@@ -185,10 +185,10 @@ export default function Navbar() {
                 {isDropdownMenu && activeDropdown === link.menu && (
                   <div
                     ref={dropdownRef}
-                    className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-lg z-50 border"
+                    className="absolute top-full left-0 mt-2 w-56 bg-white rounded-md shadow-md z-50 border"
                     style={fadeInDown}
                   >
-                    <ul className="py-2">
+                    <ul className="divide-y">
                       {dropdownItems.map((item, index) => (
                         <li key={index}>
                           <Link
