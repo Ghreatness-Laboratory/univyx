@@ -6,6 +6,7 @@ import ContactUs from "../pages/ContactUs";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
+import Services from "../pages/Services";
 import SignUp from "../pages/SignUp";
 
 const AppRouter: React.FC = () => {
@@ -14,8 +15,9 @@ const AppRouter: React.FC = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/about-us" element={<AboutUs />} />
       <Route path="/contact-us" element={<ContactUs />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/about-us" element={<AboutUs />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="*" element={<NotFound />}></Route>
     </Routes>
