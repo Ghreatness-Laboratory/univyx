@@ -33,7 +33,7 @@ export default function Button({
     <Link to={href ?? ""} rel="noopener noreferrer" aria-label={ariaLabel}>
       <button
         aria-label={ariaLabel}
-        className={`bg-primary text-white rounded-lg border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer ${className}`}
+        className={`bg-primary text-[#FCFCFC] rounded-lg border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer ${className}`}
         onClick={onClick}
       >
         {children}
