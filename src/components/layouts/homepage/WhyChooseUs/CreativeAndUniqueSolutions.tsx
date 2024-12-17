@@ -53,9 +53,9 @@ const Solution = (props: SolutionProps) => {
           <path
             d="M4.1665 10H15.8332M15.8332 10L10.8332 5M15.8332 10L10.8332 15"
             stroke="#64748B"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </Button>

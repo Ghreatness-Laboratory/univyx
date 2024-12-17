@@ -1,4 +1,5 @@
 import Button from "../../../common/Button";
+import DesktopIcon from "../../../../assets/images/Desktop-icon.svg";
 
 const services = [
   {
@@ -29,7 +30,7 @@ export default function ServiceCard() {
         >
           <div className="w-14 h-14">
             <img
-              src={""}
+              src={DesktopIcon}
               alt="Desktop Icon"
               width={62}
               height={62}
