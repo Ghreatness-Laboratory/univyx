@@ -1,6 +1,6 @@
 
 export default function AboutUs() {
   return (
-    <div></div>
+    <main data-testid="about-us-page"></main>
   )
 }

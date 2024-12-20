@@ -1,6 +1,6 @@
 
 export default function Login() {
   return (
-    <div></div>
+    <div data-testid="login-page"></div>
   )
 }
