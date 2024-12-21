@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import FooterLogo from "../../../assets/images/logo(extralarge).svg";
-import Button from "../../common/Button";
 import FacebookLogo from "../../../assets/images/facebook-logo.svg";
 import InstagramLogo from "../../../assets/images/instagram-logo.svg";
-import TwitterLogo from "../../../assets/images/twitter-logo.svg";
 import LinkedinLogo from "../../../assets/images/linkedin-logo.svg";
+import FooterLogo from "../../../assets/images/logo(extralarge).svg";
+import TwitterLogo from "../../../assets/images/twitter-logo.svg";
+import Button from "../../common/Button";
 
 const footerMenu = [
   {
@@ -12,31 +12,35 @@ const footerMenu = [
     menu: "Features",
   },
   {
-    href: "/about-us",
+    href: "/",
     menu: "About",
   },
   {
-    href: "/services",
+    href: "/",
     menu: "Services",
   },
 ];
 
 const socialMediaPlatforms = [
   {
-    link: "/",
+    link: "https://www.facebook.com",
     logo: FacebookLogo,
+    name: "Facebook",
   },
   {
-    link: "/",
+    link: "https://www.instagram.com",
     logo: InstagramLogo,
+    name: "Instagram",
   },
   {
-    link: "/",
+    link: "https://www.twitter.com",
     logo: TwitterLogo,
+    name: "Twitter",
   },
   {
-    link: "/",
+    link: "https://www.linkedin.com",
     logo: LinkedinLogo,
+    name: "Linkedin",
   },
 ];
 
@@ -93,7 +97,7 @@ export default function Footer() {
                 href={platform.link}
                 isIconOnly={true}
                 className="p-2.5 border border-white rounded-full"
-                ariaLabel="Visit social media platforms"
+                ariaLabel={`Visit ${platform.name}`}
               >
                 <img
                   src={platform.logo}

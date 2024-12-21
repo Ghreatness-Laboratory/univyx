@@ -8,7 +8,7 @@ import WhyChooseUs from "../components/layouts/homepage/WhyChooseUs";
 
 export default function Home() {
   return (
-    <main>
+    <main data-testid="home-page">
       <Hero />
       <AboutUs />
       <Services />

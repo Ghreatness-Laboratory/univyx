@@ -1,8 +1,8 @@
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import DesktopLogo from "../../../assets/images/logo(large).svg";
 import MobileLogo from "../../../assets/images/logo(small).svg";
 import Button from "../../common/Button";
-import { useEffect, useRef, useState } from "react";
 
 interface Navlink {
   href: string;
@@ -73,7 +73,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Click outside handler for desktop dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -107,18 +106,15 @@ export default function Navbar() {
     <div className="bg-white">
       <nav
         className="max-w-[1150px] w-full mx-auto py-3 md:py-7 px-6 md:px-4 flex justify-between items-center relative"
-        aria-label="navbar"
+        aria-label="Main navigation"
       >
-        <span className="sr-only">Desktop navbar</span>
         <div className="px-1">
-          <span className="sr-only">Logo</span>
           <img
             src={DesktopLogo}
             alt="Ghreatness Labs logo and title"
             width={165}
             height={34}
             className="hidden md:block"
-            aria-required
           />
           <img
             src={MobileLogo}
@@ -126,7 +122,6 @@ export default function Navbar() {
             width={123}
             height={25}
             className="block md:hidden"
-            aria-required
           />
         </div>
 
@@ -135,7 +130,6 @@ export default function Navbar() {
             const isActive = location.pathname === link.href;
             const isMenuActive =
               "relative text-[#64748B] px-3 transition-all duration-2000ms ease-in-out bottom-1";
-
             const isDropdownMenu =
               link.menu === "Services" || link.menu === "About Us";
 
@@ -159,7 +153,7 @@ export default function Navbar() {
                     <Button
                       className="p-2"
                       isIconOnly={true}
-                      ariaLabel="Drop-down menu"
+                      ariaLabel={`Toggle ${link.menu} dropdown menu`}
                       onClick={() => handleDropDownMenu(link.menu)}
                     >
                       <svg
@@ -213,13 +207,14 @@ export default function Navbar() {
             className="hidden md:block py-2.5 px-3.5"
             isIconOnly={false}
             ariaLabel="Go to Login page"
+            data-testid="login-link"
           >
             <p>Join Us</p>
           </Button>
           <Button
             className="block md:hidden py-2.5 px-3.5"
             isIconOnly={true}
-            ariaLabel="Open Hamburger Menu"
+            ariaLabel="Toggle mobile menu"
             onClick={handleMobileNavbar}
           >
             <svg
@@ -244,15 +239,14 @@ export default function Navbar() {
       {mobileNavbar && (
         <nav
           className="fixed lg:hidden top-0 h-[100vh] w-full bg-white"
-          aria-label="navbar"
+          aria-label="Mobile navigation"
         >
-          <span className="sr-only">Mobile navbar</span>
           <div className="flex items-center justify-end gap-2 py-3 px-6 font-bold leading-6">
             <h6>MENU</h6>
             <Button
               className="block py-2.5 px-3.5"
               isIconOnly={true}
-              ariaLabel="Close Hamburger Menu"
+              ariaLabel="Close mobile menu"
               onClick={handleMobileNavbar}
             >
               <svg
@@ -295,7 +289,7 @@ export default function Navbar() {
                       <Button
                         className="p-4 border-l"
                         isIconOnly={true}
-                        ariaLabel="Drop-down menu"
+                        ariaLabel={`Toggle ${link.menu} mobile dropdown menu`}
                         onClick={() => handleDropDownMenu(link.menu)}
                       >
                         <svg

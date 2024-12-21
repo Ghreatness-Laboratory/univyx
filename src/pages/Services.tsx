@@ -1,6 +1,6 @@
 
 export default function Services() {
   return (
-    <div></div>
+    <main data-testid="services-page"></main>
   )
 }

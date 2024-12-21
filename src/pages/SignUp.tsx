@@ -1,6 +1,6 @@
 
 export default function SignUp() {
   return (
-    <div></div>
+    <div data-testid="sign-up-page"></div>
   )
 }

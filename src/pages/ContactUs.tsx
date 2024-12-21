@@ -1,6 +1,6 @@
 
 export default function ContactUs() {
   return (
-    <div></div>
+    <main data-testid="contact-us-page"></main>
   )
 }

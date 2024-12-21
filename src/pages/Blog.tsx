@@ -1,6 +1,6 @@
 
 export default function Blog() {
   return (
-    <div></div>
+    <main data-testid="blog-page"></main>
   )
 }
