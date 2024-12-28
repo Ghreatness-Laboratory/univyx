@@ -31,8 +31,8 @@ export default function OurCoreBeliefs() {
             Mission
           </h6>
           <p className="text-secondary text-base font-normal max-md:p-2.5">
-            Value is a fundamental concept that underpins many aspects of life,
-            business, and society. At its core, value represents the worth,
+            Our mission is to transform dreams into reality by providing
+            innovative solutions. At its core, value represents the worth,
             significance, or importance that something holds to individuals.
           </p>
         </div>
