@@ -8,7 +8,10 @@ export default function Slider() {
   const duplicatedFrames = [...frames, ...frames];
 
   return (
-    <div className="overflow-hidden relative py-6 md:py-[50px] mx-auto">
+    <div
+      data-testid="slider"
+      className="overflow-hidden relative py-6 md:py-[50px] mx-auto"
+    >
       <div className="flex gap-3 md:gap-8">
         {duplicatedFrames.map((image, index) => (
           <div key={index} className="flex-shrink-0">

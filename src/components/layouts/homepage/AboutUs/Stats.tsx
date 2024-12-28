@@ -28,7 +28,10 @@ const statistics: StatisticsProps[] = [
 
 export default function Stats() {
   return (
-    <div className="max-w-[1120px] w-full mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 place-items-center gap-8">
+    <div
+      data-testid="stats"
+      className="max-w-[1120px] w-full mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 place-items-center gap-8"
+    >
       {statistics.map((stats, index) => (
         <div
           key={index}
