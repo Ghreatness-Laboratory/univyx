@@ -23,7 +23,6 @@ export default function FeatureCard(feature: FeaturesProps) {
           width={490}
           height={434}
           className="w-full h-full object-cover rounded-[30px]"
-          aria-required
         />
       </div>
       <div className="flex flex-col items-center md:items-start gap-3 md:gap-[30px] max-w-[518px] text-center md:text-left px-6 md:px-0">

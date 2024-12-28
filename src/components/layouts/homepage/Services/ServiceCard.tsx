@@ -35,7 +35,6 @@ export default function ServiceCard() {
               width={62}
               height={62}
               className="w-full h-full object-cover"
-              aria-required
             />
           </div>
           <div className="flex flex-col gap-3 w-full">

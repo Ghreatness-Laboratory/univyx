@@ -26,7 +26,6 @@ export default function OurJourney() {
                 width={2}
                 height={462}
                 className="w-full h-full object-cover"
-                aria-required
               />
             </div>
 
@@ -68,7 +67,6 @@ export default function OurJourney() {
               width={486}
               height={386}
               className="w-full h-full rounded-[20px] object-cover"
-              aria-required
             />
           </div>
         </div>

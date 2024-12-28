@@ -35,12 +35,12 @@ export default function TestimonialCard({
       data-testid="testimonial-card"
       className="lg:max-w-[352px] w-full p-8 bg-[#F9F9FB] flex flex-col"
     >
-      <div className="flex items-center gap-1">
+      <ul className="flex items-center gap-1">
         <span className="sr-only">Ratings</span>
         {Array.from({ length: rating }, (_, index) => (
-          <span key={index}>{star}</span>
+          <li key={index}>{star}</li>
         ))}
-      </div>
+      </ul>
 
       <p className="text-primary text-base font-normal pt-5 pb-8">
         {comment}

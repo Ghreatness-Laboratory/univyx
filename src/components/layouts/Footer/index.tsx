@@ -57,7 +57,6 @@ export default function Footer() {
                 alt="Ghreatness Labs logo and title"
                 width={310}
                 height={60}
-                aria-required
               />
             </div>
             <div className="flex justify-center md:justify-normal gap-3 md:gap-5 ">
@@ -105,7 +104,6 @@ export default function Footer() {
                   width={15}
                   height={15}
                   className="w-[18px] h-[18px]"
-                  aria-required
                 />
               </Button>
             ))}

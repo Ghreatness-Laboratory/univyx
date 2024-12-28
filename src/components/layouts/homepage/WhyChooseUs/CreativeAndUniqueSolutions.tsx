@@ -80,7 +80,6 @@ export default function CreativeAndUniqueSolutions() {
             width={390}
             height={650}
             className="w-full h-full object-cover rounded-[20px]"
-            aria-required
           />
         </div>
       </section>

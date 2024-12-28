@@ -12,7 +12,6 @@ export default function CompanyCard(props: CompanyCardProps) {
           width={166}
           height={35}
           className="w-[166PX] h-auto object-cover"
-          aria-required
         />
         {props.name}
       </div>

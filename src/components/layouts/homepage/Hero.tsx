@@ -25,7 +25,6 @@ export default function Hero() {
             alt="Hero Image"
             width={1120}
             height={581}
-            aria-required
             className="rounded-[20px]"
             aria-label="Hero Image"
           />
