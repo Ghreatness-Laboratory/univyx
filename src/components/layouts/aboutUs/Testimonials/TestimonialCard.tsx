@@ -8,6 +8,8 @@ export interface TestimonialCardProps {
 
 const star = (
   <svg
+    role="img"
+    aria-label="star"
     xmlns="http://www.w3.org/2000/svg"
     width="18"
     height="18"
@@ -21,37 +23,43 @@ const star = (
   </svg>
 );
 
-export default function TestimonialCard(props: TestimonialCardProps) {
+export default function TestimonialCard({
+  name,
+  profession,
+  comment,
+  image,
+  rating = 5
+}: TestimonialCardProps) {
   return (
-    <div className="lg:max-w-[352px] w-full p-8 bg-[#F9F9FB] flex flex-col">
+    <div
+      data-testid="testimonial-card"
+      className="lg:max-w-[352px] w-full p-8 bg-[#F9F9FB] flex flex-col"
+    >
       <div className="flex items-center gap-1">
         <span className="sr-only">Ratings</span>
-        {Array(props.rating)
-          .fill(null)
-          .map((_, index) => (
-            <span key={index}>{star}</span>
-          ))}
+        {Array.from({ length: rating }, (_, index) => (
+          <span key={index}>{star}</span>
+        ))}
       </div>
 
       <p className="text-primary text-base font-normal pt-5 pb-8">
-        {props.comment}
+        {comment}
       </p>
 
       <div className="flex gap-2 items-center pt-6 border-t">
         <div className="w-[54px] h-[54px] rounded-[4px]">
           <img
-            src={props.image}
+            src={image}
             alt="Profile picture"
             width={54}
             height={54}
             className="w-full h-full object-cover rounded-[4px]"
-            aria-required
           />
         </div>
         <div className="flex flex-col gap-[3px] ">
-          <h6 className="text-primary text-base font-medium">{props.name}</h6>
+          <h6 className="text-primary text-base font-medium">{name}</h6>
           <p className="text-secondary text-xs leading-[18px] font-normal">
-            {props.profession}
+            {profession}
           </p>
         </div>
       </div>
