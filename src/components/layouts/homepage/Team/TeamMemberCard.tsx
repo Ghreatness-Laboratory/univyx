@@ -108,6 +108,8 @@ export default function TeamMemberCard({ selectedRole }: TeamMemberCardProps) {
               <img
                 src={member.photo}
                 alt="Team Member Photo"
+                role="img"
+                aria-label={`Photo of ${member.name}`}
                 className="w-full h-full object-cover rounded-[10px] sm:rounded-[20px]"
               />
             </div>

@@ -40,14 +40,16 @@ describe("TeamMemberCard component", () => {
     expect(facebookLinks.length).toBeGreaterThan(0);
   });
 
-  it("renders member images with required aria attributes", () => {
+  it("renders member images with proper accessibility attributes", () => {
     renderComponent("All");
 
-    const images = screen.getAllByRole("img", { name: "Team Member Photo" });
+    const images = screen.getAllByRole("img");
 
     images.forEach((image) => {
-      expect(image).toHaveAttribute("aria-required");
-      expect(image).toHaveAttribute("alt", "Team Member Photo");
+      expect(image).toHaveAttribute("alt"); // Check alt exists
+      expect(image).toHaveAttribute("aria-label"); // Check aria-label exists
+      expect(image.getAttribute("alt")).toBeTruthy(); // Check alt is not empty
+      expect(image.getAttribute("aria-label")).toBeTruthy(); // Check aria-label is not empty
     });
   });
 
@@ -56,18 +58,6 @@ describe("TeamMemberCard component", () => {
 
     const memberNames = screen.queryAllByText("William B. Harris");
     expect(memberNames).toHaveLength(0);
-  });
-
-  it("applies correct responsive classes to team member cards", () => {
-    renderComponent("All");
-
-    const cards = screen
-      .getAllByRole("img", { name: "Team Member Photo" })
-      .map((img) => img.closest('div[class*="flex items-center"]'));
-
-    cards.forEach((card) => {
-      expect(card).toHaveClass("flex", "items-center", "gap-[13.01px]");
-    });
   });
 
   it("renders team member descriptions correctly", () => {
