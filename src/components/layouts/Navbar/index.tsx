@@ -91,6 +91,11 @@ export default function Navbar() {
 
   const handleMobileNavbar = () => {
     setMobileNavbar(!mobileNavbar);
+    if (mobileNavbar) {
+      document.body.style.overflow = "unset";
+    } else {
+      document.body.style.overflow = "hidden";
+    }
   };
 
   const handleDropDownMenu = (menu: string) => {
@@ -238,7 +243,7 @@ export default function Navbar() {
 
       {mobileNavbar && (
         <nav
-          className="fixed lg:hidden top-0 h-[100vh] w-full bg-white"
+          className="fixed lg:hidden top-0 h-[100vh] w-full bg-white z-50"
           aria-label="Mobile navigation"
         >
           <div className="flex items-center justify-end gap-2 py-3 px-6 font-bold leading-6">
