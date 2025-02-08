@@ -69,6 +69,7 @@ const ActiveMenuIndicator = () => {
 export default function Navbar() {
   const [mobileNavbar, setMobileNavbar] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isSticky, setIsSticky] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -86,6 +87,23 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const heroHeight =
+        document.querySelector(".hero-section")?.clientHeight || 0;
+      if (window.scrollY > heroHeight) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -108,7 +126,11 @@ export default function Navbar() {
   };
 
   return (
-    <div className="bg-white">
+    <div
+      className={`bg-white transition-all duration-300 ${
+        isSticky ? "sticky top-0 z-50 shadow-b-md" : ""
+      }`}
+    >
       <nav
         className="max-w-[1150px] w-full mx-auto py-3 md:py-7 px-6 md:px-4 flex justify-between items-center relative"
         aria-label="Main navigation"

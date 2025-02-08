@@ -8,15 +8,15 @@ import Button from "../../common/Button";
 
 const footerMenu = [
   {
-    href: "/",
+    href: "#features",
     menu: "Features",
   },
   {
-    href: "/",
+    href: "#about",
     menu: "About",
   },
   {
-    href: "/",
+    href: "#services",
     menu: "Services",
   },
 ];
@@ -45,6 +45,28 @@ const socialMediaPlatforms = [
 ];
 
 export default function Footer() {
+  const handleFooterLinkClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    href: string
+  ) => {
+    event.preventDefault();
+    if (href.startsWith("#")) {
+      const targetId = href.replace("#", "");
+      const element = document.getElementById(targetId);
+      const navbarHeight = document.querySelector("nav")?.clientHeight || 0;
+
+      if (element) {
+        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
   return (
     <footer aria-label="footer">
       <section className="bg-[#F9F9FB]">
@@ -64,6 +86,7 @@ export default function Footer() {
                 <Link
                   key={index}
                   to={menu.href}
+                  onClick={(event) => handleFooterLinkClick(event, menu.href)}
                   className="px-4 md:px-5 py-2 rounded-full font-semibold leading-6 border border-[var(--Text-Colors-200,#D6D6D6)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]"
                 >
                   {menu.menu}

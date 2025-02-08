@@ -2,7 +2,7 @@ import ServiceCard from "./ServiceCard";
 
 export default function Services() {
   return (
-    <div>
+    <div id="services">
       <section className="max-w-[1120px] w-full mx-auto flex justify-between max-md:flex-col max-lg:gap-7 sm:px-6 lg:px-0 py-12 md:py-[100px]">
         <div className="md:max-w-[364px] w-full px-6 md:px-0 max-md:text-center">
           <div className="flex flex-col gap-1">
