@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import Company1 from "../../../../assets/images/aboutUs/company-1.svg";
 import Company2 from "../../../../assets/images/aboutUs/company-2.svg";
 import Company3 from "../../../../assets/images/aboutUs/company-3.svg";
@@ -43,6 +44,20 @@ const companies = [
   },
 ];
 
+const marqueeVariants = {
+  animate: {
+    x: [0, -1000],
+    transition: {
+      x: {
+        repeat: Infinity,
+        repeatType: "loop",
+        duration: 20,
+        ease: "linear",
+      },
+    },
+  },
+};
+
 export default function Company() {
   return (
     <div>
@@ -56,17 +71,29 @@ export default function Company() {
           </p>
         </div>
 
-        <div
-          className="grid grid-cols-4 gap-x-72 gap-y-8 md:gap-8 w-full overflow-x-auto hide-scrollbar scroll-smooth"
-          style={{
-            WebkitOverflowScrolling: "touch",
-          }}
-        >
-          {companies.map((company, index) => (
-            <div key={index}>
-              <CompanyCard image={company.image} name={company.name} />
-            </div>
-          ))}
+        <div className="relative overflow-hidden">
+          <motion.div
+            className="flex gap-8 whitespace-nowrap marquee"
+            variants={marqueeVariants}
+            animate="animate"
+          >
+            {companies.concat(companies).map((company, index) => (
+              <div key={index} className="flex-shrink-0">
+                <CompanyCard image={company.image} name={company.name} />
+              </div>
+            ))}
+          </motion.div>
+          <motion.div
+            className="flex gap-8 whitespace-nowrap marquee"
+            variants={marqueeVariants}
+            animate="animate"
+          >
+            {companies.concat(companies.reverse()).map((company, index) => (
+              <div key={index} className="flex-shrink-0">
+                <CompanyCard image={company.image} name={company.name} />
+              </div>
+            ))}
+          </motion.div>
         </div>
       </section>
     </div>

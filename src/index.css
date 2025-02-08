@@ -33,19 +33,27 @@ body {
   }
 }
 
-@keyframes slide {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+
+
+/* Company Marquee */
+.marquee {
+  animation: marquee 20s linear infinite;
 }
 
-.slider-container {
-  display: flex;
-  animation: slide 10s infinite linear;
+.marquee:hover {
+  animation-play-state: paused;
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-1000px); }
+}
+
+.hover\:pause-marquee:hover {
+  animation-play-state: paused;
+}
+
+
 
 /* Hide scrollbar for all browsers */
 .hide-scrollbar::-webkit-scrollbar {
