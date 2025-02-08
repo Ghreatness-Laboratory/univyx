@@ -1,12 +1,8 @@
 import HeroImage from "../../../assets/images/homepage/hero-image.png";
 
-interface HeroProps {
-  className?: string;
-}
-
-export default function Hero({ className }: HeroProps) {
+export default function Hero() {
   return (
-    <div className={className}>
+    <div>
       <section className="max-w-[1120px] w-full mx-auto flex flex-col px-6 lg:px-0 py-12 md:py-[100px]">
         <h3
           className="max-w-[902px] w-full text-primary font-semibold text-4xl md:text-7xl leading-[44px] md:leading-[90px] tracking-[-0.72px] md:tracking-[-1.44px]"
