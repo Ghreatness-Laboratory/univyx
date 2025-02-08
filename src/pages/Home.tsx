@@ -20,7 +20,7 @@ export default function Home() {
         whileInView="visible"
         variants={sectionVariants}
       >
-        <Hero className="hero-section" />
+        <Hero />
       </motion.div>
       <motion.div
         initial="hidden"

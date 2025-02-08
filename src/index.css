@@ -22,6 +22,8 @@ body {
   margin: 0;
 }
 
+
+/* Navbar animations */
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -31,6 +33,19 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.5s ease-in-out;
 }
 
 

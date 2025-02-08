@@ -47,9 +47,13 @@ const dropdownItems = [
   },
 ];
 
-const fadeInDown = {
-  animation: "fadeInDown 0.2s linear",
-};
+const fadeInDown = (time: number) => ({
+  animation: `fadeInDown ${time}s linear`,
+});
+
+const slideIn = (time: number) => ({
+  animation: `slideIn ${time}s ease-in-out`,
+});
 
 const ActiveMenuIndicator = () => {
   return (
@@ -92,9 +96,8 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const heroHeight =
-        document.querySelector(".hero-section")?.clientHeight || 0;
-      if (window.scrollY > heroHeight) {
+      const fixedHeight = 500;
+      if (window.scrollY > fixedHeight) {
         setIsSticky(true);
       } else {
         setIsSticky(false);
@@ -109,10 +112,10 @@ export default function Navbar() {
 
   const handleMobileNavbar = () => {
     setMobileNavbar(!mobileNavbar);
-    if (mobileNavbar) {
-      document.body.style.overflow = "unset";
-    } else {
+    if (!mobileNavbar) {
       document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
     }
   };
 
@@ -123,16 +126,18 @@ export default function Navbar() {
   const handleMobileLinkClick = (href: string) => {
     navigate(href);
     setMobileNavbar(false);
+    document.body.style.overflow = "unset";
   };
 
   return (
     <div
       className={`bg-white transition-all duration-300 ${
-        isSticky ? "sticky top-0 z-50 shadow-b-md" : ""
+        isSticky ? "sticky top-0 z-50 shadow-md" : ""
       }`}
+      style={isSticky ? slideIn(0.5) : fadeInDown(0.8)}
     >
       <nav
-        className="max-w-[1150px] w-full mx-auto py-3 md:py-7 px-6 md:px-4 flex justify-between items-center relative"
+        className="max-w-[1150px] w-full mx-auto py-3 md:py-7 px-4 flex justify-between items-center relative"
         aria-label="Main navigation"
       >
         <div className="px-1">
@@ -207,7 +212,7 @@ export default function Navbar() {
                   <div
                     ref={dropdownRef}
                     className="absolute top-full left-0 mt-2 w-56 bg-white rounded-md shadow-md z-50 border"
-                    style={fadeInDown}
+                    style={fadeInDown(0.2)}
                   >
                     <ul className="divide-y">
                       {dropdownItems.map((item, index) => (
@@ -345,7 +350,7 @@ export default function Navbar() {
                   {isDropdownMenu && activeDropdown === link.menu && (
                     <ul
                       className="flex flex-col border-t divide-y"
-                      style={fadeInDown}
+                      style={fadeInDown(0.2)}
                     >
                       {dropdownItems.map((item, index) => (
                         <Link
