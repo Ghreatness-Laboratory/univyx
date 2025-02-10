@@ -4,7 +4,7 @@ import Stats from "./Stats";
 
 export default function AboutUs() {
   return (
-    <div>
+    <div id="about">
       <section className="flex flex-col py-12 md:py-[100px]">
         <div className="max-w-[1120px] w-full mx-auto px-6 md:px-4 flex flex-col">
           <Link to={"/about-us"}>

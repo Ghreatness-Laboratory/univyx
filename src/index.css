@@ -22,6 +22,8 @@ body {
   margin: 0;
 }
 
+
+/* Navbar animations */
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -33,19 +35,40 @@ body {
   }
 }
 
-@keyframes slide {
-  0% {
-    transform: translateX(0);
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
   }
-  100% {
-    transform: translateX(-100%);
+  to {
+    transform: translateY(0);
   }
 }
 
-.slider-container {
-  display: flex;
-  animation: slide 10s infinite linear;
+.animate-slideIn {
+  animation: slideIn 0.5s ease-in-out;
 }
+
+
+
+/* Company Marquee */
+.marquee {
+  animation: marquee 20s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-1000px); }
+}
+
+.hover\:pause-marquee:hover {
+  animation-play-state: paused;
+}
+
+
 
 /* Hide scrollbar for all browsers */
 .hide-scrollbar::-webkit-scrollbar {

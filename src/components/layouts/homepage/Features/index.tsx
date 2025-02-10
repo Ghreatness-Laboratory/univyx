@@ -19,7 +19,7 @@ const features: FeaturesProps[] = [
 
 export default function Features() {
   return (
-    <div>
+    <div id="features">
       <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] md:px-6 lg:px-0">
         <FeatureCard
           title={features[0].title}
