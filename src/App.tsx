@@ -1,16 +1,12 @@
 import "./App.css";
-import Footer from "./components/layouts/Footer";
-import Navbar from "./components/layouts/Navbar";
 import AppRouter from "./routes/AppRouter";
 
 function App() {
-  return (
-    <div>
-      <Navbar />
-      <AppRouter />
-      <Footer />
-    </div>
-  );
+   return (
+      <div>
+         <AppRouter />
+      </div>
+   );
 }
 
 export default App;
