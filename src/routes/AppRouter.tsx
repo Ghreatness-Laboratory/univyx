@@ -4,10 +4,10 @@ import AboutUs from "../pages/AboutUs";
 import Blog from "../pages/Blog";
 import ContactUs from "../pages/ContactUs";
 import Home from "../pages/Home";
-import Login from "../pages/Login";
+import Login from "../pages/auth/Login";
 import NotFound from "../pages/NotFound";
 import Services from "../pages/Services";
-import SignUp from "../pages/SignUp";
+import SignUp from "../pages/auth/SignUp";
 import ScrollToTop from "./ScrollToTop";
 
 const AppRouter: React.FC = () => {
@@ -15,8 +15,8 @@ const AppRouter: React.FC = () => {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/auth/login" element={<Login />} />
+        <Route path="/auth/sign-up" element={<SignUp />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about-us" element={<AboutUs />} />

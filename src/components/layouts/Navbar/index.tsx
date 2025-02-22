@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import DesktopLogo from "../../../assets/images/logo(large).svg";
-import MobileLogo from "../../../assets/images/logo(small).svg";
+import UnivyxLogo from "../../../assets/images/univyx-logo.svg";
 import Button from "../../common/Button";
 
 interface Navlink {
@@ -16,19 +15,19 @@ const navlinks: Navlink[] = [
   },
   {
     href: "/contact-us",
-    menu: "Contact Us",
+    menu: "Entertainment",
   },
   {
     href: "/services",
-    menu: "Services",
+    menu: "Academics",
   },
   {
     href: "/about-us",
-    menu: "About Us",
+    menu: "Gaming",
   },
   {
     href: "/blog",
-    menu: "Blog",
+    menu: "Shop",
   },
 ];
 
@@ -137,22 +136,22 @@ export default function Navbar() {
       style={isSticky ? slideIn(0.5) : fadeInDown(0.8)}
     >
       <nav
-        className="max-w-[1150px] w-full mx-auto py-3 md:py-7 px-4 flex justify-between items-center relative"
+        className="max-w-[1150px] w-full mx-auto px-4 py-1 flex justify-between items-center relative"
         aria-label="Main navigation"
       >
         <div className="px-1">
           <img
-            src={DesktopLogo}
-            alt="Ghreatness Labs logo and title"
-            width={165}
-            height={34}
+            src={UnivyxLogo}
+            alt="Univyx logo and title"
+            width={200}
+            height={100}
             className="hidden md:block"
           />
           <img
-            src={MobileLogo}
+            src={UnivyxLogo}
             alt="Ghreatness Labs logo and title"
-            width={123}
-            height={25}
+            width={120}
+            height={90}
             className="block md:hidden"
           />
         </div>
@@ -235,7 +234,7 @@ export default function Navbar() {
 
         <div>
           <Button
-            href="/login"
+            href="?auth=signup"
             className="hidden md:block py-2.5 px-3.5"
             isIconOnly={false}
             ariaLabel="Go to Login page"

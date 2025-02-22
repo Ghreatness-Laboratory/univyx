@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Average+Sans&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend+Deca:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 :root {
   --primary-color: #0D0D0D;
@@ -50,7 +54,7 @@ body {
 
 
 
-/* Company Marquee */
+/* Marquee */
 .marquee {
   animation: marquee 20s linear infinite;
 }
@@ -68,16 +72,24 @@ body {
   animation-play-state: paused;
 }
 
+@layer base {
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: #4b5563 !important; 
+    transition: background-color 5000s ease-in-out 0s;
+  }
 
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+  }
+}
 
-/* Hide scrollbar for all browsers */
-.hide-scrollbar::-webkit-scrollbar {
+.scrollbar-none::-webkit-scrollbar {
   display: none;
 }
-
-.hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-
