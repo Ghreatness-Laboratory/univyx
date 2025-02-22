@@ -1,6 +1,6 @@
-import member1 from "../../../../assets/images/blogs/member1.png";
-import member2 from "../../../../assets/images/blogs/member2.png";
-import member3 from "../../../../assets/images/blogs/member3.png";
+import member1 from "../../../../assets/images/entertainment/member1.png";
+import member2 from "../../../../assets/images/entertainment/member2.png";
+import member3 from "../../../../assets/images/entertainment/member3.png";
 import MemberCard from "./MemberCard";
 
 const memberStories = [

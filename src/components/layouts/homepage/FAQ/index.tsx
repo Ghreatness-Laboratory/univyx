@@ -3,7 +3,7 @@ import Accordian from "./Accordian";
 
 const questions_and_answer = [
   {
-    question: "The standard Lorem Ipsum passage.",
+    question: "What is Univyx all about?",
     answer:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took",
   },

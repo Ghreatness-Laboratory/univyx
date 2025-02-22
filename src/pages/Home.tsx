@@ -3,6 +3,7 @@ import AboutUs from "../components/layouts/homepage/AboutUs";
 import FAQ from "../components/layouts/homepage/FAQ";
 import Features from "../components/layouts/homepage/Features";
 import Hero from "../components/layouts/homepage/Hero";
+import Partners from "../components/layouts/homepage/Partners";
 import Services from "../components/layouts/homepage/Services";
 import Team from "../components/layouts/homepage/Team";
 import WhyChooseUs from "../components/layouts/homepage/WhyChooseUs";
@@ -56,6 +57,13 @@ export default function Home() {
         variants={sectionVariants}
       >
         <Features />
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+      >
+        <Partners />
       </motion.div>
       <motion.div
         initial="hidden"

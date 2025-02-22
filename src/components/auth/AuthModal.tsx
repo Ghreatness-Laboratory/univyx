@@ -44,7 +44,7 @@ export default function AuthModal() {
         ✖
       </button>
       <div
-        className="relative bg-white p-6 sm:px-6 rounded-lg shadow-lg w-full max-w-[957px] mx-4 max-h-[85vh] overflow-y-auto scrollbar-none"
+        className="relative bg-white p-6 sm:px-6 rounded-lg shadow-lg w-full max-w-[957px] mx-4 max-h-[85vh] overflow-y-auto hide-scrollbar"
         style={{
           scrollbarWidth: "none", 
           msOverflowStyle: "none", 

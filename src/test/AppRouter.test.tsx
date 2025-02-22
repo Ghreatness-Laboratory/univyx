@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, test, expect } from "vitest";
 import "@testing-library/jest-dom";
-import AppRouter from "../routes/AppRouter";
+import AppRouter from "../routes/PublicRoutes";
 
 const routes = [
   { path: "/", testid: "home-page" },

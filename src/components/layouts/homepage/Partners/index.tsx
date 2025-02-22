@@ -1,45 +1,46 @@
 import { motion } from "framer-motion";
-import Company1 from "../../../../assets/images/aboutUs/company-1.svg";
-import Company2 from "../../../../assets/images/aboutUs/company-2.svg";
-import Company3 from "../../../../assets/images/aboutUs/company-3.svg";
-import Company4 from "../../../../assets/images/aboutUs/company-4.svg";
-import Company5 from "../../../../assets/images/aboutUs/company-5.svg";
-import Company6 from "../../../../assets/images/aboutUs/company-6.svg";
-import Company7 from "../../../../assets/images/aboutUs/company-7.svg";
-import Company8 from "../../../../assets/images/aboutUs/company-8.svg";
-import CompanyCard from "./CompanyCard";
+import Partner1 from "../../../../assets/images/homepage/partner-1.svg";
+import Partner2 from "../../../../assets/images/homepage/partner-2.svg";
+import Partner3 from "../../../../assets/images/homepage/partner-3.svg";
+import Partner4 from "../../../../assets/images/homepage/partner-4.svg";
+import Partner5 from "../../../../assets/images/homepage/partner-5.svg";
+import Partner6 from "../../../../assets/images/homepage/partner-6.svg";
+import Partner7 from "../../../../assets/images/homepage/partner-7.svg";
+import Partner8 from "../../../../assets/images/homepage/partner-8.svg";
 
-const companies = [
+import PartnerCard from "./PartnerCard";
+
+const partners = [
   {
-    image: Company1,
+    image: Partner1,
     name: "",
   },
   {
-    image: Company2,
+    image: Partner2,
     name: "",
   },
   {
-    image: Company3,
+    image: Partner3,
     name: "",
   },
   {
-    image: Company4,
+    image: Partner4,
     name: "",
   },
   {
-    image: Company5,
+    image: Partner5,
     name: "",
   },
   {
-    image: Company6,
+    image: Partner6,
     name: "",
   },
   {
-    image: Company7,
+    image: Partner7,
     name: "",
   },
   {
-    image: Company8,
+    image: Partner8,
     name: "",
   },
 ];
@@ -58,7 +59,7 @@ const marqueeVariants = {
   },
 };
 
-export default function Company() {
+export default function Partners() {
   return (
     <div>
       <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[45px] md:gap-8 px-6 lg:px-0 py-12 md:py-[100px] overflow-hidden">
@@ -77,9 +78,9 @@ export default function Company() {
             variants={marqueeVariants}
             animate="animate"
           >
-            {companies.concat(companies).map((company, index) => (
+            {partners.concat(partners).map((partner, index) => (
               <div key={index} className="flex-shrink-0">
-                <CompanyCard image={company.image} name={company.name} />
+                <PartnerCard image={partner.image} name={partner.name} />
               </div>
             ))}
           </motion.div>
@@ -88,9 +89,9 @@ export default function Company() {
             variants={marqueeVariants}
             animate="animate"
           >
-            {companies.concat(companies.reverse()).map((company, index) => (
+            {partners.concat(partners.reverse()).map((partner, index) => (
               <div key={index} className="flex-shrink-0">
-                <CompanyCard image={company.image} name={company.name} />
+                <PartnerCard image={partner.image} name={partner.name} />
               </div>
             ))}
           </motion.div>

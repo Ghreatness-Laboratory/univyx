@@ -18,7 +18,7 @@ interface TeamMemberProps {
   ];
 }
 
-interface TeamMemberCardProps {
+interface TeamMemberCardsProps {
   selectedRole: string;
 }
 
@@ -85,7 +85,7 @@ const teamMembers: TeamMemberProps[] = [
   },
 ];
 
-export default function TeamMemberCard({ selectedRole }: TeamMemberCardProps) {
+export default function TeamMemberCards({ selectedRole }: TeamMemberCardsProps) {
   const filteredMembers =
     selectedRole === "All"
       ? teamMembers

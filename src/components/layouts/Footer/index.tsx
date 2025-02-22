@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import FacebookLogo from "../../../assets/images/facebook-logo.svg";
 import InstagramLogo from "../../../assets/images/instagram-logo.svg";
 import LinkedinLogo from "../../../assets/images/linkedin-logo.svg";
-import FooterLogo from "../../../assets/images/logo(extralarge).svg";
 import TwitterLogo from "../../../assets/images/twitter-logo.svg";
-import Button from "../../common/Button";
+import UnivyxLogo from "../../../assets/images/univyx-logo.svg";
 
 const footerMenu = [
   {
@@ -56,7 +55,8 @@ export default function Footer() {
       const navbarHeight = document.querySelector("nav")?.clientHeight || 0;
 
       if (element) {
-        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        const elementPosition =
+          element.getBoundingClientRect().top + window.scrollY;
         const offsetPosition = elementPosition - navbarHeight;
 
         window.scrollTo({
@@ -67,6 +67,8 @@ export default function Footer() {
     }
   };
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer aria-label="footer">
       <section className="bg-[#F9F9FB]">
@@ -75,10 +77,11 @@ export default function Footer() {
             <div className="flex justify-center md:justify-normal">
               <span className="sr-only">Logo</span>
               <img
-                src={FooterLogo}
-                alt="Ghreatness Labs logo and title"
+                src={UnivyxLogo}
+                alt="Univyx logo and title"
                 width={310}
                 height={60}
+                className="rounded-2xl"
               />
             </div>
             <div className="flex justify-center md:justify-normal gap-3 md:gap-5 ">
@@ -101,9 +104,8 @@ export default function Footer() {
               success for our clients.
             </h1>
             <p className="text-secondary font-normal leading-6">
-              We prioritize comprehending our clients' unique challenges,
-              objectives, and aspirations, ensuring that our efforts are
-              tailored to their specific requirements
+              Welcome to our platform, where private university students can
+              connect, have fun, and game together. Join us today!
             </p>
           </div>
         </div>
@@ -111,15 +113,13 @@ export default function Footer() {
 
       <section className="bg-primary py-8 px-4">
         <div className="max-w-[1120px] w-full mx-auto flex flex-col md:flex-row items-center gap-8 justify-between text-white text-lg font-normal text-center">
-          <h6>Copyright @ 2024 Ghreatness, All rights reserved.</h6>
+          <h6>Copyright @ {currentYear} Univyx, All rights reserved.</h6>
           <div className="flex items-center gap-[15px]">
             {socialMediaPlatforms.map((platform, index) => (
-              <Button
+              <Link
                 key={index}
-                href={platform.link}
-                isIconOnly={true}
+                to={platform.link}
                 className="p-2.5 border border-white rounded-full"
-                ariaLabel={`Visit ${platform.name}`}
               >
                 <img
                   src={platform.logo}
@@ -127,8 +127,9 @@ export default function Footer() {
                   width={15}
                   height={15}
                   className="w-[18px] h-[18px]"
+                  aria-label={`Visit ${platform.name}`}
                 />
-              </Button>
+              </Link>
             ))}
           </div>
         </div>

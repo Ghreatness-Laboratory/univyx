@@ -1,4 +1,4 @@
-import Quote from "../../../../assets/images/blogs/quote.svg";
+import Quote from "../../../../assets/images/entertainment/quote.svg";
 
 interface MemberCardProps {
   props: {

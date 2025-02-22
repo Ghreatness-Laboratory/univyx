@@ -1,8 +1,8 @@
 import { useState } from "react";
-import blog1 from "../../../../assets/images/blogs/blog1.png";
-import blog2 from "../../../../assets/images/blogs/blog2.png";
-import blog3 from "../../../../assets/images/blogs/blog3.png";
-import blog4 from "../../../../assets/images/blogs/blog4.png";
+import blog1 from "../../../../assets/images/entertainment/blog1.png";
+import blog2 from "../../../../assets/images/entertainment/blog2.png";
+import blog3 from "../../../../assets/images/entertainment/blog3.png";
+import blog4 from "../../../../assets/images/entertainment/blog4.png";
 import BlogCard, { BlogsProps } from "./BlogCard";
 
 const blogs: BlogsProps[] = [

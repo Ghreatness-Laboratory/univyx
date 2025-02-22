@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TeamMemberCard from "./TeamMemberCard";
+import TeamMemberCards from "./TeamMemberCards";
 
 const TeamMemberRoles = [
   "All",
@@ -34,7 +34,7 @@ export default function Team() {
           </ul>
         </div>
 
-        <TeamMemberCard selectedRole={selectedRole} />
+        <TeamMemberCards selectedRole={selectedRole} />
       </section>
     </div>
   );

@@ -14,19 +14,19 @@ const navlinks: Navlink[] = [
     menu: "Home",
   },
   {
-    href: "/contact-us",
+    href: "/entertainment",
     menu: "Entertainment",
   },
   {
-    href: "/services",
+    href: "/academics",
     menu: "Academics",
   },
   {
-    href: "/about-us",
+    href: "/gaming",
     menu: "Gaming",
   },
   {
-    href: "/blog",
+    href: "/shop",
     menu: "Shop",
   },
 ];
@@ -162,7 +162,9 @@ export default function Navbar() {
             const isMenuActive =
               "relative text-[#64748B] px-3 transition-all duration-2000ms ease-in-out bottom-1";
             const isDropdownMenu =
-              link.menu === "Services" || link.menu === "About Us";
+              link.menu === "Academics" ||
+              link.menu === "Gaming" ||
+              link.menu === "Entertainment";
 
             return (
               <li
@@ -182,7 +184,7 @@ export default function Navbar() {
                   </div>
                   {isDropdownMenu && (
                     <Button
-                      className="p-2"
+                      className="py-2"
                       isIconOnly={true}
                       ariaLabel={`Toggle ${link.menu} dropdown menu`}
                       onClick={() => handleDropDownMenu(link.menu)}

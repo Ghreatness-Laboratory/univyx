@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-import TeamMemberCard from "../../components/layouts/homepage/Team/TeamMemberCard";
+import TeamMemberCard from "../../components/layouts/homepage/Team/TeamMemberCards";
 
 describe("TeamMemberCard component", () => {
   // Helper function to render component with router
