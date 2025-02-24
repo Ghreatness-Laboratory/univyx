@@ -22,7 +22,7 @@ export default function Accordian({
         isOpen ? "bg-[#F9F9FB] border-none" : "border border-[#D6D6D6]"
       }`}
     >
-      <div className="flex max-md:flex-col items-center max-md:items-start justify-between max-md:gap-5">
+      <div className="flex max-md:flex-col items-center max-md:items-start justify-between gap-5 md:gap-2">
         <h6 className="text-primary text-2xl font-medium animate-fadeInDown">
           {content.question}
         </h6>

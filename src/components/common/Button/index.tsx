@@ -6,7 +6,8 @@ interface ButtonProps {
   isIconOnly?: boolean;
   ariaLabel?: string;
   className?: string;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  target?: string;
+  onClick?: () => void;
 }
 
 export default function Button({
@@ -15,6 +16,7 @@ export default function Button({
   isIconOnly,
   ariaLabel,
   className,
+  target,
   onClick,
 }: ButtonProps) {
   if (isIconOnly) {
@@ -34,15 +36,12 @@ export default function Button({
       to={href}
       rel="noopener noreferrer"
       aria-label={ariaLabel}
+      className={`bg-primary text-[#FCFCFC] rounded-lg border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer ${className}`}
       data-testid="link"
+      onClick={onClick}
+      target={target}
     >
-      <button
-        aria-label={ariaLabel}
-        className={`bg-primary text-[#FCFCFC] rounded-lg border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer ${className}`}
-        onClick={onClick}
-      >
-        {children}
-      </button>
+      {children}
     </Link>
   );
 }
