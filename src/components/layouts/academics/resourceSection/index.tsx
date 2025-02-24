@@ -64,7 +64,7 @@ export default function ResourceSection() {
             className="md:w-1/4 px-6 py-2 bg-primary text-white rounded-md disabled:opacity-90 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
             aria-label="Get Notes"
           >
-            Get Notes
+            Get Resources
           </button>
         </div>
 

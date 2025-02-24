@@ -73,7 +73,7 @@ export default function Footer() {
     <footer aria-label="footer">
       <section className="bg-[#F9F9FB]">
         <div className="max-w-[1120px] w-full mx-auto pb-16 md:pb-[50px] pt-12 md:pt-[100px] md:px-4 lg:px-0 flex flex-col md:flex-row items-center gap-4 justify-between">
-          <div className="max-w-[423px] w-full h-[148px] md:h-[286px] md:self-start flex flex-col justify-between">
+          <div className="max-w-[423px] w-full min-h-[148px] md:h-[286px] md:self-start flex flex-col justify-between gap-5">
             <div className="flex justify-center md:justify-normal">
               <span className="sr-only">Logo</span>
               <img
@@ -84,7 +84,7 @@ export default function Footer() {
                 className="rounded-2xl"
               />
             </div>
-            <div className="flex justify-center md:justify-normal gap-3 md:gap-5 ">
+            <div className="flex justify-center md:justify-normal gap-3 md:gap-5">
               {footerMenu.map((menu, index) => (
                 <Link
                   key={index}

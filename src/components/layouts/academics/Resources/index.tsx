@@ -60,7 +60,7 @@ export default function Resources() {
   }, [filters]);
 
   return (
-    <div className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] md:px-6 lg:px-0">
+    <div className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
       <div className="space-y-6">
         <div className="flex flex-col gap-6">
           <Link

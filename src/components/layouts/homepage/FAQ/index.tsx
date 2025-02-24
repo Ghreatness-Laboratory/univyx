@@ -8,12 +8,12 @@ const questions_and_answer = [
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took",
   },
   {
-    question: "The standard Lorem Ipsum passage, used since the 1500s",
+    question: "What features does it offer?",
     answer:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took",
   },
   {
-    question: "The standard Lorem Ipsum passage, used since the 1500s",
+    question: "Is is open to all universities?",
     answer:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took",
   },

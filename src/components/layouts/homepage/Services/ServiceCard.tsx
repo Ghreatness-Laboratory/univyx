@@ -53,7 +53,7 @@ export default function ServiceCard() {
         className="py-4 px-[22px] max-sm:max-w-[338px] w-full grid place-self-center"
         ariaLabel="View More Services"
       >
-        <p className="font-semibold text-[18px] leading-7">
+        <p className="font-semibold text-[18px] leading-7 text-center">
           View More Services
         </p>
       </Button>
