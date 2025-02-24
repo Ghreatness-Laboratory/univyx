@@ -54,7 +54,7 @@ export default function Blogs() {
       : blogs.filter((blog) => blog.category === selectedCategory);
 
   return (
-    <div>
+    <div className="bg-[#F9F9FB]">
       <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-6 md:gap-[50px] px-6 xl:px-0 py-12 md:py-[100px]">
         <div className="flex max-md:flex-col gap-8 md:items-center md:justify-between lg:pb-[50px] border-b">
           <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] md:tracking-[-0.96px]">

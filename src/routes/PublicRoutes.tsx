@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
+import Resources from "../components/layouts/academics/Resources";
 import Academics from "../pages/Academics";
 import Entertainment from "../pages/Entertainment";
 import Gaming from "../pages/Gaming";
@@ -16,6 +17,7 @@ const PublicRouter: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/entertainment" element={<Entertainment />} />
         <Route path="/academics" element={<Academics />} />
+        <Route path="/academics/:universityId" element={<Resources />} />
         <Route path="/gaming" element={<Gaming />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="*" element={<NotFound />}></Route>

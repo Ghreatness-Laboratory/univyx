@@ -15,7 +15,7 @@ export default function Entertainment() {
         whileInView="visible"
         variants={sectionVariants}
       >
-        <Blogs />{" "}
+        <Blogs />
       </motion.div>
       <motion.div
         initial="hidden"
