@@ -115,7 +115,7 @@ export default function Articles() {
         )}
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow-md">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
         <h3 className="text-xl font-bold text-slate-800 mb-4">
           Write Your Own Article
         </h3>
@@ -123,7 +123,7 @@ export default function Articles() {
           Share your unique experiences, insights, and perspectives with the
           community. Every student has a story worth telling!
         </p>
-        <div className="bg-purple-50 p-5 rounded-lg">
+        <div className="bg-purple-50 px-3 py-5 md:p-5 rounded-lg">
           <form className="space-y-4">
             <div>
               <label

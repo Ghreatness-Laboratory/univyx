@@ -7,11 +7,11 @@ export default function News() {
   const [activeCategory, setActiveCategory] = useState("All");
   const categories = [
     "All",
+    "Environment",
     "Campus",
     "Sports",
     "Academics",
     "Research",
-    "Environment",
   ];
 
   const filteredNews =

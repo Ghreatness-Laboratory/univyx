@@ -62,11 +62,11 @@ export default function TrendingTopics() {
         ))}
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow-md">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
         <h3 className="text-xl font-bold text-slate-800 mb-2">
           Weekly Hot Take
         </h3>
-        <div className="p-6 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg text-white">
+        <div className="p-4 md:p-6 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg text-white">
           <h4 className="text-2xl font-bold mb-4">
             "Online Classes Should Be an Option Post-Pandemic"
           </h4>
@@ -101,7 +101,7 @@ export default function TrendingTopics() {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow-md">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
         <h3 className="text-xl font-bold text-slate-800 mb-4">
           Start a New Discussion
         </h3>
