@@ -16,8 +16,7 @@ export const universities: University[] = [
   { id: 'veritas', name: 'Veritas University' },
   { id: 'redeemers', name: 'Redeemers University' },
   { id: 'augustine', name: 'Augustine University' },
-  { id: 'bowen', name: 'Augustine University' },
-  { id: 'augustine', name: 'Bowen University' },
+  { id: 'bowen', name: 'Bowen University' },
   { id: 'Igbenidon', name: 'Igbenidon University' },
   { id: 'Macpherson', name: 'Macpherson University' },
   { id: 'godfrey-okoye', name: 'Godfrey Okoye University' }
