@@ -22,7 +22,7 @@ export default function Accordion({
 }: AccordionProps) {
   return (
     <div
-      className={`px-4 md:px-5 py-4 md:p-6 flex flex-col gap-3 rounded-xl transition-all duration-300 shadow-md border 
+      className={`px-4 md:px-5 py-4 md:p-6 flex flex-col gap-3 rounded-md transition-all duration-300 border 
       ${isOpen ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"}`}
     >
       <div

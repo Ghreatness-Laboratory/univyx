@@ -14,27 +14,27 @@ interface SolutionProps {
 
 const solutions = [
   {
-    title: "Gaming",
+    title: "Gaming Hub",
     content:
-      "Dive into immersive worlds, challenge your skills, and connect with a community that shares your passion for play.",
+      "Connect with fellow gamers, participate in tournaments, and showcase your skills in an inclusive community that celebrates esports and gaming culture.",
     image: SolutionImage1,
   },
   {
-    title: "Competitions",
+    title: "Academics",
     content:
-      "Push your limits, test your skills, and rise to the top because every challenge is a chance to shine.",
+      "Access past questions, notes, and study materials to excel in your academic journey. Knowledge shared is knowledge multiplied.",
     image: SolutionImage2,
   },
   {
-    title: "Tech Teams",
+    title: "Business",
     content:
-      "Innovation thrives where great minds unite. Collaborate, create, and shape the future with like-minded tech enthusiasts.",
+      "Discover entrepreneurial opportunities, gain insights from industry leaders, and turn ideas into successful ventures.",
     image: SolutionImage3,
   },
   {
-    title: "E-Teams",
+    title: "Entertainment",
     content:
-      "Where passion meets performance connect, compete, and conquer in the world of esports and beyond.",
+      "Stay in the loop with the latest university news, trending topics, and events, ensuring you're always engaged and informed.",
     image: SolutionImage4,
   },
 ];
@@ -42,7 +42,7 @@ const solutions = [
 const Solution = ({ title, content, isActive, onClick }: SolutionProps) => {
   return (
     <div className="flex max-lg:flex-col lg:items-center gap-3 justify-between">
-      <h3 className="text-primary text-[30px] leading-[38px] font-medium w-[167px]">
+      <h3 className="text-primary text-[30px] leading-[38px] font-medium w-[187px]">
         {title}
       </h3>
       <p className="text-secondary text-base font-normal lg:max-w-[347px] w-full">
@@ -51,7 +51,7 @@ const Solution = ({ title, content, isActive, onClick }: SolutionProps) => {
       <Button
         isIconOnly={true}
         onClick={onClick}
-        className={`p-4 rounded-full transition-all w-fit ${
+        className={`p-2 rounded-full transition-all w-fit ${
           isActive ? "bg-[#64748B]" : "bg-white"
         }`}
         ariaLabel="See More"

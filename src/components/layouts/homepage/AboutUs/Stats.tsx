@@ -40,7 +40,7 @@ export default function Stats() {
           <h1 className="text-4xl md:text-5xl font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] md:tracking-[-0.96px] ">
             {stats.count}
           </h1>
-          <p className="text-secondary font-normal text-base ">
+          <p className="text-secondary font-normal text-base max-md:text-balance">
             {stats.content}
           </p>
         </div>

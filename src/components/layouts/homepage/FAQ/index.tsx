@@ -6,46 +6,47 @@ const questions_and_answer = [
   {
     question: "What is Univyx all about?",
     answer:
-      "Univyx is a digital platform designed to enhance student learning experiences by providing resources, collaboration tools, and academic insights.",
+      "Univyx is a pioneering platform designed to transform the student experience in private universities, providing a comprehensive ecosystem of community, resources, opportunities, and gaming.",
+  },
+  {
+    question: "Is Univyx only for private university students?",
+    answer:
+      "Yes, Univyx is specifically designed for private university students aged 18-25, addressing their unique needs and challenges.",
   },
   {
     question: "What features does Univyx offer?",
     answer:
-      "Univyx offers personalized study plans, peer collaboration, AI-powered learning tools, and access to expert guidance.",
-  },
-  {
-    question: "Is Univyx open to all universities?",
-    answer:
-      "Yes, Univyx is open to students from all universities. It aims to create a universal learning hub for students worldwide.",
+      "Univyx offers academic resources, community forums, gaming competitions, a marketplace for student entrepreneurs, remote internship opportunities, and tech networking.",
   },
   {
     question: "How can I sign up for Univyx?",
     answer:
-      "You can sign up by visiting our website and creating an account using your university email or personal email.",
+      "You can sign up by visiting our website and creating an account using your private university email address.",
   },
   {
-    question: "Is there a mobile app available?",
-    answer: "No.",
-  },
-  {
-    question: "Does Univyx provide free resources?",
+    question: "Are there gaming tournaments on Univyx?",
     answer:
-      "Yes, Univyx provides a mix of free and premium resources, including open-source learning materials and expert courses.",
+      "Yes, Univyx hosts both intra and inter-university gaming competitions, fostering teamwork and healthy competition among students.",
+  },
+  {
+    question: "Does Univyx provide academic resources?",
+    answer:
+      "Yes, Univyx provides access to past questions, notes, and other study materials to help students excel academically.",
   },
   {
     question: "How can I get support if I have an issue?",
     answer:
-      "You can reach out to our support team through the help center on our website or via email support@univyx.com.",
+      "You can reach out to our support team through the help center on our website or via email at support@univyx.com.",
   },
   {
-    question: "Can I collaborate with other students on projects?",
+    question: "Can I sell my products on Univyx?",
     answer:
-      "Absolutely! Univyx provides collaboration tools that allow students to work on projects, share ideas, and discuss topics.",
+      "Absolutely! Univyx Shop is a marketplace for student entrepreneurs to sell their products and services to the university community.",
   },
   {
-    question: "Does Univyx support multiple languages?",
+    question: "How does Univyx help with career development?",
     answer:
-      "Yes, Univyx supports multiple languages, making it accessible to students worldwide.",
+      "Univyx provides access to remote internship opportunities and connections with tech professionals for mentorship and career growth.",
   },
 ];
 
@@ -85,19 +86,18 @@ export default function FAQ() {
 
   return (
     <div>
-      <section className="max-w-[753px] w-full mx-auto flex flex-col gap-3 md:gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
-        <div className="flex flex-col gap-5 text-center">
+      <section className="max-w-[1120px] w-full mx-auto flex max-lg:flex-col justify-between gap-3 md:gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
+        <div className="max-w-md flex flex-col gap-5 max-md:text-center">
           <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] md:tracking-[-0.96px]">
             Frequently Asked Questions
           </h1>
           <p className="text-secondary text-base font-normal">
-            Lorem ipsum dolor sit amet consectetur. Orci malesuada mi et mi
-            pellentesque tincidunt at mollis facilisis. Nisl eu blandit nunc
-            parturient adipiscing commodo.
+            Find answers to common questions about Univyx, our features, and how
+            we can enhance your university experience.
           </p>
         </div>
 
-        <div>
+        <div className="w-full">
           <form action="#" className="relative mt-2 mb-8">
             <input
               type="text"
@@ -130,7 +130,7 @@ export default function FAQ() {
             </svg>
           </form>
 
-          <div className="space-y-8">
+          <div className="space-y-6 md:space-y-8">
             {currentQuestions.length > 0 ? (
               currentQuestions.map((content, index) => (
                 <div key={index}>
@@ -142,9 +142,28 @@ export default function FAQ() {
                 </div>
               ))
             ) : (
-              <p className="text-center text-xl min-h-[20vh] text-secondary">
-                No results found
-              </p>
+              <div className="flex flex-col items-center justify-center text-center min-h-[40vh] space-y-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="w-16 h-16 text-gray-400"
+                >
+                  <path
+                    d="M15.5 15L21.5 21M10.5 17C6.63401 17 3.5 13.866 3.5 10C3.5 6.13401 6.63401 3 10.5 3C14.366 3 17.5 6.13401 17.5 10C17.5 13.866 14.366 17 10.5 17Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <p className="text-xl text-secondary font-medium">
+                  Oops! No matching results found.
+                </p>
+                <p className="text-gray-500 text-base">
+                  Try searching with different keywords.
+                </p>
+              </div>
             )}
           </div>
 

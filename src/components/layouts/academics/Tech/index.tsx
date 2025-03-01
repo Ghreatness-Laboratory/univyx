@@ -13,26 +13,26 @@ interface TechProps {
 
 const techs: TechProps[] = [
   {
-    name: "Choosing the Right Payment Solution for Your Business",
+    name: "Building Your Tech Network in University",
     date: "Sep 4, 2024",
     image: Tech1,
     link: "",
   },
   {
-    name: "Choosing the Right Payment Solution for Your Business",
-    date: "Sep 4, 2024",
+    name: "Student-Led Innovations Shaping Campus Life",
+    date: "Aug 28, 2024",
     image: Tech2,
     link: "",
   },
   {
-    name: "Choosing the Right Payment Solution for Your Business",
-    date: "Sep 4, 2024",
+    name: "From Campus Projects to Startup Success",
+    date: "Aug 15, 2024",
     image: Tech3,
     link: "",
   },
   {
-    name: "Choosing the Right Payment Solution for Your Business",
-    date: "Sep 4, 2024",
+    name: "Emerging Tech Skills Every Student Should Master",
+    date: "Aug 5, 2024",
     image: Tech1,
     link: "",
   },
@@ -44,10 +44,11 @@ export default function Tech() {
       <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
         <div>
           <h3 className="text-primary text-4xl md:text-5xl font-semibold">
-            Tech
+            Tech Networking
           </h3>
           <p className="text-secondary text-lg mt-1">
-            Get connected in the tech space
+            Connect with tech professionals, innovators, and entrepreneurs
+            within your university ecosystem
           </p>
         </div>
 
@@ -59,7 +60,7 @@ export default function Tech() {
             >
               <img
                 src={tech.image}
-                alt={`Tech at ${tech.name}`}
+                alt={`Tech article: ${tech.name}`}
                 className="rounded-t-2xl"
               />
               <div className="p-[30px] flex flex-col gap-[30px] ">

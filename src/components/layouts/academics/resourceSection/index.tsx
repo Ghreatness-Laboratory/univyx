@@ -36,16 +36,16 @@ export default function ResourceSection() {
 
   return (
     <div data-testid="access-resources">
-      <div className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
+      <div className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-20 px-6 lg:px-0">
         <div className="flex max-lg:flex-col max-lg:gap-10 items-center justify-between">
           <div className="max-w-2xl w-full">
             <h1 className="text-primary text-4xl md:text-5xl font-semibold mb-3">
-              Get Academic Resources
+              Academic Excellence Hub
             </h1>
             <p className="text-secondary text-lg">
-              Access a comprehensive collection of lecture notes, study
-              materials, and academic resources contributed by students and
-              faculty.
+              Access a comprehensive collection of past questions, lecture
+              notes, and collaborative study materials shared by students across
+              private universities.
             </p>
           </div>
 
@@ -88,8 +88,8 @@ export default function ResourceSection() {
                 />
               </svg>
             }
-            title="Digital Library Access"
-            description="Access thousands of academic journals, research papers, and e-books from leading publishers."
+            title="Comprehensive Study Materials"
+            description="Access past questions, lecture notes, and study guides contributed by top-performing students from private universities."
           />
           <FeatureCard
             icon={
@@ -107,8 +107,8 @@ export default function ResourceSection() {
                 />
               </svg>
             }
-            title="Study Groups"
-            description="Join virtual study groups and connect with peers from your university for collaborative learning."
+            title="Collaborative Learning Community"
+            description="Connect with peers from your university, join subject-specific study groups, and participate in virtual tutorials led by fellow students."
           />
           <FeatureCard
             icon={
@@ -126,17 +126,16 @@ export default function ResourceSection() {
                 />
               </svg>
             }
-            title="Research Support"
-            description=" Get assistance with research methodologies, data analysis, and
-              academic writing."
+            title="Tech Skills Development"
+            description="Access tutorials and resources on emerging technologies, connect with tech mentors, and participate in tech workshops and hackathons."
           />
         </div>
 
-        <div className="bg-gray-50 rounded-2xl p-8 mt-8 grid md:grid-cols-4 gap-8">
-          <StatCard value="15+" label="Partner Universities" />
-          <StatCard value="50K+" label="Study Resources" />
-          <StatCard value="100K+" label="Active Students" />
-          <StatCard value="95%" label="Satisfaction Rate" />
+        <div className="bg-gray-100 rounded-2xl p-8 mt-8 grid md:grid-cols-4 gap-8">
+          <StatCard value="25+" label="Private Universities" />
+          <StatCard value="75K+" label="Academic Resources" />
+          <StatCard value="120K+" label="Active Students" />
+          <StatCard value="98%" label="Student Success Rate" />
         </div>
       </div>
     </div>

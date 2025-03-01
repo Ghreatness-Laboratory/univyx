@@ -6,13 +6,13 @@ const features: FeaturesProps[] = [
   {
     title: "Univyx- Elevate Your Dreams, Achieve More",
     content:
-      "Univyx is your gateway to limitless possibilities where ambitions take flight and goals turn into achievements. Push beyond boundaries, embrace new challenges and let every step forward bring you closer to success. With Univyx, the journey to greatness never stops!",
+      "Univyx brings together academic resources, social networking, and career development in one comprehensive platform. Access study materials, connect with peers, participate in campus events, and discover internship opportunities tailored for private university students.",
     image: Features1,
   },
   {
-    title: "Taking Your Goals to New Heights",
+    title: "Gaming & Esports Community",
     content:
-      "Dream bigger, aim higher and push beyond boundaries. Every step forward brings you closer to success. Take your goals to new heights and make them a reality. The journey may be challenging, but the view from the top is worth it!",
+      "Join a vibrant gaming community that fosters teamwork, sportsmanship, and healthy competition. Participate in intra and inter-university gaming tournaments, showcase your skills, and connect with fellow gamers who share your passion.",
     image: Features2,
   },
 ];
@@ -20,7 +20,7 @@ const features: FeaturesProps[] = [
 export default function Features() {
   return (
     <div id="features">
-      <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
+      <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] lg:px-0">
         <FeatureCard
           title={features[0].title}
           content={features[0].content}

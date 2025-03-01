@@ -115,7 +115,7 @@ export default function TrendingTopics() {
         <h3 className="text-xl font-bold text-slate-800 mb-2">
           Weekly Hot Take
         </h3>
-        <div className="p-4 md:p-6 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg text-white">
+        <div className="px-4 py-6 md:p-6 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg text-white">
           <h4 className="text-2xl font-bold mb-4">
             "Online Classes Should Be an Option Post-Pandemic"
           </h4>
@@ -124,20 +124,22 @@ export default function TrendingTopics() {
             learning options, should our university make online attendance a
             permanent option for lecture-based courses?
           </p>
-          <div className="flex items-center gap-6 mb-6">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-teal-500">
-                <ChevronUp size={16} />
+          <div className="flex max-md:flex-col md:items-center gap-3 md:gap-6 mb-6">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-teal-500">
+                  <ChevronUp size={16} />
+                </div>
+                <span className="font-bold">{agreePercentage}%</span>
               </div>
-              <span className="font-bold">{agreePercentage}%</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-teal-500">
-                <ChevronDown size={16} />
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-teal-500">
+                  <ChevronDown size={16} />
+                </div>
+                <span className="font-bold">{disagreePercentage}%</span>
               </div>
-              <span className="font-bold">{disagreePercentage}%</span>
             </div>
-            <div className="text-white/80 text-sm">{totalVotes} votes</div>
+            <div className="text-white/90">{totalVotes} votes</div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button

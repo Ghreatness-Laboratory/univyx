@@ -18,7 +18,7 @@ const departments = [
     image: Tutorials,
   },
   {
-    name: "Tecnology",
+    name: "Technology",
     image: Technology,
   },
 ];
@@ -31,11 +31,11 @@ export default function General() {
     >
       <div>
         <h1 className="text-primary text-[32px] md:text-5xl font-semibold leading-tight">
-          Unlock Your Academic Potential
+          Elevate Your Academic Journey
         </h1>
         <p className="text-secondary text-lg mt-3">
-          Access a variety of learning materials, from notes and past questions
-          to tutorials.
+          Access a comprehensive collection of academic resources to excel in
+          your university education.
         </p>
       </div>
 
@@ -44,21 +44,20 @@ export default function General() {
           <div className="max-h-[260px] overflow-hidden">
             <img
               src={Academics}
-              alt="Academic book"
-              className="w-full h-full object-cover "
+              alt="Academic resources"
+              className="w-full h-full object-cover"
             />
           </div>
           <div className="p-6">
             <h2 className="text-primary text-2xl font-semibold">
-              Brain, Mind, and Body: The Healing of Trauma
+              Collaborative Learning: Building Knowledge Together
             </h2>
             <p className="text-secondary mt-2 leading-relaxed">
-              Explore the intricate connections between brain, mind, and body in
-              the journey of trauma recovery.
+              Join our community of ambitious students sharing resources and
+              insights to maximize academic success in private universities.
             </p>
-
             <p className="text-[#616161] mt-6">
-              Start learning with materials from these categories:
+              Explore our academic resources in these categories:
             </p>
             <div className="flex flex-wrap gap-3 mt-4">
               {departments.map((dept, index) => (
@@ -89,8 +88,14 @@ export default function General() {
                   {dept.name}
                 </h3>
                 <p className="text-[#616161] text-sm mt-1">
-                  Get access to {dept.name.toLowerCase()} and improve your
-                  learning.
+                  {dept.name === "Notes" &&
+                    "Share and access comprehensive study notes from top students."}
+                  {dept.name === "Past Questions" &&
+                    "Practice with previous exam questions to boost your confidence."}
+                  {dept.name === "Tutorials" &&
+                    "Learn from peer-led tutorials on challenging subjects."}
+                  {dept.name === "Technology" &&
+                    "Stay updated with the latest tech trends and resources."}
                 </p>
               </div>
             </div>
