@@ -4,10 +4,28 @@ import Select from "react-select";
 import { events } from "../../../../data/entertainment/events";
 import EventCard from "./EventCard";
 
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 export default function Events() {
   const [view, setView] = useState<"grid" | "calendar">("grid");
-  const [selectedMonth, setSelectedMonth] = useState<string>("March");
-  const months = ["January", "February", "March", "April", "May", "June"];
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
+
+  const filteredEvents = events.filter((event) =>
+    event.date.startsWith(selectedMonth)
+  );
 
   return (
     <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
@@ -149,9 +167,15 @@ export default function Events() {
 
       {view === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-          {events.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))
+          ) : (
+            <p className="text-gray-500 text-center col-span-2">
+              No events found for {selectedMonth}.
+            </p>
+          )}
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
@@ -161,32 +185,33 @@ export default function Events() {
             </h3>
           </div>
           <div className="grid grid-cols-7 text-center border-b">
-            <div className="py-3 border-r font-medium text-gray-500">Sun</div>
-            <div className="py-3 border-r font-medium text-gray-500">Mon</div>
-            <div className="py-3 border-r font-medium text-gray-500">Tue</div>
-            <div className="py-3 border-r font-medium text-gray-500">Wed</div>
-            <div className="py-3 border-r font-medium text-gray-500">Thu</div>
-            <div className="py-3 border-r font-medium text-gray-500">Fri</div>
-            <div className="py-3 font-medium text-gray-500">Sat</div>
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+              <div
+                key={day}
+                className="py-3 border-r font-medium text-gray-500"
+              >
+                {day}
+              </div>
+            ))}
           </div>
           <div className="grid grid-cols-7 border-b">
             {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
-              const hasEvent = events.some((event) =>
+              const hasEvent = filteredEvents.some((event) =>
                 event.date.includes(`${selectedMonth} ${day}`)
               );
               return (
                 <div
                   key={day}
                   className={`h-32 p-2 border-r border-b relative ${
-                    day % 7 === 0 ? "" : ""
-                  } ${hasEvent ? "bg-orange-50" : ""}`}
+                    hasEvent ? "bg-orange-50" : ""
+                  }`}
                 >
                   <span className="text-sm font-medium">{day}</span>
                   {hasEvent && (
                     <div className="mt-1">
                       <div className="bg-orange-500 text-white text-xs p-1 rounded">
                         {
-                          events.find((event) =>
+                          filteredEvents.find((event) =>
                             event.date.includes(`${selectedMonth} ${day}`)
                           )?.title
                         }

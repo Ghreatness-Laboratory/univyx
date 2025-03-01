@@ -1,5 +1,6 @@
 import { ChevronRight, PlusCircle, Search } from "lucide-react";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { studentArticles } from "../../../../data/entertainment/articles";
 import ArticleCard from "./ArticlesCard";
@@ -11,11 +12,32 @@ const categoryOptions = [
   { value: "Advice", label: "Advice" },
   { value: "Opinion", label: "Opinion" },
 ];
+
+interface ArticleFormData {
+  title: string;
+  category: { value: string; label: string } | null;
+  excerpt: string;
+}
+
 export default function Articles() {
   const [activeCategory, setActiveCategory] = useState("All");
   const categories = ["All", "Student Life", "Campus Life", "Travel", "Advice"];
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<ArticleFormData>({
+    defaultValues: {
+      title: "",
+      category: null,
+      excerpt: "",
+    },
+  });
 
   const filteredArticles = studentArticles
     .filter(
@@ -31,6 +53,26 @@ export default function Articles() {
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
+  };
+
+  const onSubmit = (data: ArticleFormData) => {
+    console.log({
+      title: data.title,
+      category: data.category?.value,
+      excerpt: data.excerpt,
+    });
+
+    setFormSubmitted(true);
+
+    reset({
+      title: "",
+      category: null,
+      excerpt: "",
+    });
+
+    setTimeout(() => {
+      setFormSubmitted(false);
+    }, 3000);
   };
 
   return (
@@ -123,72 +165,114 @@ export default function Articles() {
           Share your unique experiences, insights, and perspectives with the
           community. Every student has a story worth telling!
         </p>
+        {formSubmitted && (
+          <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg">
+            Your article has been submitted successfully!
+          </div>
+        )}
         <div className="bg-purple-50 px-3 py-5 md:p-5 rounded-lg">
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="title"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Article Title
+                Article Title <span className="text-red-500">*</span>
               </label>
               <input
-                type="text"
                 id="title"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className={`w-full px-4 py-2 border ${
+                  errors.title
+                    ? "border-red-500 ring-1 ring-red-500"
+                    : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
                 placeholder="Enter a catchy title..."
+                {...register("title", {
+                  required: "Title is required",
+                })}
               />
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.title.message}
+                </p>
+              )}
             </div>
             <div>
               <label
                 htmlFor="category"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Category
+                Category <span className="text-red-500">*</span>
               </label>
-              <Select
-                options={categoryOptions}
-                placeholder="Select a category"
-                value={
-                  selectedCategory
-                    ? { value: selectedCategory, label: selectedCategory }
-                    : null
-                }
-                onChange={(option) =>
-                  setSelectedCategory(option ? option.value : null)
-                }
-                className="w-full"
-                styles={{
-                  control: (base) => ({
-                    ...base,
-                    borderRadius: "0.5rem",
-                    border: "1px solid #D1D5DB",
-                    padding: "0.2rem",
-                    boxShadow: "none",
-                    "&:hover": {
-                      border: "1px solid #A78BFA",
-                    },
-                  }),
-                }}
+              <Controller
+                name="category"
+                control={control}
+                rules={{ required: "Category is required" }}
+                render={({ field }) => (
+                  <Select
+                    inputId="category"
+                    options={categoryOptions}
+                    placeholder="Select a category"
+                    {...field}
+                    className={`w-full ${
+                      errors.category ? "border-red-500" : ""
+                    }`}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        borderRadius: "0.5rem",
+                        border: errors.category
+                          ? "1px solid #EF4444"
+                          : "1px solid #D1D5DB",
+                        padding: "0.2rem",
+                        boxShadow: errors.category
+                          ? "0 0 0 1px #EF4444"
+                          : "none",
+                        "&:hover": {
+                          border: errors.category
+                            ? "1px solid #EF4444"
+                            : "1px solid #A78BFA",
+                        },
+                      }),
+                    }}
+                  />
+                )}
               />
+              {errors.category && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.category.message}
+                </p>
+              )}
             </div>
             <div>
               <label
                 htmlFor="excerpt"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Brief Excerpt
+                Brief Excerpt <span className="text-red-500">*</span>
               </label>
               <textarea
                 id="excerpt"
                 rows={2}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className={`w-full px-4 py-2 border ${
+                  errors.excerpt
+                    ? "border-red-500 ring-1 ring-red-500"
+                    : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
                 placeholder="Write a short summary of your article..."
+                {...register("excerpt", {
+                  required: "Excerpt is required",
+                })}
               />
+              {errors.excerpt && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.excerpt.message}
+                </p>
+              )}
             </div>
             <div className="flex justify-end">
               <button
-                type="button"
+                type="submit"
                 className="px-6 py-2 bg-purple-500 hover:bg-purple-600 text-white font-medium rounded-lg transition-colors inline-flex items-center"
               >
                 Get Started <PlusCircle size={16} className="ml-2" />
