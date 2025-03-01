@@ -31,13 +31,12 @@ export default function TopicCard({ topic, className }: TopicCard) {
         </div>
       </div>
       <div className="p-4">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-1">
           <div className="flex items-center text-sm text-gray-500">
             <MessageCircle size={16} className="mr-1" />
             <span className="font-medium text-gray-700">
-              {topic.discussionCount}
-            </span>{" "}
-            discussions
+              {topic.discussionCount} discussions
+            </span>
           </div>
           <div className="text-xs text-gray-500">
             Updated {topic.lastUpdated}

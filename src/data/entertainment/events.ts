@@ -57,7 +57,7 @@ export const events: EventProps[] = [
   {
     id: "event-4",
     title: "Hackathon 2025",
-    date: "March 22-24, 2025",
+    date: "March 22, 2025",
     time: "48 Hours",
     location: "Engineering Building",
     description: "Annual coding competition with prizes worth $10,000. Form teams and build innovative solutions to real-world problems.",

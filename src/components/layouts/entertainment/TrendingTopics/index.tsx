@@ -4,18 +4,62 @@ import { useForm } from "react-hook-form";
 import { trendingTopics } from "../../../../data/entertainment/trendingTopics";
 import TopicCard from "./TrendingTopicsCard";
 
-interface TopicTitleProps {
+interface TopicFormData {
   topic: string;
   description: string;
   tags: string;
 }
-export default function TrendingTopics() {
-  const { register, handleSubmit, reset } = useForm<TopicTitleProps>();
-  const [activeTab, setActiveTab] = useState<string>("all");
 
-  const onSubmit = (data: TopicTitleProps) => {
+export default function TrendingTopics() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TopicFormData>({
+    defaultValues: {
+      topic: "",
+      description: "",
+      tags: "",
+    },
+  });
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("all");
+  const [agreeCount, setAgreeCount] = useState<number>(840);
+  const [disagreeCount, setDisagreeCount] = useState<number>(418);
+  const [userVote, setUserVote] = useState<"agree" | "disagree" | null>(null);
+
+  const handleVote = (vote: "agree" | "disagree") => {
+    if (userVote === vote) return;
+
+    if (vote === "agree") {
+      setAgreeCount((prev) => prev + 1);
+      if (userVote === "disagree") setDisagreeCount((prev) => prev - 1);
+    } else {
+      setDisagreeCount((prev) => prev + 1);
+      if (userVote === "agree") setAgreeCount((prev) => prev - 1);
+    }
+
+    setUserVote(vote);
+  };
+
+  const totalVotes = agreeCount + disagreeCount;
+  const agreePercentage =
+    totalVotes > 0 ? ((agreeCount / totalVotes) * 100).toFixed(0) : 0;
+  const disagreePercentage =
+    totalVotes > 0 ? ((disagreeCount / totalVotes) * 100).toFixed(0) : 0;
+
+  const onSubmit = (data: TopicFormData) => {
     console.log(data);
+
+    setFormSubmitted(true);
+
     reset();
+
+    setTimeout(() => {
+      setFormSubmitted(false);
+    }, 3000);
   };
 
   const tabs = [
@@ -25,6 +69,11 @@ export default function TrendingTopics() {
     { id: "career", name: "Career" },
     { id: "social", name: "Social" },
   ];
+
+  const filteredTopics =
+    activeTab === "all"
+      ? trendingTopics
+      : trendingTopics.filter((topic) => topic.category === activeTab);
 
   return (
     <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
@@ -57,7 +106,7 @@ export default function TrendingTopics() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {trendingTopics.map((topic) => (
+        {filteredTopics.map((topic) => (
           <TopicCard key={topic.id} topic={topic} />
         ))}
       </div>
@@ -70,7 +119,7 @@ export default function TrendingTopics() {
           <h4 className="text-2xl font-bold mb-4">
             "Online Classes Should Be an Option Post-Pandemic"
           </h4>
-          <p className="mb-4 ">
+          <p className="mb-4">
             With 78% of students reporting better work-life balance with hybrid
             learning options, should our university make online attendance a
             permanent option for lecture-based courses?
@@ -80,21 +129,38 @@ export default function TrendingTopics() {
               <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-teal-500">
                 <ChevronUp size={16} />
               </div>
-              <span className="font-bold">67%</span>
+              <span className="font-bold">{agreePercentage}%</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-teal-500">
                 <ChevronDown size={16} />
               </div>
-              <span className="font-bold">33%</span>
+              <span className="font-bold">{disagreePercentage}%</span>
             </div>
-            <div className="text-white/80 text-sm">1,258 votes</div>
+            <div className="text-white/80 text-sm">{totalVotes} votes</div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button className="px-4 py-2 bg-white text-teal-600 rounded-lg hover:bg-teal-50 transition-colors font-medium">
+            <button
+              onClick={() => handleVote("agree")}
+              disabled={userVote === "agree"}
+              className={`px-4 py-2 rounded-lg transition-colors font-medium ${
+                userVote === "agree"
+                  ? "bg-white text-teal-600 opacity-50 cursor-not-allowed"
+                  : "bg-white text-teal-600 hover:bg-teal-50"
+              }`}
+            >
               I agree with this
             </button>
-            <button className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors font-medium">
+
+            <button
+              onClick={() => handleVote("disagree")}
+              disabled={userVote === "disagree"}
+              className={`px-4 py-2 rounded-lg transition-colors font-medium ${
+                userVote === "disagree"
+                  ? "bg-white/20 text-white opacity-90 cursor-not-allowed"
+                  : "bg-white/20 text-white hover:bg-white/30"
+              }`}
+            >
               I disagree with this
             </button>
           </div>
@@ -105,49 +171,85 @@ export default function TrendingTopics() {
         <h3 className="text-xl font-bold text-slate-800 mb-4">
           Start a New Discussion
         </h3>
+        {formSubmitted && (
+          <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg">
+            Your discussion topic has been submitted successfully!
+          </div>
+        )}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label
               htmlFor="topic"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Topic Title
+              Topic Title <span className="text-red-500">*</span>
             </label>
             <input
               id="topic"
-              {...register("topic", { required: true })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              className={`w-full px-4 py-2 border ${
+                errors.topic
+                  ? "border-red-500 ring-1 ring-red-500"
+                  : "border-gray-300"
+              } rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent`}
               placeholder="What would you like to discuss?"
+              {...register("topic", {
+                required: "Topic title is required",
+              })}
             />
+            {errors.topic && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.topic.message}
+              </p>
+            )}
           </div>
           <div>
             <label
               htmlFor="description"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Description
+              Description <span className="text-red-500">*</span>
             </label>
             <textarea
               id="description"
               rows={3}
-              {...register("description", { required: true })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              className={`w-full px-4 py-2 border ${
+                errors.description
+                  ? "border-red-500 ring-1 ring-red-500"
+                  : "border-gray-300"
+              } rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent`}
               placeholder="Add some context to your topic..."
+              {...register("description", {
+                required: "Description is required",
+              })}
             />
+            {errors.description && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.description.message}
+              </p>
+            )}
           </div>
           <div>
             <label
               htmlFor="tags"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Tags (comma separated)
+              Tags (comma separated) <span className="text-red-500">*</span>
             </label>
             <input
               id="tags"
-              {...register("tags")}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              className={`w-full px-4 py-2 border ${
+                errors.tags
+                  ? "border-red-500 ring-1 ring-red-500"
+                  : "border-gray-300"
+              } rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent`}
               placeholder="e.g. campus, dining, social"
+              {...register("tags", {
+                required: "Tags are required",
+              })}
             />
+            {errors.tags && (
+              <p className="text-red-500 text-sm mt-1">{errors.tags.message}</p>
+            )}
           </div>
           <div className="flex justify-end">
             <button
