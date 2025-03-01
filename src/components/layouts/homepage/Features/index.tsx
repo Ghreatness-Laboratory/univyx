@@ -4,15 +4,15 @@ import FeatureCard, { FeaturesProps } from "./FeatureCard";
 
 const features: FeaturesProps[] = [
   {
-    title: "Taking Your Goals to New Heights",
+    title: "Univyx- Elevate Your Dreams, Achieve More",
     content:
-      "Understanding a product's capabilities requires a comprehensive assessment of its features, functionality, flexibility & integration. Understanding a product's capabilities requires a comprehensive assessment of its features, functionality, flexibility.",
+      "Univyx is your gateway to limitless possibilities where ambitions take flight and goals turn into achievements. Push beyond boundaries, embrace new challenges and let every step forward bring you closer to success. With Univyx, the journey to greatness never stops!",
     image: Features1,
   },
   {
     title: "Taking Your Goals to New Heights",
     content:
-      "Understanding a product's capabilities requires a comprehensive assessment of its features, functionality, flexibility & integration. Understanding a product's capabilities requires a comprehensive assessment of its features, functionality, flexibility.",
+      "Dream bigger, aim higher and push beyond boundaries. Every step forward brings you closer to success. Take your goals to new heights and make them a reality. The journey may be challenging, but the view from the top is worth it!",
     image: Features2,
   },
 ];
