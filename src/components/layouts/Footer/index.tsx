@@ -1,46 +1,30 @@
+import { InstagramLogo, TiktokLogo, WhatsappLogo, X } from "phosphor-react";
 import { Link } from "react-router-dom";
-import FacebookLogo from "../../../assets/images/facebook-logo.svg";
-import InstagramLogo from "../../../assets/images/instagram-logo.svg";
-import LinkedinLogo from "../../../assets/images/linkedin-logo.svg";
-import TwitterLogo from "../../../assets/images/twitter-logo.svg";
 import UnivyxLogo from "../../../assets/images/univyx-logo.svg";
 
 const footerMenu = [
-  {
-    href: "#features",
-    menu: "Features",
-  },
-  {
-    href: "#about",
-    menu: "About",
-  },
-  {
-    href: "#services",
-    menu: "Services",
-  },
+  { href: "#features", menu: "Features" },
+  { href: "#about", menu: "About" },
+  { href: "#services", menu: "Services" },
 ];
 
 const socialMediaPlatforms = [
   {
-    link: "https://www.facebook.com",
-    logo: FacebookLogo,
-    name: "Facebook",
-  },
-  {
-    link: "https://www.instagram.com",
-    logo: InstagramLogo,
+    link: "https://www.instagram.com/univyx",
+    icon: <InstagramLogo size={24} />,
     name: "Instagram",
   },
   {
-    link: "https://www.twitter.com",
-    logo: TwitterLogo,
-    name: "Twitter",
+    link: "https://whatsapp.com/channel/0029Vb2ER34F1YlKC4kehu3Y",
+    icon: <WhatsappLogo size={24} />,
+    name: "WhatsApp",
   },
   {
-    link: "https://www.linkedin.com",
-    logo: LinkedinLogo,
-    name: "Linkedin",
+    link: "https://www.tiktok.com/@univyx_",
+    icon: <TiktokLogo size={24} />,
+    name: "TikTok",
   },
+  { link: "https://x.com/univyx", icon: <X size={24} />, name: "X" },
 ];
 
 export default function Footer() {
@@ -58,11 +42,7 @@ export default function Footer() {
         const elementPosition =
           element.getBoundingClientRect().top + window.scrollY;
         const offsetPosition = elementPosition - navbarHeight;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
       }
     }
   };
@@ -99,7 +79,7 @@ export default function Footer() {
           </div>
 
           <div className="max-w-[647px] w-full flex flex-col md:self-start gap-5 text-center md:text-left px-4 md:px-0">
-            <h1 className="text-primary text-4xl md:text-5xl  font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] md:tracking-[-0.96px]">
+            <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] md:tracking-[-0.96px]">
               Working to create value and <br className="md:hidden" /> drive
               success for our clients.
             </h1>
@@ -121,14 +101,7 @@ export default function Footer() {
                 to={platform.link}
                 className="p-2.5 border border-white rounded-full"
               >
-                <img
-                  src={platform.logo}
-                  alt="Social Media Platform"
-                  width={15}
-                  height={15}
-                  className="w-[18px] h-[18px]"
-                  aria-label={`Visit ${platform.name}`}
-                />
+                {platform.icon}
               </Link>
             ))}
           </div>
