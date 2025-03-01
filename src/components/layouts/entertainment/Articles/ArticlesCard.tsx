@@ -35,16 +35,18 @@ export default function ArticleCard({ article, className }: ArticleCardProps) {
       </div>
       <div className="p-5">
         <div className="flex justify-between items-center mb-2">
-          <div className="flex items-center">
-            <User size={14} className="text-gray-500 mr-1" />
-            <span className="text-xs text-gray-700 font-medium">
-              {article.author}
-            </span>
-            <span className="mx-2 text-gray-300">•</span>
-            <Clock size={14} className="text-gray-500 mr-1" />
-            <span className="text-xs text-gray-500">{article.readTime}</span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center">
+              <User size={14} className="text-gray-500 mr-1" />
+              <span className="text-xs text-gray-700 font-medium">
+                {article.author}
+              </span>
+              <span className="mx-2 text-gray-300">•</span>
+              <Clock size={14} className="text-gray-500 mr-1" />
+              <span className="text-xs text-gray-500">{article.readTime}</span>
+            </div>
+            <span className="text-xs text-gray-500">{article.date}</span>
           </div>
-          <span className="text-xs text-gray-500">{article.date}</span>
         </div>
         <h3 className="font-bold text-lg mb-2 line-clamp-2 hover:text-purple-600 transition-colors">
           {article.title}

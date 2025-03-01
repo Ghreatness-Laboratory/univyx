@@ -30,7 +30,7 @@ export default function News() {
           <h2 className="text-3xl font-bold text-slate-800 mb-2">
             Curated University News
           </h2>
-          <p className="text-gray-600 max-w-xl">
+          <p className="text-secondary  max-w-xl">
             Stay updated with the latest happening around campus, curated by our
             editorial team
           </p>

@@ -77,12 +77,12 @@ export default function Articles() {
 
   return (
     <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between">
         <div className="mb-6 lg:mb-0">
           <h2 className="text-3xl font-bold text-slate-800 mb-2">
             Student-Written Articles
           </h2>
-          <p className="text-gray-600 max-w-2xl">
+          <p className="text-secondary  max-w-2xl">
             Authentic perspectives, experiences, and insights shared directly by
             fellow students
           </p>
@@ -161,7 +161,7 @@ export default function Articles() {
         <h3 className="text-xl font-bold text-slate-800 mb-4">
           Write Your Own Article
         </h3>
-        <p className="text-gray-600 mb-6 max-w-xl">
+        <p className="text-secondary  mb-6 max-w-xl">
           Share your unique experiences, insights, and perspectives with the
           community. Every student has a story worth telling!
         </p>

@@ -82,7 +82,7 @@ export default function TrendingTopics() {
           <h2 className="text-3xl font-bold text-slate-800 mb-2">
             Trending Topics
           </h2>
-          <p className="text-gray-600 max-w-2xl">
+          <p className="text-secondary  max-w-2xl">
             Join the conversation on what's buzzing across campus right now
           </p>
         </div>
@@ -143,10 +143,10 @@ export default function TrendingTopics() {
             <button
               onClick={() => handleVote("agree")}
               disabled={userVote === "agree"}
-              className={`px-4 py-2 rounded-lg transition-colors font-medium ${
+              className={`px-4 py-2 rounded-lg transition-all font-medium shadow-md ${
                 userVote === "agree"
-                  ? "bg-white text-teal-600 opacity-50 cursor-not-allowed"
-                  : "bg-white text-teal-600 hover:bg-teal-50"
+                  ? "bg-teal-600 text-white translate-y-[2px] shadow-none opacity-80 cursor-not-allowed"
+                  : "bg-white text-teal-600 hover:bg-teal-50 active:translate-y-[2px] active:shadow-none"
               }`}
             >
               I agree with this
@@ -155,10 +155,10 @@ export default function TrendingTopics() {
             <button
               onClick={() => handleVote("disagree")}
               disabled={userVote === "disagree"}
-              className={`px-4 py-2 rounded-lg transition-colors font-medium ${
+              className={`px-4 py-2 rounded-lg transition-all font-medium shadow-md ${
                 userVote === "disagree"
-                  ? "bg-white/20 text-white opacity-90 cursor-not-allowed"
-                  : "bg-white/20 text-white hover:bg-white/30"
+                  ? "bg-teal-600 text-white translate-y-[2px] shadow-none opacity-80 cursor-not-allowed"
+                  : "bg-white/20 text-white hover:bg-white/30 active:translate-y-[2px] active:shadow-none"
               }`}
             >
               I disagree with this
