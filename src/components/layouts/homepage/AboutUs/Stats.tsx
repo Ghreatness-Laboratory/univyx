@@ -10,19 +10,19 @@ const statistics: StatisticsProps[] = [
       "As the foremost agency in our domain, we continuously lead by example, setting benchmarks for innovation, reliability, and customer-centricity.",
   },
   {
-    count: "500+",
+    count: "18+",
     content:
-      "our agency has successfully completed over 500 projects, showcasing our commitment to excellence and quality in every endeavor we undertake.",
+      "We collaborate with more than 18 renowned universities, fostering strong academic partnerships that provide students with valuable learning experiences.",
   },
   {
-    count: "200+",
+    count: "10+",
     content:
-      "With a dedicated team of over 200 happy employees, we prioritize their satisfaction and engagement, fostering a supportive.",
+      "With a network of dedicated partners, we drive impactful initiatives and innovative solutions that support student growth and success.",
   },
   {
-    count: "15k+",
+    count: "20✦",
     content:
-      "Boasting over 15,000 five-star reviews, our agency is honored to have earned the trust and recognition of our clients.",
+      "Our student ambassadors bridge connections between students, creating a vibrant, inclusive, and supportive campus environment.",
   },
 ];
 
