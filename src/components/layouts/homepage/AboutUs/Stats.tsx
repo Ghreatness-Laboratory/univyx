@@ -10,11 +10,6 @@ const statistics: StatisticsProps[] = [
       "As the foremost agency in our domain, we continuously lead by example, setting benchmarks for innovation, reliability, and customer-centricity.",
   },
   {
-    count: "18+",
-    content:
-      "We collaborate with more than 18 renowned universities, fostering strong academic partnerships that provide students with valuable learning experiences.",
-  },
-  {
     count: "10+",
     content:
       "With a network of dedicated partners, we drive impactful initiatives and innovative solutions that support student growth and success.",
@@ -23,6 +18,11 @@ const statistics: StatisticsProps[] = [
     count: "20✦",
     content:
       "Our student ambassadors bridge connections between students, creating a vibrant, inclusive, and supportive campus environment.",
+  },
+  {
+    count: "18+",
+    content:
+      "We collaborate with more than 18 renowned universities, fostering strong academic partnerships that provide students with valuable learning experiences.",
   },
 ];
 
