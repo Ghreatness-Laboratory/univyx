@@ -34,7 +34,7 @@ export default function Events() {
           <h2 className="text-3xl font-bold text-slate-800 mb-2">
             Event Announcements
           </h2>
-          <p className="text-gray-600 max-w-xl">
+          <p className="text-secondary  max-w-xl">
             Never miss out on campus events, festivals, workshops, and
             gatherings
           </p>
