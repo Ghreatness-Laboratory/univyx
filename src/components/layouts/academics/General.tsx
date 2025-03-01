@@ -29,8 +29,8 @@ export default function General() {
       data-testid="general"
       className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0"
     >
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-primary text-3xl md:text-5xl font-semibold leading-tight">
+      <div>
+        <h1 className="text-primary text-[32px] md:text-5xl font-semibold leading-tight">
           Unlock Your Academic Potential
         </h1>
         <p className="text-secondary text-lg mt-3">

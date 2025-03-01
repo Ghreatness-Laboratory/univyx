@@ -37,35 +37,38 @@ export default function ResourceSection() {
   return (
     <div data-testid="access-resources">
       <div className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
-        <div className="text-center">
-          <h1 className="text-primary text-4xl md:text-5xl font-semibold mb-3">
-            Academic Notes & Resources
-          </h1>
-          <p className="text-secondary text-lg max-w-2xl mx-auto">
-            Access a comprehensive collection of lecture notes, study materials,
-            and academic resources contributed by students and faculty.
-          </p>
-        </div>
+        <div className="flex max-lg:flex-col max-lg:gap-10 items-center justify-between">
+          <div className="max-w-2xl w-full">
+            <h1 className="text-primary text-4xl md:text-5xl font-semibold mb-3">
+              Get Academic Resources
+            </h1>
+            <p className="text-secondary text-lg">
+              Access a comprehensive collection of lecture notes, study
+              materials, and academic resources contributed by students and
+              faculty.
+            </p>
+          </div>
 
-        <div className="flex max-md:flex-col gap-4 max-w-2xl w-full mx-auto">
-          <Select
-            options={universityOptions}
-            value={selectedUniversity}
-            onChange={handleSelectChange}
-            className="md:w-3/4"
-            placeholder="Select University"
-          />
-          <button
-            disabled={!selectedUniversity}
-            onClick={() =>
-              selectedUniversity &&
-              navigate(`/academics/${selectedUniversity.value}`)
-            }
-            className="md:w-1/4 px-6 py-2 bg-primary text-white rounded-md disabled:opacity-90 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
-            aria-label="Get Notes"
-          >
-            Get Resources
-          </button>
+          <div className="flex max-md:flex-col gap-4 md:max-w-[400px] w-full md:justify-end">
+            <Select
+              options={universityOptions}
+              value={selectedUniversity}
+              onChange={handleSelectChange}
+              className="w-full"
+              placeholder="Select University"
+            />
+            <button
+              disabled={!selectedUniversity}
+              onClick={() =>
+                selectedUniversity &&
+                navigate(`/academics/${selectedUniversity.value}`)
+              }
+              className="px-6 py-2 bg-primary whitespace-nowrap text-white rounded-md disabled:opacity-90 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+              aria-label="Get Notes"
+            >
+              Get Resources
+            </button>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
