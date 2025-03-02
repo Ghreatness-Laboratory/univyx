@@ -38,7 +38,7 @@ export default function AuthModal() {
       onClick={handleOverlayClick}
     >
       <button
-        className="absolute top-4 right-6 text-white hover:opacity-50"
+        className="absolute top-2 md:top-4 right-3 md:right-6 text-white hover:opacity-50"
         onClick={closeModal}
       >
         ✖

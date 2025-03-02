@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-import FeatureCard from "../../components/layouts/homepage/Features/FeatureCard";
+import FeatureCard from "../../components/layouts/homepage/GetStarted/GetStartedCard";
 
 describe("FeatureCard Component", () => {
   const feature = {

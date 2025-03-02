@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import AboutUs from "../components/layouts/homepage/AboutUs";
+import AboutUs from "../components/layouts/homepage/About";
 import FAQ from "../components/layouts/homepage/FAQ";
 import Features from "../components/layouts/homepage/Features";
+import GetStarted from "../components/layouts/homepage/GetStarted";
 import Hero from "../components/layouts/homepage/Hero";
 import Partners from "../components/layouts/homepage/Partners";
-import Services from "../components/layouts/homepage/Services";
 import Team from "../components/layouts/homepage/Team";
 import WhyChooseUs from "../components/layouts/homepage/WhyChooseUs";
 
@@ -35,7 +35,7 @@ export default function Home() {
         whileInView="visible"
         variants={sectionVariants}
       >
-        <Services />
+        <Features />
       </motion.div>
       <motion.div
         initial="hidden"
@@ -56,7 +56,7 @@ export default function Home() {
         whileInView="visible"
         variants={sectionVariants}
       >
-        <Features />
+        <GetStarted />
       </motion.div>
       <motion.div
         initial="hidden"

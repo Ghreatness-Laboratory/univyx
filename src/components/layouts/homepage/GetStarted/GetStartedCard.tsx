@@ -1,13 +1,13 @@
 import Button from "../../../common/Button";
 
-export interface FeaturesProps {
+export interface GetStartedProps {
   title: string;
   content: string;
   image: string;
   isRowReverse?: boolean;
 }
 
-export default function FeatureCard(feature: FeaturesProps) {
+export default function GetStartedCard(feature: GetStartedProps) {
   return (
     <div
       className={`flex ${

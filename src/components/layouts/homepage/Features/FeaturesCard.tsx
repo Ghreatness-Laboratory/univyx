@@ -1,7 +1,7 @@
 import DesktopIcon from "../../../../assets/images/Desktop-icon.svg";
 import Button from "../../../common/Button";
 
-const services = [
+const features = [
   {
     title: "Resource Hub",
     description:
@@ -19,13 +19,13 @@ const services = [
   },
 ];
 
-export default function ServiceCard() {
+export default function FeaturesCard() {
   return (
     <div className="md:max-w-[575px] w-full flex flex-col gap-3 md:gap-8">
-      {services.map((service, index) => (
+      {features.map((feature, index) => (
         <div
           key={index}
-          aria-label={service.title}
+          aria-label={feature.title}
           className="py-4 px-[30px] md:p-[30px] rounded-[20px] flex flex-col gap-5 items-center md:items-start text-center md:text-left bg-[#F9F9FB]"
         >
           <div className="w-14 h-14">
@@ -39,10 +39,10 @@ export default function ServiceCard() {
           </div>
           <div className="flex flex-col gap-3 w-full">
             <h6 className="text-primary text-2xl font-medium">
-              {service.title}
+              {feature.title}
             </h6>
             <p className="text-secondary text-base font-normal text-balance">
-              {service.description}
+              {feature.description}
             </p>
           </div>
         </div>

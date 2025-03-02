@@ -2,9 +2,9 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-import AboutUs from "../../components/layouts/homepage/AboutUs";
-import Slider from "../../components/layouts/homepage/AboutUs/Slider";
-import Stats from "../../components/layouts/homepage/AboutUs/Stats";
+import AboutUs from "../../components/layouts/homepage/About";
+import Slider from "../../components/layouts/homepage/About/Slider";
+import Stats from "../../components/layouts/homepage/About/Stats";
 
 describe("AboutUs Component", () => {
   it("renders the About Us section with correct headings and link", () => {

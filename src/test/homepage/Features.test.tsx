@@ -1,67 +1,58 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import Features from "../../components/layouts/homepage/Features";
 import { MemoryRouter } from "react-router-dom";
+import { describe, expect, it } from "vitest";
+import Services from "../../components/layouts/homepage/Features";
+import ServiceCard from "../../components/layouts/homepage/Features/FeaturesCard";
 
-describe("Features Section", () => {
-  it("renders both FeatureCards with correct titles", () => {
+describe("ServiceCard Component", () => {
+  it("renders all service cards with the correct data", () => {
     render(
       <MemoryRouter>
-        <Features />
+        <ServiceCard />
       </MemoryRouter>
     );
-    const titles = screen.getAllByRole("heading", { level: 2 });
 
-    expect(titles.length).toBe(2);
-    expect(titles[0]).toHaveTextContent("Taking Your Goals to New Heights");
-    expect(titles[1]).toHaveTextContent("Taking Your Goals to New Heights");
-  });
+    const serviceTitles = ["UI/UX Design", "Web Design", "Development"];
 
-  it("renders images for each FeatureCard", () => {
-    render(
-      <MemoryRouter>
-        <Features />
-      </MemoryRouter>
-    );
-    const images = screen.getAllByRole("img", { name: "Features" });
-
-    expect(images.length).toBe(2);
-    images.forEach((image) => {
-      expect(image).toBeInTheDocument();
-      expect(image).toHaveAttribute("src");
-      expect(image).toHaveAttribute("alt", "Features");
+    serviceTitles.forEach((title) => {
+      expect(screen.getByText(title)).toBeInTheDocument();
     });
-  });
 
-  it("renders the content text for each FeatureCard", () => {
+    const serviceDescriptions = [
+      "Whether you're looking to redesign an existing interface, optimise user flows, or create a brand new digital product.",
+      "Business branding is a process that involves creating a unique identity & image for a company, product.",
+      "We understand that the digital landscape is constantly evolving, which is why we stay ahead of the curve.",
+    ];
+
+    serviceDescriptions.forEach((description) => {
+      expect(screen.getByText(description)).toBeInTheDocument();
+    });
+
+    const viewMoreLink = screen.getByRole("link", {
+      name: /View More Services/i,
+    });
+    expect(viewMoreLink).toBeInTheDocument();
+    expect(viewMoreLink).toHaveAttribute("href", "/services");
+  });
+});
+
+describe("Services Component", () => {
+  it("renders the Services section with the correct heading and description", () => {
     render(
       <MemoryRouter>
-        <Features />
+        <Services />
       </MemoryRouter>
     );
-    const paragraphs = screen.getAllByText(
-      /Understanding a product's capabilities requires a comprehensive assessment/
-    );
 
-    expect(paragraphs.length).toBe(2);
-    paragraphs.forEach((paragraph) => {
-      expect(paragraph).toBeInTheDocument();
+    const heading = screen.getByRole("heading", {
+      name: /Your Next Innovation/i,
     });
-  });
+    expect(heading).toBeInTheDocument();
 
-  it("renders a button with 'Get Started' in each FeatureCard", () => {
-    render(
-      <MemoryRouter>
-        <Features />
-      </MemoryRouter>
+    const description = screen.getByText(
+      /"Your Next Innovation" is your partner in bringing your vision to life\. We provide the resources, expertise, and support needed to turn\./i
     );
-    const buttons = screen.getAllByRole("link", { name: "Get Started" });
-
-    expect(buttons.length).toBe(2);
-    buttons.forEach((button) => {
-      expect(button).toBeInTheDocument();
-      expect(button).toHaveAttribute("href", "/login");
-    });
+    expect(description).toBeInTheDocument();
   });
 });
