@@ -1,5 +1,4 @@
 import { Calendar, Clock } from "lucide-react";
-import { useState } from "react";
 import { EventProps } from "../../../../data/entertainment/events";
 
 interface EventCardProps {
@@ -7,8 +6,6 @@ interface EventCardProps {
   className?: string;
 }
 export default function EventCard({ event, className }: EventCardProps) {
-  const [isRegistered, setIsRegistered] = useState(event.isRegistered);
-
   return (
     <div
       className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ${className}`}
@@ -67,22 +64,6 @@ export default function EventCard({ event, className }: EventCardProps) {
         <p className="text-gray-600 text-sm mb-5 line-clamp-3">
           {event.description}
         </p>
-        <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-500">
-            <span className="font-medium text-gray-700">{event.attendees}</span>{" "}
-            attending
-          </div>
-          <button
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${
-              isRegistered
-                ? "bg-green-100 text-green-700 hover:bg-green-200"
-                : "bg-orange-500 text-white hover:bg-orange-600"
-            } transition-colors`}
-            onClick={() => setIsRegistered(!isRegistered)}
-          >
-            {isRegistered ? "Registered" : "Register Now"}
-          </button>
-        </div>
       </div>
     </div>
   );

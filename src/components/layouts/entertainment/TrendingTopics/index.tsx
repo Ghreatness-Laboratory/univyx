@@ -1,5 +1,5 @@
-import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, ChevronRight, ChevronUp, Upload } from "lucide-react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { trendingTopics } from "../../../../data/entertainment/trendingTopics";
@@ -7,8 +7,8 @@ import TopicCard from "./TrendingTopicsCard";
 
 interface TopicFormData {
   topic: string;
-  description: string;
   tags: string;
+  image?: FileList;
 }
 
 export default function TrendingTopics() {
@@ -17,6 +17,9 @@ export default function TrendingTopics() {
   const [agreeCount, setAgreeCount] = useState<number>(840);
   const [disagreeCount, setDisagreeCount] = useState<number>(418);
   const [userVote, setUserVote] = useState<"agree" | "disagree" | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const {
@@ -27,7 +30,6 @@ export default function TrendingTopics() {
   } = useForm<TopicFormData>({
     defaultValues: {
       topic: "",
-      description: "",
       tags: "",
     },
   });
@@ -39,6 +41,8 @@ export default function TrendingTopics() {
     // setFormSubmitted(true);
 
     reset();
+    setImagePreview(null);
+    setImageError(null);
 
     // setTimeout(() => {
     //   setFormSubmitted(false);
@@ -59,6 +63,41 @@ export default function TrendingTopics() {
     setUserVote(vote);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setImageError(null);
+
+    if (file) {
+      // Check file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        setImageError("Image size must be less than 5MB");
+        setImagePreview(null);
+        return;
+      }
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null);
+    }
+  };
+
+  const handleSelectImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleRemoveImage = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setImagePreview(null);
+    setImageError(null);
+  };
+
   const totalVotes = agreeCount + disagreeCount;
   const agreePercentage =
     totalVotes > 0 ? ((agreeCount / totalVotes) * 100).toFixed(0) : 0;
@@ -77,6 +116,9 @@ export default function TrendingTopics() {
     activeTab === "all"
       ? trendingTopics
       : trendingTopics.filter((topic) => topic.category === activeTab);
+
+  // Register image input without applying ref directly
+  const imageRegister = register("image");
 
   return (
     <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
@@ -209,28 +251,64 @@ export default function TrendingTopics() {
           </div>
           <div>
             <label
-              htmlFor="description"
+              htmlFor="image"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Description <span className="text-red-500">*</span>
+              Cover Image (optional)
             </label>
-            <textarea
-              id="description"
-              rows={3}
-              className={`w-full px-4 py-2 border ${
-                errors.description
-                  ? "border-red-500 ring-1 ring-red-500"
-                  : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent`}
-              placeholder="Add some context to your topic..."
-              {...register("description", {
-                required: "Description is required",
-              })}
+            <input
+              type="file"
+              id="image"
+              ref={fileInputRef}
+              accept="image/*"
+              className="hidden"
+              name={imageRegister.name}
+              onBlur={imageRegister.onBlur}
+              onChange={(e) => {
+                imageRegister.onChange(e);
+                handleImageChange(e);
+              }}
             />
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.description.message}
-              </p>
+
+            {!imagePreview ? (
+              <div
+                onClick={handleSelectImageClick}
+                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-teal-500 transition-colors"
+              >
+                <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                <p className="mt-2 text-sm text-gray-500">
+                  Click to upload an image (5MB max)
+                </p>
+              </div>
+            ) : (
+              <div className="relative mt-2">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-full max-h-64 object-cover rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
+            {imageError && (
+              <p className="text-red-500 text-sm mt-1">{imageError}</p>
             )}
           </div>
           <div>
