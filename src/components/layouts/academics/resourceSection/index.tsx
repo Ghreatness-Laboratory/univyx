@@ -56,6 +56,13 @@ export default function ResourceSection() {
               onChange={handleSelectChange}
               className="w-full"
               placeholder="Select University"
+              styles={{
+                control: (styles) => ({
+                  ...styles,
+                  paddingTop: 4,
+                  paddingBottom: 4,
+                }),
+              }}
             />
             <button
               disabled={!selectedUniversity}
@@ -63,7 +70,7 @@ export default function ResourceSection() {
                 selectedUniversity &&
                 navigate(`/academics/${selectedUniversity.value}`)
               }
-              className="px-6 py-2 bg-primary whitespace-nowrap text-white rounded-md disabled:opacity-90 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+              className="px-6 py-2.5 md:py-2 bg-primary whitespace-nowrap text-white rounded-md disabled:opacity-90 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
               aria-label="Get Notes"
             >
               Get Resources
@@ -71,7 +78,7 @@ export default function ResourceSection() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-4 md:gap-8">
           <FeatureCard
             icon={
               <svg
@@ -132,10 +139,10 @@ export default function ResourceSection() {
         </div>
 
         <div className="bg-gray-100 rounded-2xl p-8 mt-8 grid md:grid-cols-4 gap-8">
-          <StatCard value="25+" label="Private Universities" />
-          <StatCard value="75K+" label="Academic Resources" />
-          <StatCard value="120K+" label="Active Students" />
-          <StatCard value="98%" label="Student Success Rate" />
+          <StatCard value="18+" label="Private Universities" />
+          <StatCard value="1K+" label="Academic Resources" />
+          <StatCard value="40K+" label="Active Students" />
+          <StatCard value="98%" label="Accessibiity" />
         </div>
       </div>
     </div>

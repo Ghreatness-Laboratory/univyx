@@ -41,7 +41,7 @@ export default function General() {
 
       <div className="flex flex-col lg:flex-row items-start gap-8 max-w-6xl mx-auto">
         <div className="w-full lg:w-2/3 flex flex-col border border-[#D6D6D6] rounded-[30px] overflow-hidden">
-          <div className="max-h-[260px] overflow-hidden">
+          <div className="min-h-[260px] max-h-[260px] overflow-hidden">
             <img
               src={Academics}
               alt="Academic resources"
@@ -81,7 +81,7 @@ export default function General() {
               <img
                 src={dept.image}
                 alt={dept.name}
-                className="w-1/3 object-cover"
+                className="w-1/3 max-h-[124px] object-cover"
               />
               <div className="p-4 flex-1">
                 <h3 className="text-primary text-lg font-semibold">

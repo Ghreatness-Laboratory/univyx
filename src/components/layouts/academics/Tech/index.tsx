@@ -61,7 +61,7 @@ export default function Tech() {
               <img
                 src={tech.image}
                 alt={`Tech article: ${tech.name}`}
-                className="rounded-t-2xl"
+                className="rounded-t-2xl max-h-[246px]"
               />
               <div className="p-[30px] flex flex-col gap-[30px] ">
                 <h3 className="font-medium text-2xl leading-8 text-primary">
