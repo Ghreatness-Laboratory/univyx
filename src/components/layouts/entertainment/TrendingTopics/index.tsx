@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { trendingTopics } from "../../../../data/entertainment/trendingTopics";
 import TopicCard from "./TrendingTopicsCard";
 
@@ -11,6 +12,13 @@ interface TopicFormData {
 }
 
 export default function TrendingTopics() {
+  // const [formSubmitted, setFormSubmitted] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("all");
+  const [agreeCount, setAgreeCount] = useState<number>(840);
+  const [disagreeCount, setDisagreeCount] = useState<number>(418);
+  const [userVote, setUserVote] = useState<"agree" | "disagree" | null>(null);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -24,11 +32,18 @@ export default function TrendingTopics() {
     },
   });
 
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [activeTab, setActiveTab] = useState<string>("all");
-  const [agreeCount, setAgreeCount] = useState<number>(840);
-  const [disagreeCount, setDisagreeCount] = useState<number>(418);
-  const [userVote, setUserVote] = useState<"agree" | "disagree" | null>(null);
+  const onSubmit = (data: TopicFormData) => {
+    console.log(data);
+    navigate("?auth=login");
+
+    // setFormSubmitted(true);
+
+    reset();
+
+    // setTimeout(() => {
+    //   setFormSubmitted(false);
+    // }, 3000);
+  };
 
   const handleVote = (vote: "agree" | "disagree") => {
     if (userVote === vote) return;
@@ -49,18 +64,6 @@ export default function TrendingTopics() {
     totalVotes > 0 ? ((agreeCount / totalVotes) * 100).toFixed(0) : 0;
   const disagreePercentage =
     totalVotes > 0 ? ((disagreeCount / totalVotes) * 100).toFixed(0) : 0;
-
-  const onSubmit = (data: TopicFormData) => {
-    console.log(data);
-
-    setFormSubmitted(true);
-
-    reset();
-
-    setTimeout(() => {
-      setFormSubmitted(false);
-    }, 3000);
-  };
 
   const tabs = [
     { id: "all", name: "All Topics" },
@@ -173,11 +176,11 @@ export default function TrendingTopics() {
         <h3 className="text-xl font-bold text-slate-800 mb-4">
           Start a New Discussion
         </h3>
-        {formSubmitted && (
+        {/* {formSubmitted && (
           <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg">
             Your discussion topic has been submitted successfully!
           </div>
-        )}
+        )} */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label

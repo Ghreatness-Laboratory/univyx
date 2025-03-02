@@ -1,6 +1,7 @@
 import { ChevronRight, PlusCircle, Search } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { studentArticles } from "../../../../data/entertainment/articles";
 import ArticleCard from "./ArticlesCard";
@@ -23,7 +24,8 @@ export default function Articles() {
   const [activeCategory, setActiveCategory] = useState("All");
   const categories = ["All", "Student Life", "Campus Life", "Travel", "Advice"];
   const [searchTerm, setSearchTerm] = useState("");
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  // const [formSubmitted, setFormSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -39,6 +41,23 @@ export default function Articles() {
     },
   });
 
+  const onSubmit = (data: ArticleFormData) => {
+    console.log(data);
+    navigate("?auth=login");
+
+    // setFormSubmitted(true);
+
+    reset({
+      title: "",
+      category: null,
+      excerpt: "",
+    });
+
+    // setTimeout(() => {
+    //   setFormSubmitted(false);
+    // }, 3000);
+  };
+
   const filteredArticles = studentArticles
     .filter(
       (article) =>
@@ -53,26 +72,6 @@ export default function Articles() {
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
-  };
-
-  const onSubmit = (data: ArticleFormData) => {
-    console.log({
-      title: data.title,
-      category: data.category?.value,
-      excerpt: data.excerpt,
-    });
-
-    setFormSubmitted(true);
-
-    reset({
-      title: "",
-      category: null,
-      excerpt: "",
-    });
-
-    setTimeout(() => {
-      setFormSubmitted(false);
-    }, 3000);
   };
 
   return (
@@ -165,11 +164,11 @@ export default function Articles() {
           Share your unique experiences, insights, and perspectives with the
           community. Every student has a story worth telling!
         </p>
-        {formSubmitted && (
+        {/* {formSubmitted && (
           <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg">
             Your article has been submitted successfully!
           </div>
-        )}
+        )} */}
         <div className="bg-purple-50 px-3 py-5 md:p-5 rounded-lg">
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
