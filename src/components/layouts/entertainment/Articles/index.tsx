@@ -17,7 +17,7 @@ const categoryOptions = [
 interface ArticleFormData {
   title: string;
   category: { value: string; label: string } | null;
-  excerpt: string;
+  description: string;
 }
 
 export default function Articles() {
@@ -37,7 +37,7 @@ export default function Articles() {
     defaultValues: {
       title: "",
       category: null,
-      excerpt: "",
+      description: "",
     },
   });
 
@@ -50,7 +50,7 @@ export default function Articles() {
     reset({
       title: "",
       category: null,
-      excerpt: "",
+      description: "",
     });
 
     // setTimeout(() => {
@@ -66,7 +66,7 @@ export default function Articles() {
     .filter(
       (article) =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.author.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -245,27 +245,27 @@ export default function Articles() {
             </div>
             <div>
               <label
-                htmlFor="excerpt"
+                htmlFor="description"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Brief Excerpt <span className="text-red-500">*</span>
+                Brief Description <span className="text-red-500">*</span>
               </label>
               <textarea
-                id="excerpt"
+                id="description"
                 rows={2}
                 className={`w-full px-4 py-2 border ${
-                  errors.excerpt
+                  errors.description
                     ? "border-red-500 ring-1 ring-red-500"
                     : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
                 placeholder="Write a short summary of your article..."
-                {...register("excerpt", {
-                  required: "Excerpt is required",
+                {...register("description", {
+                  required: "description is required",
                 })}
               />
-              {errors.excerpt && (
+              {errors.description && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.excerpt.message}
+                  {errors.description.message}
                 </p>
               )}
             </div>
