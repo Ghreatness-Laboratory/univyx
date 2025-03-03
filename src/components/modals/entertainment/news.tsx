@@ -1,30 +1,20 @@
-import { Heart, MessageCircle, Share2, X } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { universityNews } from "../../../data/entertainment/news";
-import AuthRequiredOverlay from "./AuthRequiredOverlay";
-import CommentSection from "./CommentSection";
 
 export default function NewsModal() {
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get("id");
   const section = searchParams.get("section");
   const [isLiked, setIsLiked] = useState(false);
-  const [showAuthOverlay, setShowAuthOverlay] = useState(false);
-  const [overlayPosition, setOverlayPosition] = useState({ top: 0, left: 0 });
-  const [overlayType, setOverlayType] = useState<"like" | "comment" | "share">(
-    "like"
-  );
-
-  useEffect(() => {
-    setShowAuthOverlay(false);
-  }, []);
+  const [showLoginMessage, setShowLoginMessage] = useState(false);
 
   const closeModal = () => {
     searchParams.delete("id");
     searchParams.delete("section");
     setSearchParams(searchParams);
-    setShowAuthOverlay(false);
+    setShowLoginMessage(false);
   };
 
   useEffect(() => {
@@ -32,11 +22,11 @@ export default function NewsModal() {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false);
+      setShowLoginMessage(false);
     }
     return () => {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false);
+      setShowLoginMessage(false);
     };
   }, [id, section]);
 
@@ -57,43 +47,12 @@ export default function NewsModal() {
 
     const isLoggedIn = false;
     if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setOverlayType("like");
-      setShowAuthOverlay(true);
+      setShowLoginMessage(true);
+
+      setTimeout(() => setShowLoginMessage(false), 3000);
       return;
     }
     setIsLiked(!isLiked);
-  };
-
-  const handleComment = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    const isLoggedIn = false;
-    if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setOverlayType("comment");
-      setShowAuthOverlay(true);
-      return;
-    }
-    document
-      .getElementById("comment-section")
-      ?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const handleShare = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    const isLoggedIn = false;
-    if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setOverlayType("share");
-      setShowAuthOverlay(true);
-      return;
-    }
-    // Share functionality
   };
 
   return (
@@ -102,13 +61,10 @@ export default function NewsModal() {
       onClick={handleOverlayClick}
     >
       <button
-        className="absolute top-2 md:top-4 right-3 md:right-6 text-white hover:opacity-50 p-2 rounded-full bg-black/30 backdrop-blur-sm"
-        onClick={(e) => {
-          e.stopPropagation();
-          closeModal();
-        }}
+        className="absolute top-2 md:top-4 right-3 md:right-6 text-white hover:opacity-50"
+        onClick={closeModal}
       >
-        <X size={20} />
+        ✖
       </button>
       <div
         className="relative bg-white rounded-lg shadow-lg w-full max-w-2xl mx-4 max-h-[86vh] md:max-h-[93vh] overflow-y-auto"
@@ -122,21 +78,21 @@ export default function NewsModal() {
           <img
             src={content.imageUrl}
             alt={content.title}
-            className="w-full h-64 object-cover"
+            className="w-full h-64 object-cover rounded-t-lg"
           />
           <div className="absolute top-4 right-4 bg-indigo-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
             {content.category}
           </div>
         </div>
 
-        <div className="p-6">
-          <div className="flex flex-col gap-1 mb-2">
-            <div className="flex items-center justify-between">
+        <div className="p-4 md:p-6">
+          <div className="flex flex-col gap-1 mb-4">
+            <div className="flex max-md:flex-col gap-1 md:items-center justify-between">
               <div>
                 <span className="text-sm text-gray-700 font-medium">
                   {content.source}
                 </span>
-                <span className="mx-2">•</span>
+                <span className="mx-2 text-gray-300">•</span>
                 <span className="text-sm text-gray-500">
                   {content.readTime}
                 </span>
@@ -147,55 +103,33 @@ export default function NewsModal() {
 
           <h2 className="text-2xl font-bold mb-4">{content.title}</h2>
 
-          <div className="prose max-w-none mb-6">
+          <div className="prose max-w-none mb-4">
             <p>{content.content}</p>
           </div>
 
-          <div className="flex items-center justify-between border-t border-b py-4 my-4">
-            <div className="flex items-center gap-6">
+          <div className="flex items-center justify-between mt-6 border-t pt-4">
+            <span className="text-sm text-gray-500">{content.date}</span>
+            <div className="relative">
+              {showLoginMessage && (
+                <div className="absolute bottom-full mb-2 right-0 bg-indigo-500 text-white shadow-md rounded-md p-2 text-sm z-10 w-48">
+                  <p>Please log in to like this article</p>
+                </div>
+              )}
               <button
-                className={`flex items-center gap-1 ${
-                  isLiked ? "text-red-500" : "text-gray-500"
+                className={`flex items-center gap-2 border px-4 py-2 rounded-full text-sm font-medium ${
+                  isLiked
+                    ? "text-red-500 border-red-500"
+                    : "text-gray-500 border-gray-300"
                 } hover:text-red-500 transition-colors`}
                 onClick={handleLike}
               >
                 <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
                 <span>{isLiked ? content.likes + 1 : content.likes}</span>
               </button>
-
-              <button
-                className="flex items-center gap-1 text-gray-500 hover:text-indigo-600 transition-colors"
-                onClick={handleComment}
-              >
-                <MessageCircle size={20} />
-                <span>Comment</span>
-              </button>
             </div>
-
-            <button
-              className="text-gray-500 hover:text-indigo-600 transition-colors"
-              onClick={handleShare}
-            >
-              <Share2 size={20} />
-            </button>
-          </div>
-
-          <div id="comment-section" className="mt-6">
-            <CommentSection />
           </div>
         </div>
       </div>
-
-      {showAuthOverlay && (
-        <AuthRequiredOverlay
-          position={overlayPosition}
-          onClose={(e) => {
-            e?.stopPropagation();
-            setShowAuthOverlay(false);
-          }}
-          type={overlayType}
-        />
-      )}
     </div>
   );
 }
