@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { Bookmark, BookmarkCheck, Clock, Heart, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { studentArticles } from "../../../data/entertainment/articles";
-import { Bookmark, BookmarkCheck, Heart, MessageCircle, Share2, User, Clock, X } from "lucide-react";
 import AuthRequiredOverlay from "./AuthRequiredOverlay";
 import CommentSection from "./CommentSection";
 
@@ -13,7 +13,6 @@ export default function ArticlesModal() {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
   const [overlayPosition, setOverlayPosition] = useState({ top: 0, left: 0 });
-  const [overlayType, setOverlayType] = useState<"like" | "bookmark" | "comment" | "share">("like");
 
   useEffect(() => {
     setShowAuthOverlay(false);
@@ -23,7 +22,7 @@ export default function ArticlesModal() {
     searchParams.delete("id");
     searchParams.delete("section");
     setSearchParams(searchParams);
-    setShowAuthOverlay(false); 
+    setShowAuthOverlay(false);
   };
 
   useEffect(() => {
@@ -31,11 +30,11 @@ export default function ArticlesModal() {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false); 
+      setShowAuthOverlay(false);
     }
     return () => {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false); 
+      setShowAuthOverlay(false);
     };
   }, [id, section]);
 
@@ -52,13 +51,12 @@ export default function ArticlesModal() {
   if (!content) return null;
 
   const handleLike = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
 
-    const isLoggedIn = false; 
+    const isLoggedIn = false;
     if (!isLoggedIn) {
       const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
       setOverlayPosition({ top: rect.top, left: rect.left });
-      setOverlayType("like");
       setShowAuthOverlay(true);
       return;
     }
@@ -66,45 +64,16 @@ export default function ArticlesModal() {
   };
 
   const handleBookmark = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
-    
-    const isLoggedIn = false; 
+    e.stopPropagation();
+
+    const isLoggedIn = false;
     if (!isLoggedIn) {
       const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
       setOverlayPosition({ top: rect.top, left: rect.left });
-      setOverlayType("bookmark");
       setShowAuthOverlay(true);
       return;
     }
     setIsBookmarked(!isBookmarked);
-  };
-
-  const handleComment = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
-    
-    const isLoggedIn = false; 
-    if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setOverlayType("comment");
-      setShowAuthOverlay(true);
-      return;
-    }
-    document.getElementById("article-comment-section")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const handleShare = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
-    
-    const isLoggedIn = false; 
-    if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setOverlayType("share");
-      setShowAuthOverlay(true);
-      return;
-    }
-    // Share functionality
   };
 
   return (
@@ -113,21 +82,18 @@ export default function ArticlesModal() {
       onClick={handleOverlayClick}
     >
       <button
-        className="absolute top-2 md:top-4 right-3 md:right-6 text-white hover:opacity-50 p-2 rounded-full bg-black/30 backdrop-blur-sm"
-        onClick={(e) => {
-          e.stopPropagation();
-          closeModal();
-        }}
+        className="absolute top-2 md:top-4 right-3 md:right-6 text-white hover:opacity-50"
+        onClick={closeModal}
       >
-        <X size={20} />
+        ✖
       </button>
-      <div 
+      <div
         className="relative bg-white rounded-lg shadow-lg w-full max-w-2xl mx-4 max-h-[86vh] md:max-h-[93vh] overflow-y-auto"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
         }}
-        onClick={(e) => e.stopPropagation()} 
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="relative">
           <img
@@ -139,7 +105,7 @@ export default function ArticlesModal() {
             {content.category}
           </div>
         </div>
-        
+
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center">
@@ -153,14 +119,14 @@ export default function ArticlesModal() {
             </div>
             <span className="text-sm text-gray-500">{content.date}</span>
           </div>
-          
+
           <h2 className="text-2xl font-bold mb-4">{content.title}</h2>
-          
+
           <div className="prose max-w-none mb-6">
             <p>{content.content}</p>
           </div>
-          
-          <div className="flex items-center justify-between border-t border-b py-4 my-4">
+
+          <div className="flex items-center justify-between ">
             <div className="flex items-center gap-6">
               <button
                 className={`flex items-center gap-1 ${
@@ -171,7 +137,7 @@ export default function ArticlesModal() {
                 <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
                 <span>{isLiked ? content.likes + 1 : content.likes}</span>
               </button>
-              
+
               <button
                 className={`flex items-center gap-1 ${
                   isBookmarked ? "text-purple-500" : "text-gray-500"
@@ -183,32 +149,17 @@ export default function ArticlesModal() {
                 ) : (
                   <Bookmark size={20} />
                 )}
-                <span>Bookmark</span>
-              </button>
-              
-              <button
-                className="flex items-center gap-1 text-gray-500 hover:text-purple-600 transition-colors"
-                onClick={handleComment}
-              >
-                <MessageCircle size={20} />
-                <span>Comment</span>
+                <span>Save</span>
               </button>
             </div>
-            
-            <button
-              className="text-gray-500 hover:text-purple-600 transition-colors"
-              onClick={handleShare}
-            >
-              <Share2 size={20} />
-            </button>
           </div>
-          
+
           <div id="article-comment-section" className="mt-6">
             <CommentSection />
           </div>
         </div>
       </div>
-      
+
       {showAuthOverlay && (
         <AuthRequiredOverlay
           position={overlayPosition}
@@ -216,7 +167,6 @@ export default function ArticlesModal() {
             e?.stopPropagation();
             setShowAuthOverlay(false);
           }}
-          type={overlayType}
         />
       )}
     </div>

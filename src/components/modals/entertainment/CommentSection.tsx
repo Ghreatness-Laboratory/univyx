@@ -5,7 +5,6 @@ import AuthRequiredOverlay from "./AuthRequiredOverlay";
 interface CommentType {
   id: number;
   user: string;
-  avatar: string;
   content: string;
   timestamp: string;
   likes: number;
@@ -16,7 +15,6 @@ export default function CommentSection() {
     {
       id: 1,
       user: "Alex Chen",
-      avatar: "/api/placeholder/40/40",
       content: "This is really insightful information. Thanks for sharing!",
       timestamp: "2 hours ago",
       likes: 5,
@@ -24,7 +22,6 @@ export default function CommentSection() {
     {
       id: 2,
       user: "Jordan Smith",
-      avatar: "/api/placeholder/40/40",
       content:
         "I have some additional resources on this topic if anyone is interested.",
       timestamp: "1 day ago",
@@ -52,7 +49,6 @@ export default function CommentSection() {
       const newCommentObj: CommentType = {
         id: comments.length + 1,
         user: "Current User",
-        avatar: "/api/placeholder/40/40",
         content: newComment,
         timestamp: "Just now",
         likes: 0,
@@ -85,71 +81,60 @@ export default function CommentSection() {
     <div className="mt-8 pt-6 border-t" onClick={(e) => e.stopPropagation()}>
       <h3 className="text-xl font-bold mb-4">Comments ({comments.length})</h3>
 
-      <div className="space-y-4 mb-6">
+      <div className="space-y-4 mb-8">
         {comments.map((comment) => (
-          <div key={comment.id} className="flex gap-3">
-            <div className="flex-shrink-0">
-              <img
-                src={comment.avatar}
-                alt={comment.user}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-            </div>
-            <div className="flex-1">
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <div className="flex items-center gap-2 mb-1">
+          <div 
+            key={comment.id} 
+            className="border rounded-lg p-4 bg-gray-50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
                   <span className="font-medium">{comment.user}</span>
-                  <span className="text-xs text-gray-500">
-                    {comment.timestamp}
-                  </span>
+                  <span className="text-xs text-gray-500">{comment.timestamp}</span>
                 </div>
-                <p className="text-gray-700">{comment.content}</p>
+                <p className="text-gray-700 mb-3">{comment.content}</p>
+                
+                <div className="flex items-center">
+                  <button
+                    className="flex items-center gap-1 text-gray-500 hover:text-indigo-600 transition-colors"
+                    onClick={(e) => handleLikeComment(comment.id, e)}
+                  >
+                    <ThumbsUp size={16} />
+                    <span>{comment.likes}</span>
+                  </button>
+                </div>
               </div>
-              <button
-                className="flex items-center gap-1 text-gray-500 hover:text-indigo-600 transition-colors mt-1 ml-1"
-                onClick={(e) => handleLikeComment(comment.id, e)}
-              >
-                <ThumbsUp size={14} />
-                <span className="text-sm">{comment.likes}</span>
-              </button>
             </div>
           </div>
         ))}
       </div>
 
-      <form
-        onSubmit={handleSubmitComment}
-        className="flex gap-3"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex-shrink-0">
-          <img
-            src="/api/placeholder/40/40"
-            alt="Your avatar"
-            className="w-10 h-10 rounded-full object-cover"
-          />
-        </div>
-        <div className="flex-1">
-          <textarea
-            placeholder="Add a comment..."
-            className="w-full border rounded-lg p-3 min-h-24 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            value={newComment}
-            onChange={(e) => {
-              e.stopPropagation();
-              setNewComment(e.target.value);
-            }}
-            onClick={(e) => e.stopPropagation()}
-            required
-          />
-          <div className="flex justify-end mt-2">
-            <button
-              type="submit"
-              className={`bg-primary text-white px-4 py-2 rounded-lg transition-colors`}
-            >
-              Post comment
-            </button>
-          </div>
-        </div>
+      <form onSubmit={handleSubmitComment} className="flex flex-col gap-4">
+        <textarea
+          placeholder="Add a comment..."
+          className="w-full border rounded-lg p-3 min-h-24 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          value={newComment}
+          onChange={(e) => {
+            e.stopPropagation();
+            setNewComment(e.target.value);
+          }}
+          onClick={(e) => e.stopPropagation()}
+          required
+        />
+        
+        <button
+          type="submit"
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            newComment.trim() 
+              ? "bg-primary text-white" 
+              : "bg-gray-200 text-gray-500 cursor-not-allowed"
+          }`}
+          disabled={!newComment.trim()}
+        >
+          Post Comment
+        </button>
       </form>
 
       {showAuthOverlay && (
@@ -159,7 +144,6 @@ export default function CommentSection() {
             e?.stopPropagation();
             setShowAuthOverlay(false);
           }}
-          type="comment"
         />
       )}
     </div>
