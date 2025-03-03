@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { universityNews } from "../../../../data/entertainment/news";
 import NewsCard from "./NewsCard";
 
@@ -73,9 +74,12 @@ export default function News() {
       </div>
 
       <div className="text-center">
-        <button className="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-lg transition-colors inline-flex items-center">
+        <Link
+          to={"/entertainment/news"}
+          className="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-lg transition-colors inline-flex items-center"
+        >
           See all university news <ChevronRight size={18} className="ml-1" />
-        </button>
+        </Link>
       </div>
     </section>
   );

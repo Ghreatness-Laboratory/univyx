@@ -8,6 +8,7 @@ import {
   User,
 } from "lucide-react";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ArticleProps } from "../../../../data/entertainment/articles";
 
 interface ArticleCardProps {
@@ -18,7 +19,12 @@ interface ArticleCardProps {
 export default function ArticleCard({ article, className }: ArticleCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(article.isBookmarked);
-
+  const [, setSearchParams] = useSearchParams();
+  
+  const openModal = () => {
+    setSearchParams({ id: article.id.toString(), section: "articles" });
+  };
+  
   return (
     <div
       className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ${className}`}
@@ -52,12 +58,12 @@ export default function ArticleCard({ article, className }: ArticleCardProps) {
           {article.title}
         </h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-          {article.excerpt}
+          {article.description}
         </p>
         <div className="flex justify-between items-center">
           <button
             className="flex items-center text-sm font-medium text-purple-600 hover:text-purple-800 transition-colors"
-            onClick={() => {}}
+            onClick={openModal}
           >
             Read full article <ChevronRight size={16} />
           </button>

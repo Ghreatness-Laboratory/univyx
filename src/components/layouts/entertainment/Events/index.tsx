@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Select from "react-select";
 import { events } from "../../../../data/entertainment/events";
 import EventCard from "./EventCard";
@@ -226,9 +227,12 @@ export default function Events() {
       )}
 
       <div className="text-center">
-        <button className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors inline-flex items-center">
+        <Link
+          to={"/entertainment/news"}
+          className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors inline-flex items-center"
+        >
           See all upcoming events <ChevronRight size={18} className="ml-1" />
-        </button>
+        </Link>
       </div>
     </section>
   );

@@ -2,6 +2,9 @@ import "./App.css";
 import AuthModal from "./components/auth/AuthModal";
 import Footer from "./components/layouts/Footer";
 import Navbar from "./components/layouts/Navbar";
+import ArticlesModal from "./components/modals/entertainment/articles";
+import NewsModal from "./components/modals/entertainment/news";
+import TopicsModal from "./components/modals/entertainment/topics";
 import PublicRouter from "./routes/PublicRoutes";
 
 function App() {
@@ -9,10 +12,13 @@ function App() {
     <div>
       <>
         <Navbar />
-        <PublicRouter/>
+        <PublicRouter />
         <Footer />
       </>
       <AuthModal />
+      <NewsModal />
+      <ArticlesModal />
+      <TopicsModal />
     </div>
   );
 }

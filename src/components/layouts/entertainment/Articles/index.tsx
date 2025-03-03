@@ -1,7 +1,7 @@
 import { ChevronRight, PlusCircle, Search } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { studentArticles } from "../../../../data/entertainment/articles";
 import ArticleCard from "./ArticlesCard";
@@ -282,9 +282,12 @@ export default function Articles() {
       </div>
 
       <div className="text-center">
-        <button className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-medium rounded-lg transition-colors inline-flex items-center">
+        <Link
+          to={"/entertainment/news"}
+          className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-medium rounded-lg transition-colors inline-flex items-center"
+        >
           See all student articles <ChevronRight size={18} className="ml-1" />
-        </button>
+        </Link>
       </div>
     </section>
   );

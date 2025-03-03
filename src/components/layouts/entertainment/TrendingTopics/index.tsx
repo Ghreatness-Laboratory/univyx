@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronRight, ChevronUp, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { trendingTopics } from "../../../../data/entertainment/trendingTopics";
 import TopicCard from "./TrendingTopicsCard";
 
@@ -346,9 +346,12 @@ export default function TrendingTopics() {
       </div>
 
       <div className="text-center">
-        <button className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-lg transition-colors inline-flex items-center">
+        <Link
+          to={"/entertainment/topics"}
+          className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-lg transition-colors inline-flex items-center"
+        >
           See all trending topics <ChevronRight size={18} className="ml-1" />
-        </button>
+        </Link>
       </div>
     </section>
   );

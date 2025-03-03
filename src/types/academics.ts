@@ -15,7 +15,7 @@ export interface Department {
 }
 
 export interface Resource {
-  id: string;
+  id: number;
   title: string;
   description: string;
   type: 'note' | 'pastQuestion' | 'tutorial';

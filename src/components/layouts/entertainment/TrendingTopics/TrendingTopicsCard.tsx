@@ -1,11 +1,19 @@
 import { ChevronRight, MessageCircle, Share2 } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import { TrendingTopicProps } from "../../../../data/entertainment/trendingTopics";
 
 interface TopicCard {
   topic: TrendingTopicProps;
   className?: string;
 }
+
 export default function TopicCard({ topic, className }: TopicCard) {
+  const [, setSearchParams] = useSearchParams();
+  
+  const openModal = () => {
+    setSearchParams({ id: topic.id.toString(), section: "topics" });
+  };
+  
   return (
     <div
       className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ${className}`}
@@ -43,7 +51,10 @@ export default function TopicCard({ topic, className }: TopicCard) {
           </div>
         </div>
         <div className="mt-4 flex justify-between items-center">
-          <button className="flex items-center text-sm font-medium text-teal-600 hover:text-teal-800 transition-colors">
+          <button 
+            className="flex items-center text-sm font-medium text-teal-600 hover:text-teal-800 transition-colors"
+            onClick={openModal}
+          >
             Join discussion <ChevronRight size={16} />
           </button>
           <button className="text-teal-500 hover:text-teal-700">

@@ -1,12 +1,12 @@
-import Article1 from "../../assets/images/entertainment/articles/article1.png"
-import Article2 from "../../assets/images/entertainment/articles/article2.jpg"
-import Article3 from "../../assets/images/entertainment/articles/article3.png"
-import Article4 from "../../assets/images/entertainment/articles/article4.jpg"
+import Article1 from "../../assets/images/entertainment/articles/article1.png";
+import Article2 from "../../assets/images/entertainment/articles/article2.jpg";
+import Article3 from "../../assets/images/entertainment/articles/article3.png";
+import Article4 from "../../assets/images/entertainment/articles/article4.jpg";
 
 export interface ArticleProps {
-  id: string;
+  id: number;
   title: string;
-  excerpt: string;
+  description: string;
   content: string;
   author: string;
   date: string;
@@ -16,13 +16,14 @@ export interface ArticleProps {
   comments: number;
   isBookmarked: boolean;
   readTime: string;
+  section: string;
 }
 
 export const studentArticles: ArticleProps[] = [
   {
-    id: "article-1",
+    id: 1,
     title: "How I Survived Finals Week with Zero Sleep",
-    excerpt: "A humorous take on the finals week experience and tips to actually avoid my mistakes.",
+    description: "A humorous take on the finals week experience and tips to actually avoid my mistakes.",
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.",
     author: "Alex Johnson",
     date: "February 25, 2025",
@@ -32,11 +33,12 @@ export const studentArticles: ArticleProps[] = [
     comments: 56,
     isBookmarked: false,
     readTime: "7 min",
+    section: "articles",
   },
   {
-    id: "article-2",
+    id: 2,
     title: "5 Hidden Spots on Campus You Need to Visit",
-    excerpt: "Discover these secret study spots and hangout areas that most students don't know about.",
+    description: "Discover these secret study spots and hangout areas that most students don't know about.",
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.",
     author: "Jamie Smith",
     date: "February 22, 2025",
@@ -46,11 +48,12 @@ export const studentArticles: ArticleProps[] = [
     comments: 42,
     isBookmarked: true,
     readTime: "5 min",
+    section: "articles",
   },
   {
-    id: "article-3",
+    id: 3,
     title: "My Semester Abroad in Tokyo: What I Learned",
-    excerpt: "Personal reflections on cultural exchange, language barriers, and finding yourself overseas.",
+    description: "Personal reflections on cultural exchange, language barriers, and finding yourself overseas.",
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.",
     author: "Taylor Rodriguez",
     date: "February 20, 2025",
@@ -60,11 +63,12 @@ export const studentArticles: ArticleProps[] = [
     comments: 78,
     isBookmarked: false,
     readTime: "8 min",
+    section: "articles",
   },
   {
-    id: "article-4",
+    id: 4,
     title: "Balancing Part-Time Work and Full-Time Studies",
-    excerpt: "Practical advice on managing your schedule, priorities, and mental health while working through college.",
+    description: "Practical advice on managing your schedule, priorities, and mental health while working through college.",
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.",
     author: "Jordan Lee",
     date: "February 18, 2025",
@@ -74,5 +78,6 @@ export const studentArticles: ArticleProps[] = [
     comments: 35,
     isBookmarked: false,
     readTime: "6 min",
+    section: "articles",
   },
 ];

@@ -5,7 +5,7 @@ import Event4 from "../../assets/images/entertainment/events/event4.jpg"
 
 
 export interface EventProps {
-  id: string;
+  id: number;
   title: string;
   date: string;
   time: string;
@@ -19,7 +19,7 @@ export interface EventProps {
 
 export const events: EventProps[] = [
   {
-    id: "event-1",
+    id: 1,
     title: "Spring Festival Concert",
     date: "March 15, 2025",
     time: "7:00 PM - 11:00 PM",
@@ -31,7 +31,7 @@ export const events: EventProps[] = [
     isRegistered: false,
   },
   {
-    id: "event-2",
+    id: 2,
     title: "Tech Career Fair",
     date: "March 10, 2025",
     time: "10:00 AM - 4:00 PM",
@@ -43,7 +43,7 @@ export const events: EventProps[] = [
     isRegistered: true,
   },
   {
-    id: "event-3",
+    id: 3,
     title: "International Food Festival",
     date: "March 18, 2025",
     time: "12:00 PM - 6:00 PM",
@@ -55,7 +55,7 @@ export const events: EventProps[] = [
     isRegistered: false,
   },
   {
-    id: "event-4",
+    id: 4,
     title: "Hackathon 2025",
     date: "March 22, 2025",
     time: "48 Hours",

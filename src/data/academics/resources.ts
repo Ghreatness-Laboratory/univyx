@@ -2,7 +2,7 @@ import { Resource } from "../../types/academics";
 
 export const resources: Resource[] = [
   {
-    id: '1',
+    id: 1,
     title: 'Introduction to Programming',
     description: 'Comprehensive notes on programming basics',
     type: 'note',
@@ -14,7 +14,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '2',
+    id: 2,
     title: 'Data Structures and Algorithms',
     description: 'Lecture slides covering fundamental data structures',
     type: 'pastQuestion',
@@ -26,7 +26,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '3',
+    id: 3,
     title: 'Web Development Masterclass',
     description: 'Complete guide to modern web development',
     type: 'tutorial',
@@ -38,7 +38,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '4',
+    id: 4,
     title: 'Digital Logic Design',
     description: 'Past exam questions on digital circuits',
     type: 'pastQuestion',
@@ -50,7 +50,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '5',
+    id: 5,
     title: 'Thermodynamics Basics',
     description: 'Lecture notes on thermodynamic principles',
     type: 'note',
@@ -62,7 +62,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '6',
+    id: 6,
     title: 'Quantum Mechanics Overview',
     description: 'Comprehensive lecture notes on quantum mechanics',
     type: 'note',
@@ -74,7 +74,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '7',
+    id: 7,
     title: 'Electromagnetism Practice Questions',
     description: 'Past exam questions on electromagnetism',
     type: 'pastQuestion',
@@ -86,7 +86,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '8',
+    id: 8,
     title: 'Principles of Management',
     description: 'Lecture slides on key management principles',
     type: 'pastQuestion',
@@ -98,7 +98,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '9',
+    id: 9,
     title: 'Introduction to Building Design',
     description: 'Detailed notes on architectural design principles',
     type: 'note',
@@ -110,7 +110,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '10',
+    id: 10,
     title: 'Nigerian Constitutional Law',
     description: 'Comprehensive textbook on Nigerian law',
     type: 'tutorial',
@@ -122,7 +122,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '11',
+    id: 11,
     title: 'Educational Psychology',
     description: 'Lecture slides on psychological principles in education',
     type: 'pastQuestion',
@@ -134,7 +134,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '12',
+    id: 12,
     title: 'Soil Science Fundamentals',
     description: 'Lecture notes on soil composition and properties',
     type: 'note',
@@ -146,7 +146,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '13',
+    id: 13,
     title: 'Artificial Intelligence Basics',
     description: 'Introduction to AI concepts and applications',
     type: 'tutorial',
@@ -158,7 +158,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '14',
+    id: 14,
     title: 'Fluid Mechanics Principles',
     description: 'Comprehensive notes on fluid dynamics',
     type: 'note',
@@ -170,7 +170,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '15',
+    id: 15,
     title: 'Marketing Strategies',
     description: 'Key principles of marketing and branding',
     type: 'tutorial',
@@ -182,7 +182,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '16',
+    id: 16,
     title: 'Database Management Systems',
     description: 'Fundamentals of database design and SQL',
     type: 'note',
@@ -194,7 +194,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '17',
+    id: 17,
     title: 'Microeconomics Overview',
     description: 'Lecture notes on microeconomic principles',
     type: 'note',
@@ -206,7 +206,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '18',
+    id: 18,
     title: 'Software Engineering Concepts',
     description: 'A guide to software development methodologies',
     type: 'tutorial',
@@ -218,7 +218,7 @@ export const resources: Resource[] = [
     isRowReverse: true
   },
   {
-    id: '19',
+    id: 19,
     title: 'Chemical Reactions and Stoichiometry',
     description: 'Lecture notes on chemical reaction principles',
     type: 'note',
@@ -230,7 +230,7 @@ export const resources: Resource[] = [
     isRowReverse: false
   },
   {
-    id: '20',
+    id: 20,
     title: 'Structural Analysis for Civil Engineers',
     description: 'Key concepts in structural engineering',
     type: 'tutorial',

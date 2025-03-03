@@ -1,5 +1,6 @@
 import { ChevronRight, Clock, Heart } from "lucide-react";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { NewsProps } from "../../../../data/entertainment/news";
 
 interface NewsCardProps {
@@ -9,6 +10,11 @@ interface NewsCardProps {
 
 export default function NewsCard({ news, className }: NewsCardProps) {
   const [isLiked, setIsLiked] = useState(false);
+  const [, setSearchParams] = useSearchParams();
+
+  const openModal = () => {
+    setSearchParams({ id: news.id.toString(), section: "news" });
+  };
 
   return (
     <div
@@ -38,12 +44,12 @@ export default function NewsCard({ news, className }: NewsCardProps) {
           {news.title}
         </h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {news.excerpt}
+          {news.description}
         </p>
         <div className="flex justify-between items-center">
           <button
             className="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
-            onClick={() => {}}
+            onClick={openModal}
           >
             Read more <ChevronRight size={16} />
           </button>
