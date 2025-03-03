@@ -2,7 +2,6 @@ import { Bookmark, BookmarkCheck, Clock, Heart, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { studentArticles } from "../../../data/entertainment/articles";
-import AuthRequiredOverlay from "./AuthRequiredOverlay";
 import CommentSection from "./CommentSection";
 
 export default function ArticlesModal() {
@@ -11,18 +10,14 @@ export default function ArticlesModal() {
   const section = searchParams.get("section");
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [showAuthOverlay, setShowAuthOverlay] = useState(false);
-  const [overlayPosition, setOverlayPosition] = useState({ top: 0, left: 0 });
-
-  useEffect(() => {
-    setShowAuthOverlay(false);
-  }, []);
+  const [showLoginMessage, setShowLoginMessage] = useState(false);
+  const [actionType, setActionType] = useState("");
 
   const closeModal = () => {
     searchParams.delete("id");
     searchParams.delete("section");
     setSearchParams(searchParams);
-    setShowAuthOverlay(false);
+    setShowLoginMessage(false);
   };
 
   useEffect(() => {
@@ -30,11 +25,11 @@ export default function ArticlesModal() {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false);
+      setShowLoginMessage(false);
     }
     return () => {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false);
+      setShowLoginMessage(false);
     };
   }, [id, section]);
 
@@ -55,9 +50,10 @@ export default function ArticlesModal() {
 
     const isLoggedIn = false;
     if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setShowAuthOverlay(true);
+      setActionType("like");
+      setShowLoginMessage(true);
+
+      setTimeout(() => setShowLoginMessage(false), 3000);
       return;
     }
     setIsLiked(!isLiked);
@@ -68,9 +64,10 @@ export default function ArticlesModal() {
 
     const isLoggedIn = false;
     if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setShowAuthOverlay(true);
+      setActionType("bookmark");
+      setShowLoginMessage(true);
+
+      setTimeout(() => setShowLoginMessage(false), 3000);
       return;
     }
     setIsBookmarked(!isBookmarked);
@@ -106,8 +103,8 @@ export default function ArticlesModal() {
           </div>
         </div>
 
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
+        <div className="p-4 md:p-6">
+          <div className="flex max-md:flex-col gap-1 justify-between md:items-center mb-4">
             <div className="flex items-center">
               <User size={18} className="text-purple-500 mr-2" />
               <span className="text-sm text-gray-700 font-medium">
@@ -126,8 +123,13 @@ export default function ArticlesModal() {
             <p>{content.content}</p>
           </div>
 
-          <div className="flex items-center justify-between ">
-            <div className="flex items-center gap-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6 relative">
+              {showLoginMessage && (
+                <div className="absolute bottom-full mb-2 left-0 bg-purple-500 text-white shadow-md rounded-md p-2 text-sm z-10 w-48">
+                  <p>Please log in to {actionType} this article</p>
+                </div>
+              )}
               <button
                 className={`flex items-center gap-1 ${
                   isLiked ? "text-red-500" : "text-gray-500"
@@ -159,16 +161,6 @@ export default function ArticlesModal() {
           </div>
         </div>
       </div>
-
-      {showAuthOverlay && (
-        <AuthRequiredOverlay
-          position={overlayPosition}
-          onClose={(e) => {
-            e?.stopPropagation();
-            setShowAuthOverlay(false);
-          }}
-        />
-      )}
     </div>
   );
 }

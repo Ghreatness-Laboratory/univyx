@@ -1,6 +1,5 @@
 import { ThumbsUp } from "lucide-react";
 import { useState } from "react";
-import AuthRequiredOverlay from "./AuthRequiredOverlay";
 
 interface DiscussionType {
   id: number;
@@ -31,8 +30,8 @@ export default function DiscussionSection() {
   ]);
 
   const [newDiscussionContent, setNewDiscussionContent] = useState("");
-  const [showAuthOverlay, setShowAuthOverlay] = useState(false);
-  const [overlayPosition, setOverlayPosition] = useState({ top: 0, left: 0 });
+  const [showLoginMessage, setShowLoginMessage] = useState(false);
+  const [actionType, setActionType] = useState("");
 
   const handleSubmitDiscussion = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,9 +39,10 @@ export default function DiscussionSection() {
 
     const isLoggedIn = false;
     if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setShowAuthOverlay(true);
+      setActionType("post");
+      setShowLoginMessage(true);
+
+      setTimeout(() => setShowLoginMessage(false), 3000);
       return;
     }
 
@@ -65,9 +65,10 @@ export default function DiscussionSection() {
 
     const isLoggedIn = false;
     if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setShowAuthOverlay(true);
+      setActionType("like");
+      setShowLoginMessage(true);
+
+      setTimeout(() => setShowLoginMessage(false), 3000);
       return;
     }
 
@@ -99,7 +100,14 @@ export default function DiscussionSection() {
                 </div>
                 <p className="text-gray-700 mb-3">{discussion.content}</p>
 
-                <div className="flex items-center">
+                <div className="flex items-center relative">
+                  {showLoginMessage && actionType === "like" && (
+                    <div className="absolute bottom-full mb-2 left-0 bg-teal-500 text-white shadow-md rounded-md p-2 text-sm z-10 w-48">
+                      <p>
+                        Please log in to like this post
+                      </p>
+                    </div>
+                  )}
                   <button
                     className="flex items-center gap-1 text-gray-500 hover:text-teal-600 transition-colors"
                     onClick={(e) => handleLikeDiscussion(discussion.id, e)}
@@ -114,7 +122,14 @@ export default function DiscussionSection() {
         ))}
       </div>
 
-      <div className="border-t pt-6">
+      <div className="border-t pt-6 relative">
+        {showLoginMessage && actionType === "post" && (
+          <div className="absolute top-10 left-1/4 bg-teal-500 text-white shadow-md rounded-md p-2 text-sm z-10 w-48">
+            <p>
+              Please log in to join the discussion
+            </p>
+          </div>
+        )}
         <form onSubmit={handleSubmitDiscussion} className="flex flex-col gap-4">
           <textarea
             placeholder="Join the discussion..."
@@ -137,13 +152,6 @@ export default function DiscussionSection() {
           </button>
         </form>
       </div>
-
-      {showAuthOverlay && (
-        <AuthRequiredOverlay
-          position={overlayPosition}
-          onClose={() => setShowAuthOverlay(false)}
-        />
-      )}
     </div>
   );
 }

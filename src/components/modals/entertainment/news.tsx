@@ -2,25 +2,19 @@ import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { universityNews } from "../../../data/entertainment/news";
-import AuthRequiredOverlay from "./AuthRequiredOverlay";
 
 export default function NewsModal() {
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get("id");
   const section = searchParams.get("section");
   const [isLiked, setIsLiked] = useState(false);
-  const [showAuthOverlay, setShowAuthOverlay] = useState(false);
-  const [overlayPosition, setOverlayPosition] = useState({ top: 0, left: 0 });
-
-  useEffect(() => {
-    setShowAuthOverlay(false);
-  }, []);
+  const [showLoginMessage, setShowLoginMessage] = useState(false);
 
   const closeModal = () => {
     searchParams.delete("id");
     searchParams.delete("section");
     setSearchParams(searchParams);
-    setShowAuthOverlay(false);
+    setShowLoginMessage(false);
   };
 
   useEffect(() => {
@@ -28,11 +22,11 @@ export default function NewsModal() {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false);
+      setShowLoginMessage(false);
     }
     return () => {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false);
+      setShowLoginMessage(false);
     };
   }, [id, section]);
 
@@ -53,9 +47,9 @@ export default function NewsModal() {
 
     const isLoggedIn = false;
     if (!isLoggedIn) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOverlayPosition({ top: rect.top, left: rect.left });
-      setShowAuthOverlay(true);
+      setShowLoginMessage(true);
+
+      setTimeout(() => setShowLoginMessage(false), 3000);
       return;
     }
     setIsLiked(!isLiked);
@@ -91,14 +85,14 @@ export default function NewsModal() {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 md:p-6">
           <div className="flex flex-col gap-1 mb-4">
             <div className="flex max-md:flex-col gap-1 md:items-center justify-between">
               <div>
                 <span className="text-sm text-gray-700 font-medium">
                   {content.source}
                 </span>
-                <span className="mx-2">•</span>
+                <span className="mx-2 text-gray-300">•</span>
                 <span className="text-sm text-gray-500">
                   {content.readTime}
                 </span>
@@ -113,33 +107,29 @@ export default function NewsModal() {
             <p>{content.content}</p>
           </div>
 
-          {/* Like button moved here */}
           <div className="flex items-center justify-between mt-6 border-t pt-4">
             <span className="text-sm text-gray-500">{content.date}</span>
-            <button
-              className={`flex items-center gap-2 border px-4 py-2 rounded-full text-sm font-medium ${
-                isLiked
-                  ? "text-red-500 border-red-500"
-                  : "text-gray-500 border-gray-300"
-              } hover:text-red-500 transition-colors`}
-              onClick={handleLike}
-            >
-              <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
-              <span>{isLiked ? content.likes + 1 : content.likes}</span>
-            </button>
+            <div className="relative">
+              {showLoginMessage && (
+                <div className="absolute bottom-full mb-2 right-0 bg-indigo-500 text-white shadow-md rounded-md p-2 text-sm z-10 w-48">
+                  <p>Please log in to like this article</p>
+                </div>
+              )}
+              <button
+                className={`flex items-center gap-2 border px-4 py-2 rounded-full text-sm font-medium ${
+                  isLiked
+                    ? "text-red-500 border-red-500"
+                    : "text-gray-500 border-gray-300"
+                } hover:text-red-500 transition-colors`}
+                onClick={handleLike}
+              >
+                <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
+                <span>{isLiked ? content.likes + 1 : content.likes}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-
-      {showAuthOverlay && (
-        <AuthRequiredOverlay
-          position={overlayPosition}
-          onClose={(e) => {
-            e?.stopPropagation();
-            setShowAuthOverlay(false);
-          }}
-        />
-      )}
     </div>
   );
 }

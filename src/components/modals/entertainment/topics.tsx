@@ -1,26 +1,18 @@
 import { MessageCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { trendingTopics } from "../../../data/entertainment/trendingTopics";
-import AuthRequiredOverlay from "./AuthRequiredOverlay";
 import DiscussionSection from "./DiscussionSection";
 
 export default function TopicsModal() {
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get("id");
   const section = searchParams.get("section");
-  const [showAuthOverlay, setShowAuthOverlay] = useState(false);
-  const [overlayPosition, ] = useState({ top: 0, left: 0 });
-
-  useEffect(() => {
-    setShowAuthOverlay(false);
-  }, []);
 
   const closeModal = () => {
     searchParams.delete("id");
     searchParams.delete("section");
     setSearchParams(searchParams);
-    setShowAuthOverlay(false);
   };
 
   useEffect(() => {
@@ -28,11 +20,9 @@ export default function TopicsModal() {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false);
     }
     return () => {
       document.body.style.overflow = "auto";
-      setShowAuthOverlay(false);
     };
   }, [id, section]);
 
@@ -113,16 +103,6 @@ export default function TopicsModal() {
           </div>
         </div>
       </div>
-
-      {showAuthOverlay && (
-        <AuthRequiredOverlay
-          position={overlayPosition}
-          onClose={(e) => {
-            e?.stopPropagation();
-            setShowAuthOverlay(false);
-          }}
-        />
-      )}
     </div>
   );
 }
