@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import General from "../components/layouts/academics/General";
-import Tech from "../components/layouts/academics/Tech";
 import ResourceSection from "../components/layouts/academics/resourceSection";
+import Tech from "../components/layouts/academics/Tech";
+import UniversitiesProfile from "../components/layouts/academics/UniversitiesProfile";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -17,6 +18,13 @@ export default function Academics() {
         variants={sectionVariants}
       >
         <General />
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+      >
+        <UniversitiesProfile />
       </motion.div>
       <motion.div
         initial="hidden"

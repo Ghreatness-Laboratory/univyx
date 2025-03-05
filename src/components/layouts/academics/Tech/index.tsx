@@ -1,5 +1,4 @@
-import { ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, ChevronRightIcon, Clock, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { techs } from "../../../../data/academics/tech";
 
@@ -52,14 +51,13 @@ export default function Tech() {
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   {tech.description}
                 </p>
-                <div className="flex justify-end">
-                  <Link
-                    to={tech.link}
-                    className="p-2 hover:bg-primary rounded-full group transition-all duration-200 cursor-pointer"
-                  >
-                    <ChevronDoubleRightIcon className="size-5 text-primary group-hover:text-white" />
-                  </Link>
-                </div>
+                <Link
+                  to={tech.link}
+                  className="flex items-center gap-1 px-4 py-2 hover:bg-primary rounded-full group transition-all duration-200 cursor-pointer bg-primary w-fit text-white"
+                >
+                  View event
+                  <ChevronRightIcon className="size-4 text-white" />
+                </Link>
               </div>
             </div>
           ))}
