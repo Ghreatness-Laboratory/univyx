@@ -87,7 +87,7 @@ export default function FAQ() {
   return (
     <div>
       <section className="max-w-[1120px] w-full mx-auto flex max-lg:flex-col justify-between gap-3 md:gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
-        <div className="max-w-md flex flex-col gap-5 max-md:text-center">
+        <div className="md:max-w-md flex flex-col gap-5 max-md:text-center">
           <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] md:tracking-[-0.96px]">
             Frequently Asked Questions
           </h1>

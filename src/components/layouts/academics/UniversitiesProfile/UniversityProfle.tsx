@@ -152,7 +152,7 @@ export default function UniversityProfile({
           </div>
         </div>
 
-        <div className="p-6 border-t">
+        <div className="p-4 md:p-6 border-t">
           <h3 className="text-xl font-semibold text-primary mb-6">
             Student Ambassadors
           </h3>
