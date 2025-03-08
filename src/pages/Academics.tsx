@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import General from "../components/layouts/academics/General";
+import Intro from "../components/layouts/academics/Intro";
 import ResourceSection from "../components/layouts/academics/resourceSection";
 import Tech from "../components/layouts/academics/Tech";
 import UniversitiesProfile from "../components/layouts/academics/UniversitiesProfile";
@@ -17,7 +17,7 @@ export default function Academics() {
         whileInView="visible"
         variants={sectionVariants}
       >
-        <General />
+        <Intro />
       </motion.div>
       <motion.div
         initial="hidden"

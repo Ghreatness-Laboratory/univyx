@@ -23,7 +23,7 @@ const departments = [
   },
 ];
 
-export default function General() {
+export default function Intro() {
   return (
     <div
       data-testid="general"
