@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
-import Blogs from "../components/layouts/entertainment/Blogs";
-import MemberStories from "../components/layouts/entertainment/MemberStories";
+import Articles from "../components/layouts/entertainment/Articles";
+import Events from "../components/layouts/entertainment/Events";
+import Header from "../components/layouts/entertainment/Header";
+import News from "../components/layouts/entertainment/News";
+import TrendingTopics from "../components/layouts/entertainment/TrendingTopics";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -15,14 +18,35 @@ export default function Entertainment() {
         whileInView="visible"
         variants={sectionVariants}
       >
-        <Blogs />{" "}
+        <Header />
       </motion.div>
       <motion.div
         initial="hidden"
         whileInView="visible"
         variants={sectionVariants}
       >
-        <MemberStories />
+        <News />
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+      >
+        <Articles />
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+      >
+        <Events />
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+      >
+        <TrendingTopics />
       </motion.div>
     </main>
   );

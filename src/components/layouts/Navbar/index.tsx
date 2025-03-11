@@ -302,7 +302,9 @@ export default function Navbar() {
           <ul className="flex flex-col border-b">
             {navlinks.map((link, index) => {
               const isDropdownMenu =
-                link.menu === "Services" || link.menu === "About Us";
+                link.menu === "Academics" ||
+                link.menu === "Gaming" ||
+                link.menu === "Entertainment";
               return (
                 <li
                   key={index}

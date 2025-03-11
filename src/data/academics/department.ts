@@ -1,0 +1,60 @@
+import { Department } from "../../types/academics";
+
+export const departments: Department[] = [
+  { id: 'computer', name: 'Computer Engineering', collegeId: 'engineering' },
+  { id: 'mechanical', name: 'Mechanical Engineering', collegeId: 'engineering' },
+  { id: 'electrical', name: 'Electrical/Electronics Engineering', collegeId: 'engineering' },
+  { id: 'civil', name: 'Civil Engineering', collegeId: 'engineering' },
+  { id: 'chemical', name: 'Chemical Engineering', collegeId: 'engineering' },
+  { id: 'biomedical', name: 'Biomedical Engineering', collegeId: 'engineering' },
+
+  { id: 'physics', name: 'Physics', collegeId: 'sciences' },
+  { id: 'chemistry', name: 'Chemistry', collegeId: 'sciences' },
+  { id: 'mathematics', name: 'Mathematics', collegeId: 'sciences' },
+  { id: 'statistics', name: 'Statistics', collegeId: 'sciences' },
+  { id: 'microbiology', name: 'Microbiology', collegeId: 'sciences' },
+  { id: 'biochemistry', name: 'Biochemistry', collegeId: 'sciences' },
+  { id: 'computer-science', name: 'Computer Science', collegeId: 'sciences' },
+
+  { id: 'english', name: 'English and Literary Studies', collegeId: 'arts' },
+  { id: 'history', name: 'History and International Studies', collegeId: 'arts' },
+  { id: 'philosophy', name: 'Philosophy', collegeId: 'arts' },
+  { id: 'religious-studies', name: 'Religious Studies', collegeId: 'arts' },
+  { id: 'french', name: 'French', collegeId: 'arts' },
+  { id: 'theatre', name: 'Theatre and Performing Arts', collegeId: 'arts' },
+
+  { id: 'accounting', name: 'Accounting', collegeId: 'management-science' },
+  { id: 'business-admin', name: 'Business Administration', collegeId: 'management-science' },
+  { id: 'economics', name: 'Economics', collegeId: 'management-science' },
+  { id: 'finance', name: 'Banking and Finance', collegeId: 'management-science' },
+  { id: 'mass-comm', name: 'Mass Communication', collegeId: 'management-science' },
+  { id: 'public-admin', name: 'Public Administration', collegeId: 'management-science' },
+  { id: 'political-science', name: 'Political Science', collegeId: 'management-science' },
+  { id: 'international-relations', name: 'International Relations', collegeId: 'management-science' },
+  { id: 'sociology', name: 'Sociology', collegeId: 'management-science' },
+  { id: 'psychology', name: 'Psychology', collegeId: 'management-science' },
+  { id: 'entrepreneurship', name: 'Entrepreneurial Studies', collegeId: 'management-science' },
+
+  { id: 'architecture', name: 'Architecture', collegeId: 'environmental-science' },
+  { id: 'estate-management', name: 'Estate Management', collegeId: 'environmental-science' },
+  { id: 'urban-planning', name: 'Urban and Regional Planning', collegeId: 'environmental-science' },
+  { id: 'quantity-surveying', name: 'Quantity Surveying', collegeId: 'environmental-science' },
+
+  { id: 'law', name: 'Law', collegeId: 'law' },
+
+  { id: 'education-management', name: 'Educational Management', collegeId: 'education' },
+  { id: 'guidance-counseling', name: 'Guidance and Counselling', collegeId: 'education' },
+  { id: 'science-education', name: 'Science Education', collegeId: 'education' },
+  { id: 'library-science', name: 'Library and Information Science', collegeId: 'education' },
+  { id: 'adult-education', name: 'Adult and Continuing Education', collegeId: 'education' },
+  { id: 'business-education', name: 'Business Education', collegeId: 'education' },
+  { id: 'physical-health', name: 'Physical and Health Education', collegeId: 'education' },
+
+  { id: 'agronomy', name: 'Agronomy', collegeId: 'agriculture' },
+  { id: 'animal-science', name: 'Animal Science', collegeId: 'agriculture' },
+  { id: 'fisheries', name: 'Fisheries and Aquaculture', collegeId: 'agriculture' },
+  { id: 'soil-science', name: 'Soil Science', collegeId: 'agriculture' },
+  { id: 'agric-economics', name: 'Agricultural Economics', collegeId: 'agriculture' },
+  { id: 'crop-science', name: 'Crop Science', collegeId: 'agriculture' },
+  { id: 'forestry', name: 'Forestry and Wildlife Management', collegeId: 'agriculture' },
+];

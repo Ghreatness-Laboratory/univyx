@@ -1,79 +1,41 @@
+import { InstagramLogo, TiktokLogo, WhatsappLogo, X } from "phosphor-react";
 import { Link } from "react-router-dom";
-import FacebookLogo from "../../../assets/images/facebook-logo.svg";
-import InstagramLogo from "../../../assets/images/instagram-logo.svg";
-import LinkedinLogo from "../../../assets/images/linkedin-logo.svg";
-import TwitterLogo from "../../../assets/images/twitter-logo.svg";
 import UnivyxLogo from "../../../assets/images/univyx-logo.svg";
 
 const footerMenu = [
-  {
-    href: "#features",
-    menu: "Features",
-  },
-  {
-    href: "#about",
-    menu: "About",
-  },
-  {
-    href: "#services",
-    menu: "Services",
-  },
+  { href: "/academics", menu: "Academics" },
+  { href: "/entertainment", menu: "Entertainment" },
+  { href: "/gaming", menu: "Gaming" },
+  { href: "/shop", menu: "Shop" },
 ];
 
 const socialMediaPlatforms = [
   {
-    link: "https://www.facebook.com",
-    logo: FacebookLogo,
-    name: "Facebook",
-  },
-  {
-    link: "https://www.instagram.com",
-    logo: InstagramLogo,
+    link: "https://www.instagram.com/univyx",
+    icon: <InstagramLogo size={24} />,
     name: "Instagram",
   },
   {
-    link: "https://www.twitter.com",
-    logo: TwitterLogo,
-    name: "Twitter",
+    link: "https://whatsapp.com/channel/0029Vb2ER34F1YlKC4kehu3Y",
+    icon: <WhatsappLogo size={24} />,
+    name: "WhatsApp",
   },
   {
-    link: "https://www.linkedin.com",
-    logo: LinkedinLogo,
-    name: "Linkedin",
+    link: "https://www.tiktok.com/@univyx_",
+    icon: <TiktokLogo size={24} />,
+    name: "TikTok",
   },
+  { link: "https://x.com/univyx", icon: <X size={24} />, name: "X" },
 ];
 
 export default function Footer() {
-  const handleFooterLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    href: string
-  ) => {
-    event.preventDefault();
-    if (href.startsWith("#")) {
-      const targetId = href.replace("#", "");
-      const element = document.getElementById(targetId);
-      const navbarHeight = document.querySelector("nav")?.clientHeight || 0;
-
-      if (element) {
-        const elementPosition =
-          element.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = elementPosition - navbarHeight;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-      }
-    }
-  };
-
   const currentYear = new Date().getFullYear();
 
   return (
     <footer aria-label="footer">
       <section className="bg-[#F9F9FB]">
-        <div className="max-w-[1120px] w-full mx-auto pb-16 md:pb-[50px] pt-12 md:pt-[100px] md:px-4 lg:px-0 flex flex-col md:flex-row items-center gap-4 justify-between">
-          <div className="max-w-[423px] w-full h-[148px] md:h-[286px] md:self-start flex flex-col justify-between">
+        <div className="max-w-[1120px] w-full mx-auto pb-16 md:pb-[50px] pt-12 md:pt-[100px] px-4 lg:px-0 flex flex-col md:flex-row items-center gap-4 justify-between">
+          <div className="max-w-[423px] w-full min-h-[148px] md:h-[286px] md:self-start">
             <div className="flex justify-center md:justify-normal">
               <span className="sr-only">Logo</span>
               <img
@@ -81,32 +43,30 @@ export default function Footer() {
                 alt="Univyx logo and title"
                 width={310}
                 height={60}
-                className="rounded-2xl"
+                className="rounded-lg"
               />
             </div>
-            <div className="flex justify-center md:justify-normal gap-3 md:gap-5 ">
+          </div>
+
+          <div className="max-w-[647px] w-full flex flex-col md:self-start gap-5 px-4 md:px-0">
+            <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] md:tracking-[-0.96px]">
+              The ultimate platform for private university students
+            </h1>
+            <p className="text-secondary font-normal leading-6">
+              The ultimate platform for private university students, combining
+              academics, business, gaming, and entertainment in one place.
+            </p>
+            <div className="flex gap-3 md:gap-5 mt-4 flex-wrap">
               {footerMenu.map((menu, index) => (
                 <Link
                   key={index}
                   to={menu.href}
-                  onClick={(event) => handleFooterLinkClick(event, menu.href)}
                   className="px-4 md:px-5 py-2 rounded-full font-semibold leading-6 border border-[var(--Text-Colors-200,#D6D6D6)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)]"
                 >
                   {menu.menu}
                 </Link>
               ))}
             </div>
-          </div>
-
-          <div className="max-w-[647px] w-full flex flex-col md:self-start gap-5 text-center md:text-left px-4 md:px-0">
-            <h1 className="text-primary text-4xl md:text-5xl  font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] md:tracking-[-0.96px]">
-              Working to create value and <br className="md:hidden" /> drive
-              success for our clients.
-            </h1>
-            <p className="text-secondary font-normal leading-6">
-              Welcome to our platform, where private university students can
-              connect, have fun, and game together. Join us today!
-            </p>
           </div>
         </div>
       </section>
@@ -122,14 +82,7 @@ export default function Footer() {
                 className="p-2.5 border border-white rounded-full"
                 target="_blank"
               >
-                <img
-                  src={platform.logo}
-                  alt="Social Media Platform"
-                  width={15}
-                  height={15}
-                  className="w-[18px] h-[18px]"
-                  aria-label={`Visit ${platform.name}`}
-                />
+                {platform.icon}
               </Link>
             ))}
           </div>

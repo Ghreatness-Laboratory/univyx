@@ -1,4 +1,6 @@
-interface AccordianProps {
+import { motion } from "framer-motion";
+
+interface AccordionProps {
   content: {
     question: string;
     answer: string;
@@ -8,77 +10,80 @@ interface AccordianProps {
 }
 
 const fadeInDown = {
-  animation: "fadeInDown 0.2s linear",
+  initial: { opacity: 0, y: -10 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
 };
 
-export default function Accordian({
+export default function Accordion({
   content,
   isOpen,
   onToggle,
-}: AccordianProps) {
+}: AccordionProps) {
   return (
     <div
-      className={`px-3 py-2 md:p-[30px] flex flex-col gap-2 md:gap-5 rounded-[10px] ${
-        isOpen ? "bg-[#F9F9FB] border-none" : "border border-[#D6D6D6]"
-      }`}
+      className={`px-4 md:px-5 py-4 md:p-6 flex flex-col gap-3 rounded-md transition-all duration-300 border 
+      ${isOpen ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"}`}
     >
-      <div className="flex max-md:flex-col items-center max-md:items-start justify-between max-md:gap-5">
-        <h6 className="text-primary text-2xl font-medium animate-fadeInDown">
+      <div
+        className="flex gap-2 justify-between items-center cursor-pointer"
+        onClick={onToggle}
+      >
+        <h6 className="text-primary text-lg md:text-xl font-medium">
           {content.question}
         </h6>
         <button
-          onClick={onToggle}
           aria-expanded={isOpen}
           aria-controls={`answer-${content.question}`}
         >
           {isOpen ? (
-            <svg
-              className="cursor-pointer"
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
+            <motion.svg
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 180 }}
+              transition={{ duration: 0.3 }}
+              width="24"
               height="24"
-              viewBox="0 0 25 24"
+              viewBox="0 0 24 24"
               fill="none"
-              aria-hidden="true"
             >
               <path
-                d="M6.5 12H18.5"
+                d="M6 12h12"
                 stroke="#0D0D0D"
                 strokeWidth="2"
                 strokeLinecap="round"
-                strokeLinejoin="round"
               />
-            </svg>
+            </motion.svg>
           ) : (
-            <svg
-              className="cursor-pointer"
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
+            <motion.svg
+              initial={{ rotate: 180 }}
+              animate={{ rotate: 0 }}
+              transition={{ duration: 0.3 }}
+              width="24"
               height="24"
-              viewBox="0 0 25 24"
+              viewBox="0 0 24 24"
               fill="none"
-              aria-hidden="true"
             >
               <path
-                d="M6.5 12H12.5M12.5 12H18.5M12.5 12V18M12.5 12V6"
+                d="M6 12h12M12 6v12"
                 stroke="#0D0D0D"
                 strokeWidth="2"
                 strokeLinecap="round"
-                strokeLinejoin="round"
               />
-            </svg>
+            </motion.svg>
           )}
-          <span className="sr-only">Toggle answer</span>
         </button>
       </div>
       {isOpen && (
-        <p
+        <motion.p
           id={`answer-${content.question}`}
-          className="text-secondary text-base font-normal"
-          style={fadeInDown}
+          className="text-secondary text-base"
+          variants={fadeInDown}
+          initial="initial"
+          animate="animate"
+          exit="exit"
         >
           {content.answer}
-        </p>
+        </motion.p>
       )}
     </div>
   );

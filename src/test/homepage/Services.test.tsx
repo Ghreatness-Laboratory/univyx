@@ -2,8 +2,8 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-import Services from "../../components/layouts/homepage/Services";
-import ServiceCard from "../../components/layouts/homepage/Services/ServiceCard";
+import Services from "../../components/layouts/homepage/Features";
+import ServiceCard from "../../components/layouts/homepage/Features/FeaturesCard";
 
 describe("ServiceCard Component", () => {
   it("renders all service cards with the correct data", () => {

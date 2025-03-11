@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import UnivyxLogo from "../../assets/images/univyx-logo.svg";
-import Button from "../../components/common/Button";
 
 interface FormData {
   firstName: string;
@@ -24,17 +23,17 @@ export default function SignUp() {
   };
 
   return (
-    <div data-testid="sign-up-page" className="max-w-[70%] w-full mx-auto">
+    <div data-testid="sign-up-page" className="w-full md:max-w-[70%] mx-auto">
       <img
         src={UnivyxLogo}
         alt="Univyx logo and title"
         width={200}
         height={100}
-        className="mx-auto"
+        className="h-[80px] md:h-[100px] mx-auto"
       />
 
-      <h1 className="py-3 text-3xl font-semibold text-center">
-        Get a better student experience
+      <h1 className="py-3 text-xl md:text-3xl font-semibold text-center">
+        Join now for a better student experience
       </h1>
 
       <form
@@ -45,8 +44,8 @@ export default function SignUp() {
           <label className="block text-[14px] text-primary font-mormal mb-1">
             Full Name
           </label>
-          <div className="flex gap-3">
-            <div className="w-1/2">
+          <div className="flex max-md:flex-col gap-3">
+            <div className="md:w-1/2">
               <input
                 type="text"
                 {...register("firstName", {
@@ -61,7 +60,7 @@ export default function SignUp() {
                 </p>
               )}
             </div>
-            <div className="w-1/2">
+            <div className="md:w-1/2">
               <input
                 type="text"
                 {...register("lastName", { required: "Last name is required" })}
@@ -118,7 +117,7 @@ export default function SignUp() {
 
         <button
           type="submit"
-          className="w-full bg-primary text-[#FCFCFC] py-3 mt-2.5 rounded-md"
+          className="w-full bg-primary font-semibold text-[#FCFCFC] py-2 md:py-3 mt-2.5 rounded-md"
         >
           Join
         </button>
@@ -134,18 +133,16 @@ export default function SignUp() {
         </Link>
       </p>
 
-      <div className="flex items-center justify-center my-8">
+      <div className="flex items-center justify-center my-5 md:my-8">
         <div className="w-full h-px bg-gray-300"></div>
         <span className="mx-2 text-gray-500">Or</span>
         <div className="w-full h-px bg-gray-300"></div>
       </div>
 
       <div className="flex max-sm:flex-col items-center justify-center gap-[13px] text-[#FCFCFC] text-sm font-semibold leading-4">
-        <Button
-          href=""
-          className="flex gap-1 items-center p-2.5 rounded-[5.35px]"
-          isIconOnly={false}
-          ariaLabel="Sign up with google"
+        <button
+          className="flex gap-1 items-center justify-center py-3 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
+          aria-label="Sign up with google"
           data-testid="signup-link"
         >
           <svg
@@ -175,12 +172,10 @@ export default function SignUp() {
             />
           </svg>
           <p>Sign Up with Google</p>
-        </Button>
-        <Button
-          href=""
-          className="flex gap-1 items-center p-2.5 rounded-[5.35px]"
-          isIconOnly={false}
-          ariaLabel="Sign up with apple"
+        </button>
+        <button
+          className="flex gap-1 items-center justify-center py-3 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
+          aria-label="Sign up with apple"
           data-testid="signup-link"
         >
           <svg
@@ -198,7 +193,7 @@ export default function SignUp() {
             />
           </svg>
           <p>Sign Up with Apple</p>
-        </Button>
+        </button>
       </div>
     </div>
   );
