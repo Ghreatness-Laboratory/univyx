@@ -120,6 +120,7 @@ export default function Footer() {
                 key={index}
                 to={platform.link}
                 className="p-2.5 border border-white rounded-full"
+                target="_blank"
               >
                 <img
                   src={platform.logo}
