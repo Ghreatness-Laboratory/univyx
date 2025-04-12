@@ -1,4 +1,6 @@
-import { motion } from "framer-motion";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import Partner1 from "../../../../assets/images/homepage/partner-1.svg";
 import Partner2 from "../../../../assets/images/homepage/partner-2.svg";
 import Partner3 from "../../../../assets/images/homepage/partner-3.svg";
@@ -45,26 +47,55 @@ const partners = [
   },
 ];
 
-const marqueeVariants = {
-  animate: {
-    x: [0, -1000],
-    transition: {
-      x: {
-        repeat: Infinity,
-        repeatType: "loop",
-        duration: 20,
-        ease: "linear",
+const slickSettingsForward = {
+  dots: false,
+  infinite: true,
+  speed: 5000,
+  autoplaySpeed: 0,
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  arrows: false,
+  autoplay: true,
+  cssEase: "linear",
+  pauseOnHover: false,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
       },
     },
-  },
+    {
+      breakpoint: 750,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
+
+const slickSettingsBackward = {
+  ...slickSettingsForward,
+  rtl: true,
 };
 
 export default function Partners() {
+  const extendedPartners = [...partners, ...partners];
+
   return (
     <div>
       <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[45px] md:gap-8 px-6 lg:px-0 py-12 md:py-[100px] overflow-hidden">
         <div className="flex flex-col gap-[15px] text-center">
-          <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium  leading-[44px] md:leading-[60px] tracking-[-0.72px] mdLtracking-[-0.96px]">
+          <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] mdLtracking-[-0.96px]">
             Trusted by thousand businesses
           </h1>
           <p className="text-secondary text-base font-normal">
@@ -73,28 +104,25 @@ export default function Partners() {
         </div>
 
         <div className="relative overflow-hidden">
-          <motion.div
-            className="flex gap-8 whitespace-nowrap marquee"
-            variants={marqueeVariants}
-            animate="animate"
-          >
-            {partners.concat(partners).map((partner, index) => (
-              <div key={index} className="flex-shrink-0">
-                <PartnerCard image={partner.image} name={partner.name} />
-              </div>
-            ))}
-          </motion.div>
-          <motion.div
-            className="flex gap-8 whitespace-nowrap marquee"
-            variants={marqueeVariants}
-            animate="animate"
-          >
-            {partners.concat(partners.reverse()).map((partner, index) => (
-              <div key={index} className="flex-shrink-0">
-                <PartnerCard image={partner.image} name={partner.name} />
-              </div>
-            ))}
-          </motion.div>
+          <div className="mb-6">
+            <Slider {...slickSettingsForward}>
+              {extendedPartners.map((partner, index) => (
+                <div key={`forward-${index}`} className="px-4">
+                  <PartnerCard image={partner.image} name={partner.name} />
+                </div>
+              ))}
+            </Slider>
+          </div>
+
+          <div>
+            <Slider {...slickSettingsBackward}>
+              {extendedPartners.map((partner, index) => (
+                <div key={`backward-${index}`} className="px-4">
+                  <PartnerCard image={partner.image} name={partner.name} />
+                </div>
+              ))}
+            </Slider>
+          </div>
         </div>
       </section>
     </div>

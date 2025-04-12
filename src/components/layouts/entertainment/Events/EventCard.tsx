@@ -14,7 +14,7 @@ export default function EventCard({ event, className }: EventCardProps) {
         <img
           src={event.imageUrl}
           alt={event.title}
-          className="w-full h-52 object-cover"
+          className="w-full h-60 object-cover"
         />
         <div className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
           {event.category}

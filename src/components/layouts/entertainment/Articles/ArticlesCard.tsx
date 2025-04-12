@@ -29,7 +29,7 @@ export default function ArticleCard({ article, className }: ArticleCardProps) {
     <div
       className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ${className}`}
     >
-      <div className="h-48 overflow-hidden relative">
+      <div className="h-60 overflow-hidden relative">
         <img
           src={article.imageUrl}
           alt={article.title}

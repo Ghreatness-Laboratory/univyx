@@ -68,14 +68,12 @@ export default function TrendingTopics() {
     setImageError(null);
 
     if (file) {
-      // Check file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
         setImageError("Image size must be less than 5MB");
         setImagePreview(null);
         return;
       }
 
-      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -117,17 +115,16 @@ export default function TrendingTopics() {
       ? trendingTopics
       : trendingTopics.filter((topic) => topic.category === activeTab);
 
-  // Register image input without applying ref directly
   const imageRegister = register("image");
 
   return (
     <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-slate-800 mb-2">
+          <h2 className="text-4xl md:text-5xl font-semibold">
             Trending Topics
           </h2>
-          <p className="text-secondary  max-w-2xl">
+          <p className="text-secondary text-lg mt-2">
             Join the conversation on what's buzzing across campus right now
           </p>
         </div>

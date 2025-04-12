@@ -32,10 +32,10 @@ export default function Events() {
     <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[50px] py-12 md:py-[100px] px-6 lg:px-0">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-slate-800 mb-2">
+          <h2 className="text-4xl md:text-5xl font-semibold">
             Event Announcements
           </h2>
-          <p className="text-secondary  max-w-xl">
+          <p className="text-secondary text-lg mt-2">
             Never miss out on campus events, festivals, workshops, and
             gatherings
           </p>
