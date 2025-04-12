@@ -140,20 +140,24 @@ export default function Navbar() {
         aria-label="Main navigation"
       >
         <div className="px-1">
-          <img
-            src={UnivyxLogo}
-            alt="Univyx logo and title"
-            width={200}
-            height={100}
-            className="hidden md:block"
-          />
-          <img
-            src={UnivyxLogo}
-            alt="Ghreatness Labs logo and title"
-            width={120}
-            height={90}
-            className="block md:hidden"
-          />
+          <Link to="/">
+            <img
+              src={UnivyxLogo}
+              alt="Univyx logo and title"
+              width={200}
+              height={100}
+              className="hidden md:block"
+            />
+          </Link>
+          <Link to="/">
+            <img
+              src={UnivyxLogo}
+              alt="Ghreatness Labs logo and title"
+              width={120}
+              height={90}
+              className="block md:hidden"
+            />
+          </Link>
         </div>
 
         <ul className="hidden lg:flex items-center relative">

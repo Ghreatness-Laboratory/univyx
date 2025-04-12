@@ -1,7 +1,4 @@
 import { motion } from "framer-motion";
-import InterUniversityTournamentsSection from "../components/layouts/gaming/InterUniSection";
-import IntraUniversityTournamentsSection from "../components/layouts/gaming/IntraUniSection";
-import RankingsSection from "../components/layouts/gaming/Ranking/Ranking";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -9,11 +6,14 @@ const sectionVariants = {
 };
 
 import Events from "../components/layouts/gaming/Events";
+import Gallery from "../components/layouts/gaming/Gallery";
 import Header from "../components/layouts/gaming/Header";
-import { games } from "../data/gaming/games";
-import { playerRankings } from "../data/gaming/playerRankings";
-import { tournaments } from "../data/gaming/tournaments";
-import { universities } from "../data/gaming/university";
+import Tournaments from "../components/layouts/gaming/Tournament";
+import {
+  popularGames,
+  tournaments,
+  universities,
+} from "../data/gaming/tournaments";
 import { upcomingEvents } from "../data/gaming/upcomingEvents";
 
 export default function Entertainment() {
@@ -38,11 +38,10 @@ export default function Entertainment() {
         whileInView="visible"
         variants={sectionVariants}
       >
-        <InterUniversityTournamentsSection
-          interTournaments={tournaments.filter(
-            (tournament) => tournament.type === "inter"
-          )}
-          popularGames={games}
+        <Tournaments
+          tournaments={tournaments}
+          universities={universities}
+          popularGames={popularGames}
         />
       </motion.div>
       <motion.div
@@ -50,23 +49,7 @@ export default function Entertainment() {
         whileInView="visible"
         variants={sectionVariants}
       >
-        <IntraUniversityTournamentsSection
-          tournaments={tournaments.filter(
-            (tournament) => tournament.type === "intra"
-          )}
-          universities={universities}
-        />
-      </motion.div>
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        variants={sectionVariants}
-      >
-        <RankingsSection
-          playerRankings={playerRankings}
-          popularGames={games}
-          universities={universities}
-        />
+        <Gallery />
       </motion.div>
     </main>
   );
