@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import Navbar from "../components/layouts/Navbar";
+import Navbar from "../components/layouts/common/Navbar";
 
 vi.mock("../../assets/images/logo(large).svg", () => ({
   default: "large-logo-mock",

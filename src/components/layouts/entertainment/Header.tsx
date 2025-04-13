@@ -4,7 +4,7 @@ export default function EntertainmentHero() {
   return (
     <header
       data-testid="entertainment-header"
-      className="w-full relative py-16 lg:py-20 px-6 lg:px-8 overflow-hidden"
+      className="w-full relative py-16 lg:py-20 px-6 lg:px-20 overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900 to-fuchsia-900 opacity-95 z-0"></div>
 

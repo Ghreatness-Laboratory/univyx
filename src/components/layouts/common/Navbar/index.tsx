@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import UnivyxLogo from "../../../assets/images/univyx-logo.svg";
-import Button from "../../common/Button";
+import UnivyxLogo from "../../../../assets/images/univyx-logo.svg";
+import Button from "../../../common/Button";
 
 interface Navlink {
   href: string;
@@ -26,8 +26,8 @@ const navlinks: Navlink[] = [
     menu: "Gaming",
   },
   {
-    href: "/shop",
-    menu: "Shop",
+    href: "/store",
+    menu: "Store",
   },
 ];
 

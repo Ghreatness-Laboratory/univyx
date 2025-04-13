@@ -1,7 +1,7 @@
 import "./App.css";
 import AuthModal from "./components/auth/AuthModal";
-import Footer from "./components/layouts/Footer";
-import Navbar from "./components/layouts/Navbar";
+import Footer from "./components/layouts/common/Footer";
+import Navbar from "./components/layouts/common/Navbar";
 import ArticlesModal from "./components/modals/entertainment/articles";
 import NewsModal from "./components/modals/entertainment/news";
 import TopicsModal from "./components/modals/entertainment/topics";
