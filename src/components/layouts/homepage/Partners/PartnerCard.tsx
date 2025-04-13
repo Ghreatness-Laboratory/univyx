@@ -1,19 +1,12 @@
-export interface PartnerCardProps {
-  image: string;
-  name: string;
-}
-export default function PartnerCard(props: PartnerCardProps) {
+export default function PartnerCard({ image }: { image: string }) {
   return (
-    <div className="grid place-items-center h-[138px] w-[256px] rounded-[20px] border border-[#D6D6D6] mb-4">
-      <div className="flex items-center gap-2.5">
+    <div className="grid place-items-center h-32 w-full rounded-xl border border-gray-300">
+      <div className="flex items-center justify-center w-full px-4">
         <img
-          src={props.image}
-          alt={`${props.name} partner`}
-          width={166}
-          height={35}
-          className="w-[166PX] h-auto object-cover"
+          src={image}
+          alt="partner"
+          className="w-auto h-10 max-h-10 object-contain"
         />
-        {props.name}
       </div>
     </div>
   );
