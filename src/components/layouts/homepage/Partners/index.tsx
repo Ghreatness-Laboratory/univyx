@@ -9,42 +9,17 @@ import Partner5 from "../../../../assets/images/homepage/partner-5.svg";
 import Partner6 from "../../../../assets/images/homepage/partner-6.svg";
 import Partner7 from "../../../../assets/images/homepage/partner-7.svg";
 import Partner8 from "../../../../assets/images/homepage/partner-8.svg";
-
 import PartnerCard from "./PartnerCard";
 
 const partners = [
-  {
-    image: Partner1,
-    name: "",
-  },
-  {
-    image: Partner2,
-    name: "",
-  },
-  {
-    image: Partner3,
-    name: "",
-  },
-  {
-    image: Partner4,
-    name: "",
-  },
-  {
-    image: Partner5,
-    name: "",
-  },
-  {
-    image: Partner6,
-    name: "",
-  },
-  {
-    image: Partner7,
-    name: "",
-  },
-  {
-    image: Partner8,
-    name: "",
-  },
+  Partner1,
+  Partner2,
+  Partner3,
+  Partner4,
+  Partner5,
+  Partner6,
+  Partner7,
+  Partner8,
 ];
 
 const slickSettingsForward = {
@@ -58,6 +33,11 @@ const slickSettingsForward = {
   autoplay: true,
   cssEase: "linear",
   pauseOnHover: false,
+  swipeToSlide: false,
+  touchMove: false,
+  variableWidth: false,
+  centerMode: false,
+  centerPadding: "0px",
   responsive: [
     {
       breakpoint: 1024,
@@ -76,7 +56,7 @@ const slickSettingsForward = {
     {
       breakpoint: 480,
       settings: {
-        slidesToShow: 2,
+        slidesToShow: 1,
         slidesToScroll: 1,
       },
     },
@@ -93,9 +73,9 @@ export default function Partners() {
 
   return (
     <div>
-      <section className="max-w-[1120px] w-full mx-auto flex flex-col gap-[45px] md:gap-8 px-6 lg:px-0 py-12 md:py-[100px] overflow-hidden">
-        <div className="flex flex-col gap-[15px] text-center">
-          <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium leading-[44px] md:leading-[60px] tracking-[-0.72px] mdLtracking-[-0.96px]">
+      <section className="max-w-screen-lg w-full mx-auto flex flex-col gap-8 px-6 lg:px-0 py-12 md:py-24 overflow-hidden">
+        <div className="flex flex-col gap-4 text-center">
+          <h1 className="text-primary text-4xl md:text-5xl font-semibold md:font-medium leading-tight tracking-tight">
             Trusted by thousand businesses
           </h1>
           <p className="text-secondary text-base font-normal">
@@ -104,11 +84,11 @@ export default function Partners() {
         </div>
 
         <div className="relative overflow-hidden">
-          <div className="mb-6">
+          <div className="mb-4 md:mb-8">
             <Slider {...slickSettingsForward}>
               {extendedPartners.map((partner, index) => (
-                <div key={`forward-${index}`} className="px-4">
-                  <PartnerCard image={partner.image} name={partner.name} />
+                <div key={`forward-${index}`} className="p-2">
+                  <PartnerCard image={partner} />
                 </div>
               ))}
             </Slider>
@@ -117,8 +97,8 @@ export default function Partners() {
           <div>
             <Slider {...slickSettingsBackward}>
               {extendedPartners.map((partner, index) => (
-                <div key={`backward-${index}`} className="px-4">
-                  <PartnerCard image={partner.image} name={partner.name} />
+                <div key={`backward-${index}`} className="p-2">
+                  <PartnerCard image={partner} />
                 </div>
               ))}
             </Slider>
