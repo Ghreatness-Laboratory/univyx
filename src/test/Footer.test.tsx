@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { describe, expect, it, vi, expect as viExpect } from "vitest";
-import Footer from "../components/layouts/Footer";
+import Footer from "../components/layouts/common/Footer";
 
 vi.mock("../assets/images/logo(extralarge).svg", () => ({
   default: "mocked-footer-logo",

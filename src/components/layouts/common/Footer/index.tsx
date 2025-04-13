@@ -1,12 +1,12 @@
 import { InstagramLogo, TiktokLogo, WhatsappLogo, X } from "phosphor-react";
 import { Link } from "react-router-dom";
-import UnivyxLogo from "../../../assets/images/univyx-logo.svg";
+import UnivyxLogo from "../../../../assets/images/univyx-logo.svg";
 
 const footerMenu = [
   { href: "/academics", menu: "Academics" },
   { href: "/entertainment", menu: "Entertainment" },
   { href: "/gaming", menu: "Gaming" },
-  { href: "/shop", menu: "Shop" },
+  { href: "/store", menu: "Store" },
 ];
 
 const socialMediaPlatforms = [

@@ -7,7 +7,7 @@ import Entertainment from "../pages/Entertainment";
 import Gaming from "../pages/Gaming";
 import Home from "../pages/Home";
 import NotFound from "../pages/NotFound";
-import Shop from "../pages/Shop";
+import Store from "../pages/Store";
 import ScrollToTop from "./ScrollToTop";
 
 const PublicRouter: React.FC = () => {
@@ -19,7 +19,7 @@ const PublicRouter: React.FC = () => {
         <Route path="/academics" element={<Academics />} />
         <Route path="/academics/:universityId" element={<Resources />} />
         <Route path="/gaming" element={<Gaming />} />
-        <Route path="/shop" element={<Shop />} />
+        <Route path="/store" element={<Store />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
       <ScrollToTop />

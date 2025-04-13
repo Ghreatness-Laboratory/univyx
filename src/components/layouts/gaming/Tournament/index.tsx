@@ -211,7 +211,7 @@ const Tournaments: React.FC<TournamentsSectionProps> = ({
       )}
 
       {filteredTournaments.length > itemsPerPage && (
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}

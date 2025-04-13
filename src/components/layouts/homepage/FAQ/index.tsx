@@ -41,7 +41,7 @@ const questions_and_answer = [
   {
     question: "Can I sell my products on Univyx?",
     answer:
-      "Absolutely! Univyx Shop is a marketplace for student entrepreneurs to sell their products and services to the university community.",
+      "Absolutely! Univyx Store is a marketplace for student entrepreneurs to sell their products and services to the university community.",
   },
   {
     question: "How does Univyx help with career development?",
