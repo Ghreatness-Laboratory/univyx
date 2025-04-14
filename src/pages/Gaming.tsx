@@ -8,6 +8,7 @@ const sectionVariants = {
 import Events from "../components/layouts/gaming/Events";
 import Gallery from "../components/layouts/gaming/Gallery";
 import Header from "../components/layouts/gaming/Header";
+import Leaderboards from "../components/layouts/gaming/leaderboard";
 import Tournaments from "../components/layouts/gaming/Tournament";
 import {
   popularGames,
@@ -43,6 +44,13 @@ export default function Entertainment() {
           universities={universities}
           popularGames={popularGames}
         />
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+      >
+        <Leaderboards />
       </motion.div>
       <motion.div
         initial="hidden"
