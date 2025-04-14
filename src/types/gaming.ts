@@ -22,3 +22,17 @@ export interface University {
   logo: string;
   shortName: string;
 }
+
+export interface LeaderboardEntry {
+  rank: number;
+  universityId: string;
+  universityName: string;
+  logo: string;
+  members: number;
+}
+
+export interface GameLeaderboard {
+  gameId: number;
+  gameName: string;
+  leaderboard: LeaderboardEntry[];
+}
