@@ -41,9 +41,9 @@ export default function Leaderboards() {
           <button
             key={game.gameId}
             onClick={() => setSelectedGame(game.gameId)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all mb-1 ${
               selectedGame === game.gameId
-                ? "bg-primary text-white shadow-md"
+                ? "bg-primary text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -85,9 +85,9 @@ export default function Leaderboards() {
               entry.rank === 1 ? "bg-yellow-50" : ""
             }`}
           >
-            <div className="col-span-1 flex justify-center items-center">
+            <div className="col-span-1 hidden md:flex justify-center items-center">
               {entry.rank === 1 ? (
-                <div className="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center text-white font-bold">
+                <div className="w-7 h-7 rounded-full bg-yellow-400 flex items-center justify-center text-white font-bold">
                   1
                 </div>
               ) : entry.rank === 2 ? (
