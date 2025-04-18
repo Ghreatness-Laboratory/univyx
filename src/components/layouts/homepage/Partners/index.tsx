@@ -79,7 +79,7 @@ export default function Partners() {
             Trusted by thousand businesses
           </h1>
           <p className="text-secondary text-base font-normal">
-            More 15,000 Companies & partners trusted & choice Itekseo
+            More than 15 Companies & partners
           </p>
         </div>
 
