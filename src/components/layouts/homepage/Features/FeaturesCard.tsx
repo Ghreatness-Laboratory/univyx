@@ -1,6 +1,5 @@
-// FeaturesCard.jsx
 import { motion } from "framer-motion";
-import DesktopIcon from "../../../../assets/images/Desktop-icon.svg";
+import { Library, Gamepad2, Radio } from "lucide-react";
 import Button from "../../../common/Button";
 
 const features = [
@@ -8,16 +7,19 @@ const features = [
     title: "Resource Hub",
     description:
       "Access a comprehensive library of past questions, study notes, and academic materials to enhance your learning experience.",
+    icon: Library,
   },
   {
     title: "Gaming Platform",
     description:
       "Participate in exciting intra and inter-university gaming competitions that foster teamwork and healthy competition.",
+    icon: Gamepad2,
   },
   {
     title: "Entertainment",
     description:
       "Stay updated with university news, articles, trending topics, and events to keep you informed and engaged.",
+    icon: Radio,
   },
 ];
 
@@ -28,9 +30,9 @@ export default function FeaturesCard() {
       opacity: 1,
       transition: {
         staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
+        delayChildren: 0.3,
+      },
+    },
   };
 
   const cardVariants = {
@@ -40,9 +42,9 @@ export default function FeaturesCard() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   const iconVariants = {
@@ -54,63 +56,65 @@ export default function FeaturesCard() {
         type: "spring",
         stiffness: 260,
         damping: 20,
-        delay: 0.2
-      }
-    }
+        delay: 0.2,
+      },
+    },
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="md:max-w-[575px] w-full flex flex-col gap-3 md:gap-8"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.1 }}
     >
-      {features.map((feature, index) => (
-        <motion.div
-          key={index}
-          aria-label={feature.title}
-          className="py-4 px-[30px] md:p-[30px] rounded-[20px] flex flex-col gap-5 items-center md:items-start text-center md:text-left bg-[#F9F9FB]"
-          variants={cardVariants}
-          whileHover={{ 
-            y: -8,
-            boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.06)",
-            transition: { duration: 0.3 }
-          }}
-        >
-          <motion.div 
-            className="w-14 h-14"
-            variants={iconVariants}
+      {features.map((feature, index) => {
+        const IconComponent = feature.icon;
+
+        return (
+          <motion.div
+            key={index}
+            aria-label={feature.title}
+            className="py-4 px-[30px] md:p-[30px] rounded-[20px] flex flex-col gap-5 items-center md:items-start text-center md:text-left bg-[#F9F9FB]"
+            variants={cardVariants}
+            whileHover={{
+              y: -8,
+              boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.06)",
+              transition: { duration: 0.3 },
+            }}
           >
-            <img
-              src={DesktopIcon}
-              alt="Desktop Icon"
-              width={62}
-              height={62}
-              className="w-full h-full object-cover"
-            />
+            <motion.div
+              className="w-14 h-14 flex items-center justify-center bg-white rounded-full shadow-sm"
+              variants={iconVariants}
+            >
+              <IconComponent
+                size={32}
+                strokeWidth={1.5}
+                className="text-primary"
+              />
+            </motion.div>
+            <div className="flex flex-col gap-3 w-full">
+              <motion.h6
+                className="text-primary text-2xl font-medium"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 + index * 0.1 }}
+              >
+                {feature.title}
+              </motion.h6>
+              <motion.p
+                className="text-secondary text-base font-normal text-balance"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 + index * 0.1 }}
+              >
+                {feature.description}
+              </motion.p>
+            </div>
           </motion.div>
-          <div className="flex flex-col gap-3 w-full">
-            <motion.h6 
-              className="text-primary text-2xl font-medium"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 + index * 0.1 }}
-            >
-              {feature.title}
-            </motion.h6>
-            <motion.p 
-              className="text-secondary text-base font-normal text-balance"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 + index * 0.1 }}
-            >
-              {feature.description}
-            </motion.p>
-          </div>
-        </motion.div>
-      ))}
+        );
+      })}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
