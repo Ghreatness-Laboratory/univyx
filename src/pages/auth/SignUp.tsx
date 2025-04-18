@@ -23,7 +23,7 @@ export default function SignUp() {
   };
 
   return (
-    <div data-testid="sign-up-page" className="w-full md:max-w-[70%] mx-auto">
+    <div data-testid="sign-up-page" className="w-full md:max-w-[90%] mx-auto">
       <img
         src={UnivyxLogo}
         alt="Univyx logo and title"
@@ -33,7 +33,7 @@ export default function SignUp() {
       />
 
       <h1 className="py-3 text-xl md:text-3xl font-semibold text-center">
-        Join now for a better student experience
+        Join for a better student experience
       </h1>
 
       <form
@@ -52,7 +52,7 @@ export default function SignUp() {
                   required: "First name is required",
                 })}
                 placeholder="First name"
-                className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                className="w-full p-4 border border-gray-300 rounded-md text-sm"
               />
               {errors.firstName && (
                 <p className="text-red-500 text-sm">
@@ -65,7 +65,7 @@ export default function SignUp() {
                 type="text"
                 {...register("lastName", { required: "Last name is required" })}
                 placeholder="Last name"
-                className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                className="w-full p-4 border border-gray-300 rounded-md text-sm"
               />
               {errors.lastName && (
                 <p className="text-red-500 text-sm">
@@ -90,7 +90,7 @@ export default function SignUp() {
               },
             })}
             placeholder="Enter your email"
-            className="w-full p-2 border border-gray-300 rounded-md text-sm"
+            className="w-full p-4 border border-gray-300 rounded-md text-sm"
           />
           {errors.email && (
             <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -108,7 +108,7 @@ export default function SignUp() {
               minLength: { value: 8, message: "Minimum 8 characters required" },
             })}
             placeholder="Enter 8 characters"
-            className="w-full p-2 border border-gray-300 rounded-md text-sm"
+            className="w-full p-4 border border-gray-300 rounded-md text-sm"
           />
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -141,7 +141,7 @@ export default function SignUp() {
 
       <div className="flex max-sm:flex-col items-center justify-center gap-[13px] text-[#FCFCFC] text-sm font-semibold leading-4">
         <button
-          className="flex gap-1 items-center justify-center py-3 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
+          className="flex gap-1 items-center justify-center py-4 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
           aria-label="Sign up with google"
           data-testid="signup-link"
         >
@@ -174,7 +174,7 @@ export default function SignUp() {
           <p>Sign Up with Google</p>
         </button>
         <button
-          className="flex gap-1 items-center justify-center py-3 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
+          className="flex gap-1 items-center justify-center py-4 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
           aria-label="Sign up with apple"
           data-testid="signup-link"
         >

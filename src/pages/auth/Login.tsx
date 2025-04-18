@@ -21,7 +21,7 @@ export default function Login() {
   };
 
   return (
-    <div data-testid="login-page" className="w-full md:max-w-[70%] mx-auto">
+    <div data-testid="login-page" className="w-full md:max-w-[90%] mx-auto">
       <img
         src={UnivyxLogo}
         alt="Univyx logo and title"
@@ -52,7 +52,7 @@ export default function Login() {
               },
             })}
             placeholder="Enter your email"
-            className="w-full p-2 border border-gray-300 rounded-md text-sm"
+            className="w-full p-4 border border-gray-300 rounded-md text-sm"
           />
           {errors.email && (
             <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -69,7 +69,7 @@ export default function Login() {
               required: "Password is required",
             })}
             placeholder="Enter your password"
-            className="w-full p-2 border border-gray-300 rounded-md text-sm"
+            className="w-full p-4 border border-gray-300 rounded-md text-sm"
           />
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -102,7 +102,7 @@ export default function Login() {
 
       <div className="flex max-sm:flex-col items-center justify-center gap-[13px] text-[#FCFCFC] text-sm font-semibold leading-4">
         <button
-          className="flex gap-1 items-center justify-center py-3 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
+          className="flex gap-1 items-center justify-center py-4 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
           aria-label="Login with google"
           data-testid="login-link"
         >
@@ -135,7 +135,7 @@ export default function Login() {
           <p>Login with Google</p>
         </button>
         <button
-          className="flex gap-1 items-center justify-center py-3 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
+          className="flex gap-1 items-center justify-center py-4 rounded-[5.35px] w-full bg-primary text-[#FCFCFC] border border-[#64748B] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] cursor-pointer"
           aria-label="Login with apple"
           data-testid="login-link"
         >

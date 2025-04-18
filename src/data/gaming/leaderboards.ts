@@ -1,4 +1,4 @@
-import logo from "../../../public/univyx-logo.svg";
+import logo from "../../assets/univyx-logo.svg";
 import type { GameLeaderboard } from "../../types/gaming";
 
 export const gameLeaderboards: GameLeaderboard[] = [
