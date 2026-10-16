@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary-blue: #1D9BF0;
+    --primary-dark: #000000;
+    --light-bg: #FFFFFF;
+    --dark-bg: #0A0A0A;
+    --light-surface: #F7F9FC;
+    --dark-surface: #16181C;
+    --border-light: #E5E7EB;
+    --border-dark: #2F3336;
+  }
+
+  body {
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+/* User-selectable font classes */
+.font-pref-inter {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.font-pref-roboto {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-pref-georgia {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.font-pref-dyslexic {
+  font-family: 'Atkinson Hyperlegible', 'Comic Sans MS', sans-serif;
+  letter-spacing: 0.02em;
+  word-spacing: 0.05em;
+  line-height: 1.65;
+}
+
+.font-pref-system {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Safe area padding for mobile notch and navigation */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Hide scrollbars cleanly for mobile horizontal filter carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

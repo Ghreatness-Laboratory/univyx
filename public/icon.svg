@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="108" fill="#0A0A0A"/>
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#1D9BF0" stroke-width="12" stroke-opacity="0.3"/>
+  
+  <!-- Graduation cap minimalist geometric lines -->
+  <polygon points="256,120 380,180 256,240 132,180" fill="#1D9BF0"/>
+  <path d="M190,210 L190,290 C190,328 322,328 322,290 L322,210" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round"/>
+  
+  <!-- Letter X / Intersection styling -->
+  <path d="M180,340 L332,430 M332,340 L180,430" stroke="#1D9BF0" stroke-width="24" stroke-linecap="round"/>
+  
+  <!-- Central pulse accent -->
+  <circle cx="256" cy="385" r="14" fill="#FFFFFF"/>
+</svg>

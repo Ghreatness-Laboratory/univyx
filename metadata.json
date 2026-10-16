@@ -1,0 +1,8 @@
+{
+  "name": "univyX",
+  "description": "Text-first social network and student ecosystem for university communities with campus feeds, entertainment, academics, CIVYN careers, student marketplace, and univyX Arena.",
+  "permissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
