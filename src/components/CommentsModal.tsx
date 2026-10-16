@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Post } from '../types';
 import { useApp } from '../context/AppContext';
-import { X, Send, Heart, CheckCircle2 } from 'lucide-react';
+import { X, Send, CheckCircle2 } from 'lucide-react';
 
 interface CommentsModalProps {
   post: Post;
@@ -13,6 +13,9 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
   const [commentText, setCommentText] = useState('');
 
   const comments = getCommentsForPost(post.id);
+  const commentsCount = post.commentsCount ?? post.comments_count ?? comments.length;
+  const authorName = post.authorName || post.author?.fullName || post.author?.full_name || 'Scholar';
+  const isVerified = post.author?.isVerified ?? post.author?.is_verified ?? true;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +30,7 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
         {/* Header */}
         <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
-            Campus Discussion ({post.comments_count})
+            Campus Discussion ({commentsCount})
           </h3>
           <button
             onClick={onClose}
@@ -40,13 +43,13 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
         {/* Original Post Summary */}
         <div className="p-4 bg-slate-50/50 dark:bg-[#0A0A0A]/50 border-b border-slate-100 dark:border-slate-800 text-xs">
           <div className="flex items-center gap-1.5 font-medium text-slate-900 dark:text-white mb-1">
-            <span>{post.author.full_name}</span>
-            {post.author.is_verified && (
+            <span>{authorName}</span>
+            {isVerified && (
               <CheckCircle2 className="w-3.5 h-3.5 text-[#1D9BF0]" />
             )}
-            <span className="text-slate-400">@{post.author.username}</span>
+            <span className="text-slate-400">@{post.username || post.author?.username}</span>
           </div>
-          <p className="text-slate-700 dark:text-slate-300 line-clamp-3 leading-relaxed">
+          <p className="text-slate-700 dark:text-slate-300 line-clamp-3">
             {post.content}
           </p>
         </div>
@@ -58,26 +61,31 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
               No replies yet. Start the conversation!
             </div>
           ) : (
-            comments.map((comment) => (
-              <div key={comment.id} className="flex items-start gap-2.5 text-xs">
-                <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 text-[11px] border border-slate-200 dark:border-slate-700">
-                  {comment.author.full_name.charAt(0)}
-                </div>
-                <div className="flex-1 min-w-0 bg-slate-50 dark:bg-[#0A0A0A] p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-900 dark:text-white">
-                      {comment.author.full_name}
-                    </span>
-                    <span className="text-[10px] text-slate-400">
-                      {new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
+            comments.map((comment) => {
+              const cName = comment.authorName || comment.author?.fullName || comment.author?.full_name || 'Scholar';
+              const cInitial = cName.charAt(0).toUpperCase();
+              const cDate = comment.createdAt || comment.created_at || new Date().toISOString();
+              return (
+                <div key={comment.id} className="flex items-start gap-2.5 text-xs">
+                  <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 text-[11px] border border-slate-200 dark:border-slate-700">
+                    {cInitial}
                   </div>
-                  <p className="mt-1 text-slate-700 dark:text-slate-300 leading-normal">
-                    {comment.content}
-                  </p>
+                  <div className="flex-1 min-w-0 bg-slate-50 dark:bg-[#0A0A0A] p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-slate-900 dark:text-white">
+                        {cName}
+                      </span>
+                      <span className="text-[10px] text-slate-400">
+                        {new Date(cDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-slate-700 dark:text-slate-300 leading-normal">
+                      {comment.content}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
@@ -87,14 +95,13 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
             type="text"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Post your reply..."
-            maxLength={280}
-            className="flex-1 text-xs p-2.5 rounded-xl bg-slate-100 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#1D9BF0]"
+            placeholder="Post your collegiate reply..."
+            className="flex-1 text-xs p-2 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:border-[#1D9BF0]"
           />
           <button
             type="submit"
             disabled={!commentText.trim()}
-            className="p-2.5 rounded-xl bg-[#1D9BF0] text-white hover:bg-[#1A8CD8] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-xl bg-[#1D9BF0] text-white disabled:opacity-40 hover:bg-[#1A8CD8] transition-colors"
           >
             <Send className="w-4 h-4" />
           </button>

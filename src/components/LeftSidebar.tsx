@@ -10,7 +10,6 @@ import {
   Bookmark,
   Bell,
   Settings,
-  ShieldCheck,
   PenSquare,
   CheckCircle2
 } from 'lucide-react';
@@ -27,16 +26,17 @@ export const LeftSidebar: React.FC = () => {
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'entertainment', label: 'Entertainment', icon: Sparkles },
-    { id: 'academics', label: 'Academics & CIVYN', icon: GraduationCap },
-    { id: 'arena', label: 'univyX Arena', icon: Trophy },
+    { id: 'academics', label: 'Academics', icon: GraduationCap },
+    { id: 'arena', label: 'Univyx Arena', icon: Trophy },
     { id: 'store', label: 'Store', icon: ShoppingBag },
     { id: 'notifications', label: 'Notifications', icon: Bell, badge: unreadNotificationsCount },
-    { id: 'bookmarks', label: 'Bookmarks', icon: Bookmark },
+    { id: 'bookmarks', label: 'Saved Posts', icon: Bookmark },
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
-  const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'superadmin' || currentUser?.role === 'moderator';
+  const userDisplayName = currentUser?.fullName || currentUser?.full_name || 'Scholar';
+  const userInitial = userDisplayName.charAt(0).toUpperCase();
 
   return (
     <aside className="w-64 shrink-0 hidden lg:flex flex-col justify-between py-4 px-3 sticky top-14 h-[calc(100vh-3.5rem)] border-r border-slate-200 dark:border-slate-800">
@@ -47,7 +47,7 @@ export const LeftSidebar: React.FC = () => {
           onClick={() => setActiveTab('home')}
           className="flex items-center gap-2.5 px-3.5 py-3 mb-2 rounded-2xl cursor-pointer hover:bg-slate-50 dark:hover:bg-[#111316] transition-colors"
         >
-          <div className="w-8 h-8 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center p-1.5 shadow-sm">
+          <div className="w-8 h-8 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center p-1.5 shadow-xs">
             <svg viewBox="0 0 512 512" className="w-full h-full fill-white dark:fill-black stroke-white dark:stroke-black stroke-[30] stroke-linecap-round stroke-linejoin-round">
               <rect x="186" y="112" width="34" height="52" rx="17" transform="rotate(-22 203 138)" stroke="none"/>
               <rect x="178" y="348" width="52" height="34" rx="17" transform="rotate(-30 204 365)" stroke="none"/>
@@ -59,14 +59,15 @@ export const LeftSidebar: React.FC = () => {
             </svg>
           </div>
           <div>
-            <div className="text-base font-black tracking-wider text-slate-900 dark:text-white uppercase font-sans leading-none">
-              univy<span className="text-[#1D9BF0]">X</span>
+            <div className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white font-['Outfit'] leading-none">
+              Univyx
             </div>
-            <div className="text-[10px] text-slate-400 font-medium tracking-tight mt-0.5">
-              Campus Ecosystem
+            <div className="text-[10px] text-slate-400 font-medium tracking-tight mt-1">
+              Private University Network
             </div>
           </div>
         </div>
+
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -97,28 +98,14 @@ export const LeftSidebar: React.FC = () => {
           );
         })}
 
-        {isAdmin && (
-          <button
-            onClick={() => setActiveTab('admin')}
-            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold transition-colors ${
-              activeTab === 'admin'
-                ? 'bg-amber-500/10 text-amber-500'
-                : 'text-amber-500/80 hover:bg-amber-500/10 hover:text-amber-500'
-            }`}
-          >
-            <ShieldCheck className="w-5 h-5 text-amber-500" />
-            <span>Admin Dashboard</span>
-          </button>
-        )}
-
         {/* Primary Desktop Post Composer Button */}
         <div className="pt-3">
           <button
             onClick={() => setIsComposerOpen(true)}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-[#1D9BF0] text-white text-sm font-bold hover:bg-[#1A8CD8] active:scale-[0.98] transition-all shadow-md shadow-[#1D9BF0]/15"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-[#1D9BF0] text-white text-sm font-bold hover:bg-[#1A8CD8] active:scale-[0.98] transition-all shadow-sm"
           >
             <PenSquare className="w-4 h-4" />
-            <span>Post to Campus</span>
+            <span>Post</span>
           </button>
         </div>
       </div>
@@ -130,14 +117,14 @@ export const LeftSidebar: React.FC = () => {
           className="p-2.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-[#16181C] cursor-pointer transition-colors flex items-center gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-800"
         >
           <div className="w-10 h-10 rounded-full bg-[#1D9BF0]/15 text-[#1D9BF0] font-bold flex items-center justify-center shrink-0 border border-[#1D9BF0]/30 text-sm">
-            {currentUser.full_name.charAt(0)}
+            {userInitial}
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1">
               <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                {currentUser.full_name}
+                {userDisplayName}
               </h4>
-              {currentUser.is_verified && (
+              {(currentUser.isVerified || currentUser.is_verified) && (
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#1D9BF0] shrink-0" />
               )}
             </div>

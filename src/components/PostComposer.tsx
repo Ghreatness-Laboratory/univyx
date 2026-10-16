@@ -32,7 +32,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
   const [content, setContent] = useState('');
   const [category, setCategory] = useState<PostCategory>(defaultCategory);
   const [universityId, setUniversityId] = useState<string>(
-    selectedUniversityId !== 'all' ? selectedUniversityId : currentUser?.university_id || ''
+    selectedUniversityId !== 'all' ? selectedUniversityId : currentUser?.universityId || currentUser?.university_id || ''
   );
 
   const MAX_CHARS = 280;
@@ -65,7 +65,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
       <div className="flex items-start gap-3">
         {/* User Initial Avatar */}
         <div className="w-10 h-10 rounded-full bg-[#1D9BF0]/15 text-[#1D9BF0] font-bold flex items-center justify-center shrink-0 border border-[#1D9BF0]/30">
-          {currentUser?.full_name?.charAt(0) || 'U'}
+          {(currentUser?.fullName || currentUser?.full_name || 'U').charAt(0).toUpperCase()}
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 min-w-0">
@@ -138,7 +138,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                   <option value="" className="dark:bg-[#16181C]">Network-wide</option>
                   {universities.map((u) => (
                     <option key={u.id} value={u.id} className="dark:bg-[#16181C]">
-                      {u.short_name}
+                      {u.shortName || u.short_name}
                     </option>
                   ))}
                 </select>

@@ -4,12 +4,12 @@ import { PostComposer } from '../components/PostComposer';
 import { PostCard } from '../components/PostCard';
 import { Post, PostCategory } from '../types';
 import { CommentsModal } from '../components/CommentsModal';
-import { Sparkles, MessageSquare } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 export const HomeView: React.FC = () => {
   const { posts, selectedUniversityId, currentUser } = useApp();
 
-  const [feedMode, setFeedMode] = useState<'for_you' | 'following' | 'my_campus' | 'latest'>('for_you');
+  const [feedMode, setFeedMode] = useState<'for_you' | 'following' | 'my_university' | 'latest'>('for_you');
   const [selectedCategory, setSelectedCategory] = useState<PostCategory | 'all'>('all');
   const [activeCommentsPost, setActiveCommentsPost] = useState<Post | null>(null);
   const [activeQuotePost, setActiveQuotePost] = useState<Post | null>(null);
@@ -32,20 +32,24 @@ export const HomeView: React.FC = () => {
       return false;
     }
 
+    const postUniId = post.universityId || post.university_id;
     // University selector filter from top bar
-    if (selectedUniversityId !== 'all' && post.university_id && post.university_id !== selectedUniversityId) {
+    if (selectedUniversityId !== 'all' && postUniId && postUniId !== selectedUniversityId) {
       return false;
     }
 
+    const userUniId = currentUser?.universityId || currentUser?.university_id;
+    const authorId = post.authorId || post.author_id || post.author?.id;
+    const authorUsername = post.username || post.author?.username;
+
     // Feed Mode filter
-    if (feedMode === 'my_campus') {
-      if (currentUser?.university_id && post.university_id !== currentUser.university_id) {
+    if (feedMode === 'my_university') {
+      if (userUniId && postUniId !== userUniId) {
         return false;
       }
     } else if (feedMode === 'following') {
-      // In following mode, show posts authored by accounts the user follows or official pulse
-      if (post.author_id === currentUser?.id) return true;
-      if (post.author.username === 'campus_pulse') return true;
+      if (authorId === currentUser?.id) return true;
+      if (authorUsername === 'univyx_official' || authorUsername === 'damola_abuad' || authorUsername === 'zainab_nile') return true;
     }
 
     return true;
@@ -53,7 +57,7 @@ export const HomeView: React.FC = () => {
 
   return (
     <div className="w-full min-w-0">
-      {/* Feed Tabs: For You, Following, My Campus, Latest */}
+      {/* Feed Tabs: For You, Following, My University, Latest */}
       <div className="sticky top-14 z-20 bg-white/95 dark:bg-[#0A0A0A]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center justify-around text-xs font-semibold border-b border-slate-100 dark:border-slate-800/60">
           <button
@@ -85,15 +89,15 @@ export const HomeView: React.FC = () => {
           </button>
 
           <button
-            onClick={() => setFeedMode('my_campus')}
+            onClick={() => setFeedMode('my_university')}
             className={`flex-1 py-3 text-center transition-colors relative ${
-              feedMode === 'my_campus'
+              feedMode === 'my_university'
                 ? 'text-slate-900 dark:text-white'
                 : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
             }`}
           >
-            <span>My Campus</span>
-            {feedMode === 'my_campus' && (
+            <span>My University</span>
+            {feedMode === 'my_university' && (
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-[#1D9BF0] rounded-full" />
             )}
           </button>
@@ -121,7 +125,7 @@ export const HomeView: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap transition-colors shrink-0 ${
+                className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap transition-colors shrink-0 ${
                   isSelected
                     ? 'bg-[#1D9BF0] text-white'
                     : 'bg-slate-100 dark:bg-[#16181C] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'

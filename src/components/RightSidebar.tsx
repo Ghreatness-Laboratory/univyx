@@ -6,7 +6,6 @@ import {
   Briefcase,
   Trophy,
   Building2,
-  ExternalLink,
   ChevronRight
 } from 'lucide-react';
 
@@ -67,7 +66,7 @@ export const RightSidebar: React.FC = () => {
           <option value="all">All Participating Campuses</option>
           {universities.map((u) => (
             <option key={u.id} value={u.id}>
-              {u.name} ({u.short_name})
+              {u.name} ({u.shortName || u.short_name})
             </option>
           ))}
         </select>
@@ -108,7 +107,7 @@ export const RightSidebar: React.FC = () => {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900 dark:text-white">
             <Trophy className="w-4 h-4 text-amber-500" />
-            <span>Arena Power Standings</span>
+            <span>Univyx Arena Standings</span>
           </div>
           <button
             onClick={() => setActiveTab('arena')}
@@ -128,11 +127,11 @@ export const RightSidebar: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="font-mono text-slate-400 text-[11px] w-4">#{idx + 1}</span>
                 <span className="font-medium text-slate-800 dark:text-slate-200">
-                  {rank.university_short}
+                  {rank.shortName || rank.university_short || rank.universityName}
                 </span>
               </div>
               <span className="tabular-nums font-semibold text-slate-900 dark:text-white">
-                {rank.power_score} pts
+                {rank.powerScore ?? rank.power_score} pts
               </span>
             </div>
           ))}
@@ -195,7 +194,7 @@ export const RightSidebar: React.FC = () => {
         </div>
       )}
 
-      {/* Quiet Footer Links */}
+      {/* Public Footer Links (NEVER links to admin) */}
       <footer className="px-2 pt-2 text-[11px] text-slate-400 dark:text-slate-500 space-y-1">
         <div className="flex items-center gap-2 flex-wrap">
           <button onClick={() => setActiveTab('about')} className="hover:underline">About</button>
@@ -203,10 +202,8 @@ export const RightSidebar: React.FC = () => {
           <button onClick={() => setActiveTab('privacy')} className="hover:underline">Privacy & Terms</button>
           <span aria-hidden="true">·</span>
           <button onClick={() => setActiveTab('settings')} className="hover:underline">Settings</button>
-          <span aria-hidden="true">·</span>
-          <button onClick={() => setActiveTab('admin')} className="hover:underline text-amber-500/80">Admin</button>
         </div>
-        <p>© 2026 univyX Inc. Every campus. Every opportunity.</p>
+        <p>© 2026 Univyx. Revolutionizing the student experience.</p>
       </footer>
     </aside>
   );

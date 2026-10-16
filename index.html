@@ -3,30 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>univyX</title>
-    <meta name="description" content="Text-first social network and student ecosystem for university communities with campus feeds, entertainment, academics, CIVYN careers, student marketplace, and univyX Arena." />
+    <title>Univyx — Revolutionizing the student experience.</title>
+    <meta name="description" content="Revolutionizing the student experience. The social platform exclusively for private university students." />
     
     <!-- Open Graph / Social Sharing -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="univyX" />
-    <meta property="og:description" content="Text-first social network and student ecosystem for university communities with campus feeds, entertainment, academics, CIVYN careers, student marketplace, and univyX Arena." />
+    <meta property="og:title" content="Univyx — Revolutionizing the student experience." />
+    <meta property="og:description" content="Revolutionizing the student experience. The social platform exclusively for private university students." />
     
     <!-- PWA & Mobile Web App meta tags -->
-    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="theme-color" id="meta-theme-color" content="#FFFFFF" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="univyX" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Univyx" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
 
-    <!-- Google Fonts for User-Selectable Typography (Inter, Roboto, Georgia, Atkinson Hyperlegible) -->
+    <!-- Google Fonts: Plus Jakarta Sans (Primary UI), Outfit (Display/Wordmark), Inter, Roboto, Atkinson Hyperlegible -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <!-- Instant Pre-paint Theme Script (Eliminates Flash of Unstyled Theme) -->
+    <script>
+      (function() {
+        try {
+          var savedTheme = localStorage.getItem('univyx_theme') || 'system';
+          var isDark = false;
+          if (savedTheme === 'dark') {
+            isDark = true;
+          } else if (savedTheme === 'light') {
+            isDark = false;
+          } else {
+            isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          }
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            var meta = document.getElementById('meta-theme-color');
+            if (meta) meta.setAttribute('content', '#0A0A0A');
+          } else {
+            document.documentElement.classList.remove('dark');
+            var meta = document.getElementById('meta-theme-color');
+            if (meta) meta.setAttribute('content', '#FFFFFF');
+          }
+
+          var savedFont = localStorage.getItem('univyx_font') || 'jakarta';
+          document.documentElement.setAttribute('data-font', savedFont);
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body class="bg-white dark:bg-[#0A0A0A] text-slate-900 dark:text-slate-100 antialiased selection:bg-[#1D9BF0]/20 selection:text-[#1D9BF0] overflow-x-hidden min-h-screen">
+  <body class="bg-surface text-primary antialiased selection:bg-[#1D9BF0]/20 selection:text-[#1D9BF0] overflow-x-hidden min-h-screen">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

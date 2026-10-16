@@ -1,49 +1,47 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   UserProfile,
-  University,
-  Post,
   PostComment,
-  CareerOpportunity,
-  Product,
-  Store,
-  AcademicResource,
-  KnowledgeEntry,
-  CampusEvent,
-  UniversityRanking,
-  ArenaAnnouncement,
-  NotificationItem,
   ContentReport,
+  NotificationItem,
   FontPreference,
   ThemePreference,
-  PostCategory
+  UserRole
 } from '../types';
-import {
-  CURRENT_USER,
-  INITIAL_UNIVERSITIES,
-  INITIAL_POSTS,
-  INITIAL_CIVYN_OPPORTUNITIES,
-  INITIAL_PRODUCTS,
-  INITIAL_STORES,
-  INITIAL_ACADEMIC_RESOURCES,
-  INITIAL_KNOWLEDGE_ENTRIES,
-  INITIAL_EVENTS,
-  INITIAL_RANKINGS,
-  INITIAL_ARENA_ANNOUNCEMENTS
-} from '../lib/initialData';
-import { isSupabaseConfigured } from '../lib/supabase';
+import { PRIVATE_UNIVERSITIES, PrivateUniversity } from '../data/universities';
+import { INITIAL_POSTS, MockPost, PostCategory } from '../data/posts';
+import { INITIAL_CIVYN_OPPORTUNITIES, CivynOpportunity } from '../data/civyn';
+import { INITIAL_PRODUCTS, StoreProduct } from '../data/store';
+import { ACADEMIC_TUTORIALS, KNOWLEDGE_DIRECTORY, AcademicTutorial, UniversityKnowledgeEntry } from '../data/academics';
+import { COLLEGIATE_RANKINGS, ARENA_TOURNAMENTS, CollegiateRanking, ArenaTournament } from '../data/arena';
+import { INITIAL_EVENTS, CampusEvent } from '../data/events';
 
 interface AppContextType {
+  // Theme & Font
+  theme: ThemePreference;
+  setTheme: (theme: ThemePreference) => void;
+  font: FontPreference;
+  setFont: (font: FontPreference) => void;
+
+  // User Profile & Onboarding
   currentUser: UserProfile | null;
   setCurrentUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
-  universities: University[];
+  onboardUser: (userData: Partial<UserProfile>) => void;
+  signOut: () => void;
+  showWelcomeModal: boolean;
+  setShowWelcomeModal: (show: boolean) => void;
+  authModalType: 'login' | 'signup' | null;
+  setAuthModalType: (type: 'login' | 'signup' | null) => void;
+
+  // Universities
+  universities: PrivateUniversity[];
   selectedUniversityId: string;
   setSelectedUniversityId: (id: string) => void;
-  selectedUniversity: University | undefined;
-  
-  // Posts
-  posts: Post[];
-  createPost: (content: string, category: PostCategory, universityId?: string, quotePost?: Post) => Post;
+  selectedUniversity: PrivateUniversity | undefined;
+
+  // Posts & Interactions
+  posts: MockPost[];
+  createPost: (content: string, category: PostCategory, universityId?: string, quotedPost?: MockPost) => MockPost;
   editPost: (postId: string, newContent: string) => void;
   deletePost: (postId: string) => void;
   toggleLikePost: (postId: string) => void;
@@ -55,30 +53,33 @@ interface AppContextType {
   addComment: (postId: string, content: string) => void;
   getCommentsForPost: (postId: string) => PostComment[];
 
-  // Opportunities (CIVYN)
-  opportunities: CareerOpportunity[];
+  // CIVYN Opportunities
+  opportunities: CivynOpportunity[];
   toggleBookmarkOpportunity: (id: string) => void;
-  createOpportunity: (data: Omit<CareerOpportunity, 'id' | 'created_at'>) => void;
+  createOpportunity: (data: Omit<CivynOpportunity, 'id' | 'createdAt'>) => void;
   deleteOpportunity: (id: string) => void;
 
   // Store & Products
-  products: Product[];
-  stores: Store[];
-  createProduct: (product: Omit<Product, 'id' | 'created_at'>) => void;
+  products: StoreProduct[];
+  createProduct: (data: Omit<StoreProduct, 'id' | 'createdAt'>) => void;
   toggleProductAvailability: (id: string) => void;
 
-  // Academics
-  academicResources: AcademicResource[];
-  knowledgeEntries: KnowledgeEntry[];
+  // Academics & Knowledge
+  tutorials: AcademicTutorial[];
+  academicResources: AcademicTutorial[];
+  knowledgeDirectory: UniversityKnowledgeEntry[];
+  knowledgeEntries: UniversityKnowledgeEntry[];
   events: CampusEvent[];
-  createAcademicResource: (data: Omit<AcademicResource, 'id' | 'created_at'>) => void;
 
-  // Arena
-  rankings: UniversityRanking[];
-  arenaAnnouncements: ArenaAnnouncement[];
-  createArenaAnnouncement: (announcement: Omit<ArenaAnnouncement, 'id' | 'created_at'>) => void;
+  // Univyx Arena
+  rankings: CollegiateRanking[];
+  tournaments: ArenaTournament[];
+  arenaAnnouncements: { id: string; title: string; content: string; date: string }[];
+  stores: { id: string; name: string; description: string; vendorName: string; universityName: string }[];
+  arenaWaitlistJoined: boolean;
+  joinArenaWaitlist: (email: string) => void;
 
-  // Moderation & Reports
+  // Content Moderation & Reports
   reports: ContentReport[];
   submitReport: (contentId: string, contentType: 'post' | 'comment' | 'opportunity' | 'product' | 'user', reason: string, snippet: string) => void;
   resolveReport: (reportId: string, status: 'dismissed' | 'action_taken', notes?: string) => void;
@@ -89,61 +90,103 @@ interface AppContextType {
   markAllNotificationsRead: () => void;
   unreadNotificationsCount: number;
 
-  // Navigation & Shell State
+  // Shell Navigation
   activeTab: string;
   setActiveTab: (tab: string) => void;
   isDrawerOpen: boolean;
   setIsDrawerOpen: (open: boolean) => void;
   isComposerOpen: boolean;
   setIsComposerOpen: (open: boolean) => void;
-  selectedPostForModal: Post | null;
-  setSelectedPostForModal: (post: Post | null) => void;
+  selectedPostForDetail: MockPost | null;
+  setSelectedPostForDetail: (post: MockPost | null) => void;
 
-  // Personalization
-  theme: ThemePreference;
-  setTheme: (theme: ThemePreference) => void;
-  font: FontPreference;
-  setFont: (font: FontPreference) => void;
+  // Hidden Admin Panel State (Accessible only via /admin/login URL)
+  isAdminAuthenticated: boolean;
+  adminLogin: (email: string, pass: string) => boolean;
+  adminLogout: () => void;
+  adminPath: string;
+  setAdminPath: (path: string) => void;
 
-  // Toast Feedback
+  // Toasts
   toastMessage: string | null;
   showToast: (msg: string) => void;
-
-  // System
-  isSupabaseConfigured: boolean;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
 
+const DEFAULT_USER: UserProfile = {
+  id: 'usr-chidi',
+  fullName: 'Chidi Okafor',
+  full_name: 'Chidi Okafor',
+  username: 'chidi_cu',
+  email: 'chidi.okafor@stu.cu.edu.ng',
+  bio: 'Software Engineering scholar @ Covenant University · Building campus tech & decentralised student tools.',
+  universityId: 'covenant',
+  university_id: 'covenant',
+  universityName: 'Covenant University',
+  university_name: 'Covenant University',
+  faculty: 'College of Science & Technology',
+  department: 'Computer & Information Sciences',
+  academicLevel: '400L',
+  academic_level: '400L',
+  interests: ['Technology', 'Academics', 'Campus Gist', 'Collegiate Gaming'],
+  isVerified: true,
+  is_verified: true,
+  role: 'user',
+  createdAt: '2026-01-15T09:00:00Z',
+  created_at: '2026-01-15T09:00:00Z',
+  postsCount: 12,
+  posts_count: 12,
+  followersCount: 310,
+  followers_count: 310,
+  followingCount: 185,
+  following_count: 185
+};
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Theme & Font
+  // Theme state
   const [theme, setThemeState] = useState<ThemePreference>(() => {
-    return (localStorage.getItem('univyx_theme') as ThemePreference) || 'dark';
+    return (localStorage.getItem('univyx_theme') as ThemePreference) || 'system';
   });
 
+  // Font state
   const [font, setFontState] = useState<FontPreference>(() => {
-    return (localStorage.getItem('univyx_font') as FontPreference) || 'inter';
+    return (localStorage.getItem('univyx_font') as FontPreference) || 'jakarta';
   });
 
-  // User
+  // Current User
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
     const saved = localStorage.getItem('univyx_user');
-    return saved ? JSON.parse(saved) : CURRENT_USER;
+    return saved ? JSON.parse(saved) : DEFAULT_USER;
   });
 
-  // Selected University filter ('all' or university_id)
+  // Welcome modal and Auth states
+  const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(() => {
+    return localStorage.getItem('univyx_welcomed') !== 'true';
+  });
+  const [authModalType, setAuthModalType] = useState<'login' | 'signup' | null>(null);
+
+  // University selector
+  const [universities] = useState<PrivateUniversity[]>(PRIVATE_UNIVERSITIES);
   const [selectedUniversityId, setSelectedUniversityId] = useState<string>('all');
 
-  // Navigation state
-  const [activeTab, setActiveTab] = useState<string>('home');
+  // Navigation
+  const [activeTab, setActiveTabState] = useState<string>('home');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isComposerOpen, setIsComposerOpen] = useState(false);
-  const [selectedPostForModal, setSelectedPostForModal] = useState<Post | null>(null);
+  const [selectedPostForDetail, setSelectedPostForDetail] = useState<MockPost | null>(null);
+
+  // Hidden Admin Panel state
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem('univyx_admin_auth') === 'true';
+  });
+  const [adminPath, setAdminPath] = useState<string>('overview');
+
+  // Toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Entities
-  const [universities] = useState<University[]>(INITIAL_UNIVERSITIES);
-  const [posts, setPosts] = useState<Post[]>(() => {
+  // Data Entities
+  const [posts, setPosts] = useState<MockPost[]>(() => {
     const saved = localStorage.getItem('univyx_posts');
     return saved ? JSON.parse(saved) : INITIAL_POSTS;
   });
@@ -155,79 +198,168 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       'post-1': [
         {
           id: 'comm-1',
-          post_id: 'post-1',
-          author_id: 'usr-4',
-          author: {
-            username: 'tunde_law',
-            full_name: 'Babatunde Adeleke',
-            is_verified: true,
-            university_name: 'OAU'
-          },
-          content: 'Huge congratulations Engineer Uche! The entire campus network celebrates with you.',
-          likes_count: 9,
-          is_liked: false,
-          created_at: '2026-10-16T10:00:00Z'
+          postId: 'post-1',
+          authorId: 'usr-korede',
+          authorName: 'Korede Balogun',
+          username: 'korede_babcock',
+          universityName: 'Babcock University',
+          content: 'Huge congratulations Chidi! The CST faculty projects this year are setting national standards.',
+          likesCount: 14,
+          isLiked: false,
+          createdAt: '2026-10-16T11:45:00Z'
         }
       ]
     };
   });
 
-  const [opportunities, setOpportunities] = useState<CareerOpportunity[]>(() => {
+  const [opportunities, setOpportunities] = useState<CivynOpportunity[]>(() => {
     const saved = localStorage.getItem('univyx_opps');
     return saved ? JSON.parse(saved) : INITIAL_CIVYN_OPPORTUNITIES;
   });
 
-  const [products, setProducts] = useState<Product[]>(() => {
+  const [products, setProducts] = useState<StoreProduct[]>(() => {
     const saved = localStorage.getItem('univyx_products');
     return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
   });
 
-  const [stores] = useState<Store[]>(INITIAL_STORES);
-  const [academicResources, setAcademicResources] = useState<AcademicResource[]>(INITIAL_ACADEMIC_RESOURCES);
-  const [knowledgeEntries] = useState<KnowledgeEntry[]>(INITIAL_KNOWLEDGE_ENTRIES);
+  const [tutorials] = useState<AcademicTutorial[]>(ACADEMIC_TUTORIALS);
+  const [knowledgeDirectory] = useState<UniversityKnowledgeEntry[]>(KNOWLEDGE_DIRECTORY);
   const [events] = useState<CampusEvent[]>(INITIAL_EVENTS);
-  const [rankings] = useState<UniversityRanking[]>(INITIAL_RANKINGS);
-  const [arenaAnnouncements, setArenaAnnouncements] = useState<ArenaAnnouncement[]>(INITIAL_ARENA_ANNOUNCEMENTS);
+  const [rankings] = useState<CollegiateRanking[]>(COLLEGIATE_RANKINGS);
+  const [tournaments] = useState<ArenaTournament[]>(ARENA_TOURNAMENTS);
+
+  const [arenaWaitlistJoined, setArenaWaitlistJoined] = useState<boolean>(() => {
+    return localStorage.getItem('univyx_arena_waitlist') === 'true';
+  });
 
   const [reports, setReports] = useState<ContentReport[]>([
     {
       id: 'rep-1',
-      reporter_username: 'amina_ui',
-      content_id: 'post-5',
-      content_type: 'product',
-      content_snippet: 'Suspicious cheap Apple charger post on Hebron hostel channel',
-      reason: 'Verify vendor authenticity and warranty',
+      reporterUsername: 'zainab_nile',
+      contentId: 'post-8',
+      contentType: 'product',
+      contentSnippet: 'Texas Instruments graphing calculator listing verification',
+      reason: 'Check warranty and student ownership serial',
       status: 'pending',
-      created_at: '2026-10-15T19:00:00Z'
+      createdAt: '2026-10-15T19:30:00Z'
     }
   ]);
 
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     {
       id: 'notif-1',
-      user_id: 'usr-me',
-      actor_name: 'Campus Dispatch',
-      actor_username: 'campus_pulse',
+      userId: 'usr-chidi',
+      actorName: 'Univyx Campus Pulse',
+      actorUsername: 'univyx_official',
       type: 'announcement',
-      content: 'Official Inter-University debate registrations are now active in Academics.',
-      target_type: 'event',
-      is_read: false,
-      created_at: '2026-10-16T08:15:00Z'
+      content: 'The 2026 All-Private Inter-Campus Collegiate Debate motions have been posted in Academics.',
+      targetType: 'announcement',
+      isRead: false,
+      createdAt: '2026-10-16T10:00:00Z'
     },
     {
       id: 'notif-2',
-      user_id: 'usr-me',
-      actor_name: 'Uche Nnamdi',
-      actor_username: 'uche_tech',
+      userId: 'usr-chidi',
+      actorName: 'Adedamola Adeleke',
+      actorUsername: 'damola_abuad',
       type: 'like',
-      content: 'liked your latest comment on Nigerian Tech Ecosystem report.',
-      target_type: 'post',
-      is_read: true,
-      created_at: '2026-10-15T11:00:00Z'
+      content: 'liked your post on College of Science & Tech capstone defense.',
+      targetType: 'post',
+      isRead: true,
+      createdAt: '2026-10-16T11:20:00Z'
     }
   ]);
 
-  // Persist key states
+  // URL hash/pathname listener for /admin/login routing
+  useEffect(() => {
+    const handleUrlRoute = () => {
+      const path = window.location.pathname;
+      const hash = window.location.hash;
+
+      if (path === '/admin/login' || hash === '#/admin/login' || hash === '#admin-login') {
+        setActiveTabState('admin_login');
+      } else if (path.startsWith('/admin') || hash === '#/admin' || hash === '#admin') {
+        if (sessionStorage.getItem('univyx_admin_auth') === 'true') {
+          setActiveTabState('admin_panel');
+        } else {
+          setActiveTabState('admin_login');
+        }
+      }
+    };
+
+    handleUrlRoute();
+    window.addEventListener('popstate', handleUrlRoute);
+    window.addEventListener('hashchange', handleUrlRoute);
+    return () => {
+      window.removeEventListener('popstate', handleUrlRoute);
+      window.removeEventListener('hashchange', handleUrlRoute);
+    };
+  }, []);
+
+  const setActiveTab = (tab: string) => {
+    setActiveTabState(tab);
+    if (tab !== 'post_detail') {
+      setSelectedPostForDetail(null);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Toast feedback
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage((curr) => (curr === msg ? null : curr));
+    }, 3200);
+  };
+
+  // Theme synchronization
+  useEffect(() => {
+    localStorage.setItem('univyx_theme', theme);
+    const root = document.documentElement;
+    const metaTheme = document.getElementById('meta-theme-color');
+
+    const applyDark = (dark: boolean) => {
+      if (dark) {
+        root.classList.add('dark');
+        if (metaTheme) metaTheme.setAttribute('content', '#0A0A0A');
+      } else {
+        root.classList.remove('dark');
+        if (metaTheme) metaTheme.setAttribute('content', '#FFFFFF');
+      }
+    };
+
+    if (theme === 'dark') {
+      applyDark(true);
+    } else if (theme === 'light') {
+      applyDark(false);
+    } else {
+      // System mode
+      const mql = window.matchMedia('(prefers-color-scheme: dark)');
+      applyDark(mql.matches);
+
+      const listener = (e: MediaQueryListEvent) => applyDark(e.matches);
+      mql.addEventListener('change', listener);
+      return () => mql.removeEventListener('change', listener);
+    }
+  }, [theme]);
+
+  const setTheme = (t: ThemePreference) => {
+    setThemeState(t);
+    showToast(`Theme updated to ${t.charAt(0).toUpperCase() + t.slice(1)}`);
+  };
+
+  // Font synchronization
+  useEffect(() => {
+    localStorage.setItem('univyx_font', font);
+    document.documentElement.setAttribute('data-font', font);
+  }, [font]);
+
+  const setFont = (f: FontPreference) => {
+    setFontState(f);
+    showToast(`Typography set to ${f.charAt(0).toUpperCase() + f.slice(1)}`);
+  };
+
+  // Persist State
   useEffect(() => {
     localStorage.setItem('univyx_posts', JSON.stringify(posts));
   }, [posts]);
@@ -250,102 +382,85 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [currentUser]);
 
-  // Apply Theme
-  useEffect(() => {
-    localStorage.setItem('univyx_theme', theme);
-    const root = document.documentElement;
-    if (theme === 'system') {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    } else if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [theme]);
-
-  // Apply Font
-  useEffect(() => {
-    localStorage.setItem('univyx_font', font);
-    document.body.classList.remove(
-      'font-pref-inter',
-      'font-pref-roboto',
-      'font-pref-georgia',
-      'font-pref-dyslexic',
-      'font-pref-system'
-    );
-    document.body.classList.add(`font-pref-${font}`);
-  }, [font]);
-
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => {
-      setToastMessage((current) => (current === msg ? null : current));
-    }, 3200);
-  };
-
-  const setTheme = (t: ThemePreference) => {
-    setThemeState(t);
-    showToast(`Theme changed to ${t}`);
-  };
-
-  const setFont = (f: FontPreference) => {
-    setFontState(f);
-    showToast(`Typography set to ${f.toUpperCase()}`);
-  };
-
   const selectedUniversity = universities.find((u) => u.id === selectedUniversityId);
 
-  // Social interactions
+  // User Onboarding & Auth
+  const onboardUser = (userData: Partial<UserProfile>) => {
+    const uni = universities.find((u) => u.id === userData.universityId) || universities[0];
+    const newUser: UserProfile = {
+      id: `usr-${Date.now()}`,
+      fullName: userData.fullName || 'Scholar',
+      username: userData.username || `scholar_${Date.now().toString().slice(-4)}`,
+      email: userData.email || '',
+      universityId: uni.id,
+      universityName: uni.name,
+      faculty: userData.faculty || 'Sciences',
+      department: userData.department || 'Computer Science',
+      academicLevel: userData.academicLevel || '200L',
+      interests: userData.interests || ['Academics', 'Tech'],
+      isVerified: true,
+      role: 'user',
+      createdAt: new Date().toISOString(),
+      postsCount: 0,
+      followersCount: 15,
+      followingCount: 30
+    };
+
+    setCurrentUser(newUser);
+    localStorage.setItem('univyx_welcomed', 'true');
+    setShowWelcomeModal(false);
+    setAuthModalType(null);
+    showToast(`Welcome to Univyx, ${newUser.fullName}!`);
+  };
+
+  const signOut = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('univyx_user');
+    setIsDrawerOpen(false);
+    showToast('Signed out of Univyx');
+  };
+
+  // Post Actions
   const createPost = (
     content: string,
     category: PostCategory,
     universityId?: string,
-    quotePost?: Post
-  ): Post => {
-    if (!currentUser) throw new Error('Must be logged in to create a post');
+    quotedPost?: MockPost
+  ): MockPost => {
+    if (!currentUser) throw new Error('Sign in required to post');
 
-    const uId = universityId || (selectedUniversityId !== 'all' ? selectedUniversityId : currentUser.university_id);
+    const uId = universityId || (selectedUniversityId !== 'all' ? selectedUniversityId : currentUser.universityId);
     const uObj = universities.find((u) => u.id === uId);
 
-    const newPost: Post = {
+    const newPost: MockPost = {
       id: `post-${Date.now()}`,
-      author_id: currentUser.id,
-      author: {
-        username: currentUser.username,
-        full_name: currentUser.full_name,
-        is_verified: currentUser.is_verified,
-        university_name: currentUser.university_name || uObj?.short_name,
-        role: currentUser.role
-      },
+      authorId: currentUser.id,
+      authorName: currentUser.fullName,
+      username: currentUser.username,
+      universityId: uId,
+      universityName: uObj?.name || currentUser.universityName,
       content: content.trim(),
       category: category,
-      university_id: uId,
-      university_name: uObj?.name,
-      likes_count: 0,
-      comments_count: 0,
-      reposts_count: 0,
-      quotes_count: 0,
-      created_at: new Date().toISOString(),
-      is_liked: false,
-      is_bookmarked: false,
-      is_reposted: false,
-      quoted_post: quotePost
+      likesCount: 0,
+      commentsCount: 0,
+      repostsCount: 0,
+      quotesCount: 0,
+      isLiked: false,
+      isBookmarked: false,
+      isReposted: false,
+      createdAt: new Date().toISOString(),
+      quotedPost: quotedPost
         ? {
-            id: quotePost.id,
-            author_name: quotePost.author.full_name,
-            author_username: quotePost.author.username,
-            content: quotePost.content
+            id: quotedPost.id,
+            authorName: quotedPost.authorName,
+            username: quotedPost.username,
+            content: quotedPost.content
           }
         : undefined
     };
 
     setPosts((prev) => [newPost, ...prev]);
-    showToast('Post published to campus network');
+    showToast('Post published to Univyx network');
     return newPost;
   };
 
@@ -358,18 +473,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const deletePost = (postId: string) => {
     setPosts((prev) => prev.filter((p) => p.id !== postId));
-    showToast('Post removed');
+    showToast('Post deleted');
   };
 
   const toggleLikePost = (postId: string) => {
     setPosts((prev) =>
       prev.map((p) => {
         if (p.id === postId) {
-          const currentlyLiked = !!p.is_liked;
+          const nowLiked = !p.isLiked;
           return {
             ...p,
-            is_liked: !currentlyLiked,
-            likes_count: currentlyLiked ? Math.max(0, p.likes_count - 1) : p.likes_count + 1
+            isLiked: nowLiked,
+            likesCount: nowLiked ? p.likesCount + 1 : Math.max(0, p.likesCount - 1)
           };
         }
         return p;
@@ -381,12 +496,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPosts((prev) =>
       prev.map((p) => {
         if (p.id === postId) {
-          const currentlyBookmarked = !!p.is_bookmarked;
-          showToast(currentlyBookmarked ? 'Removed from saved items' : 'Saved to Bookmarks');
-          return {
-            ...p,
-            is_bookmarked: !currentlyBookmarked
-          };
+          const nowBookmarked = !p.isBookmarked;
+          showToast(nowBookmarked ? 'Saved to Bookmarks' : 'Removed from Bookmarks');
+          return { ...p, isBookmarked: nowBookmarked };
         }
         return p;
       })
@@ -397,7 +509,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (quoteText && quoteText.trim().length > 0) {
       const original = posts.find((p) => p.id === postId);
       if (original) {
-        createPost(quoteText, original.category, original.university_id, original);
+        createPost(quoteText, original.category, original.universityId, original);
       }
       return;
     }
@@ -405,12 +517,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPosts((prev) =>
       prev.map((p) => {
         if (p.id === postId) {
-          const currentlyReposted = !!p.is_reposted;
-          showToast(currentlyReposted ? 'Undo repost' : 'Reposted to your profile');
+          const nowReposted = !p.isReposted;
+          showToast(nowReposted ? 'Reposted to your profile' : 'Undo repost');
           return {
             ...p,
-            is_reposted: !currentlyReposted,
-            reposts_count: currentlyReposted ? Math.max(0, p.reposts_count - 1) : p.reposts_count + 1
+            isReposted: nowReposted,
+            repostsCount: nowReposted ? p.repostsCount + 1 : Math.max(0, p.repostsCount - 1)
           };
         }
         return p;
@@ -422,18 +534,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (!currentUser) return;
     const newComment: PostComment = {
       id: `comm-${Date.now()}`,
-      post_id: postId,
-      author_id: currentUser.id,
-      author: {
-        username: currentUser.username,
-        full_name: currentUser.full_name,
-        is_verified: currentUser.is_verified,
-        university_name: currentUser.university_name
-      },
+      postId,
+      authorId: currentUser.id,
+      authorName: currentUser.fullName,
+      username: currentUser.username,
+      universityName: currentUser.universityName,
       content: content.trim(),
-      likes_count: 0,
-      is_liked: false,
-      created_at: new Date().toISOString()
+      likesCount: 0,
+      isLiked: false,
+      createdAt: new Date().toISOString()
     };
 
     setComments((prev) => ({
@@ -442,36 +551,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
 
     setPosts((prev) =>
-      prev.map((p) => (p.id === postId ? { ...p, comments_count: p.comments_count + 1 } : p))
+      prev.map((p) => (p.id === postId ? { ...p, commentsCount: p.commentsCount + 1 } : p))
     );
 
-    showToast('Reply added to discussion');
+    showToast('Reply posted');
   };
 
   const getCommentsForPost = (postId: string) => comments[postId] || [];
 
-  // Opportunities
+  // CIVYN
   const toggleBookmarkOpportunity = (id: string) => {
     setOpportunities((prev) =>
-      prev.map((opp) => {
-        if (opp.id === id) {
-          const nowSaved = !opp.is_bookmarked;
-          showToast(nowSaved ? 'Opportunity saved to CIVYN tracker' : 'Removed from saved opportunities');
-          return { ...opp, is_bookmarked: nowSaved };
+      prev.map((o) => {
+        if (o.id === id) {
+          const saved = !o.isBookmarked;
+          showToast(saved ? 'Opportunity saved to CIVYN tracker' : 'Removed from saved opportunities');
+          return { ...o, isBookmarked: saved };
         }
-        return opp;
+        return o;
       })
     );
   };
 
-  const createOpportunity = (data: Omit<CareerOpportunity, 'id' | 'created_at'>) => {
-    const newOpp: CareerOpportunity = {
+  const createOpportunity = (data: Omit<CivynOpportunity, 'id' | 'createdAt'>) => {
+    const newOpp: CivynOpportunity = {
       ...data,
       id: `opp-${Date.now()}`,
-      created_at: new Date().toISOString()
+      createdAt: new Date().toISOString()
     };
     setOpportunities((prev) => [newOpp, ...prev]);
-    showToast('CIVYN opportunity listing created');
+    showToast('CIVYN opportunity created');
   };
 
   const deleteOpportunity = (id: string) => {
@@ -480,46 +589,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Store
-  const createProduct = (productData: Omit<Product, 'id' | 'created_at'>) => {
-    const newProd: Product = {
-      ...productData,
+  const createProduct = (data: Omit<StoreProduct, 'id' | 'createdAt'>) => {
+    const newProd: StoreProduct = {
+      ...data,
       id: `prod-${Date.now()}`,
-      created_at: new Date().toISOString()
+      createdAt: new Date().toISOString()
     };
     setProducts((prev) => [newProd, ...prev]);
-    showToast('Product listed on Campus Store');
+    showToast('Product listed on Univyx Store');
   };
 
   const toggleProductAvailability = (id: string) => {
     setProducts((prev) =>
-      prev.map((prod) => (prod.id === id ? { ...prod, is_available: !prod.is_available } : prod))
+      prev.map((p) => (p.id === id ? { ...p, isAvailable: !p.isAvailable } : p))
     );
     showToast('Product status updated');
   };
 
-  // Academics
-  const createAcademicResource = (data: Omit<AcademicResource, 'id' | 'created_at'>) => {
-    const newRes: AcademicResource = {
-      ...data,
-      id: `res-${Date.now()}`,
-      created_at: new Date().toISOString()
-    };
-    setAcademicResources((prev) => [newRes, ...prev]);
-    showToast('Academic resource published');
+  // Arena waitlist
+  const joinArenaWaitlist = (email: string) => {
+    setArenaWaitlistJoined(true);
+    localStorage.setItem('univyx_arena_waitlist', 'true');
+    showToast(`You are on the Univyx Arena collegiate roster! We will notify ${email}`);
   };
 
-  // Arena
-  const createArenaAnnouncement = (data: Omit<ArenaAnnouncement, 'id' | 'created_at'>) => {
-    const newAnn: ArenaAnnouncement = {
-      ...data,
-      id: `arena-${Date.now()}`,
-      created_at: new Date().toISOString()
-    };
-    setArenaAnnouncements((prev) => [newAnn, ...prev]);
-    showToast('Arena announcement published');
-  };
-
-  // Moderation
+  // Content Reports
   const submitReport = (
     contentId: string,
     contentType: 'post' | 'comment' | 'opportunity' | 'product' | 'user',
@@ -528,44 +622,72 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   ) => {
     const newReport: ContentReport = {
       id: `rep-${Date.now()}`,
-      reporter_username: currentUser?.username || 'anonymous',
-      content_id: contentId,
-      content_type: contentType,
-      content_snippet: snippet,
+      reporterUsername: currentUser?.username || 'scholar_user',
+      contentId,
+      contentType,
+      contentSnippet: snippet,
       reason,
       status: 'pending',
-      created_at: new Date().toISOString()
+      createdAt: new Date().toISOString()
     };
     setReports((prev) => [newReport, ...prev]);
-    showToast('Report submitted for administrative review. Thank you for keeping univyX safe.');
+    showToast('Report submitted for campus moderation review. Thank you for protecting our private university community.');
   };
 
   const resolveReport = (reportId: string, status: 'dismissed' | 'action_taken', notes?: string) => {
     setReports((prev) =>
-      prev.map((r) => (r.id === reportId ? { ...r, status, moderator_notes: notes } : r))
+      prev.map((r) => (r.id === reportId ? { ...r, status, moderatorNotes: notes } : r))
     );
     showToast(`Report marked as ${status}`);
   };
 
   // Notifications
   const markNotificationRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
-    );
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
   const markAllNotificationsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     showToast('All notifications marked as read');
   };
 
-  const unreadNotificationsCount = notifications.filter((n) => !n.is_read).length;
+  const unreadNotificationsCount = notifications.filter((n) => !n.isRead).length;
+
+  // Hidden Admin Login
+  const adminLogin = (email: string, pass: string): boolean => {
+    // Mock credentials check
+    if (email && pass) {
+      setIsAdminAuthenticated(true);
+      sessionStorage.setItem('univyx_admin_auth', 'true');
+      setActiveTabState('admin_panel');
+      showToast('Welcome, Administrator. Admin session active.');
+      return true;
+    }
+    return false;
+  };
+
+  const adminLogout = () => {
+    setIsAdminAuthenticated(false);
+    sessionStorage.removeItem('univyx_admin_auth');
+    setActiveTabState('home');
+    showToast('Admin logged out');
+  };
 
   return (
     <AppContext.Provider
       value={{
+        theme,
+        setTheme,
+        font,
+        setFont,
         currentUser,
         setCurrentUser,
+        onboardUser,
+        signOut,
+        showWelcomeModal,
+        setShowWelcomeModal,
+        authModalType,
+        setAuthModalType,
         universities,
         selectedUniversityId,
         setSelectedUniversityId,
@@ -585,16 +707,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         createOpportunity,
         deleteOpportunity,
         products,
-        stores,
         createProduct,
         toggleProductAvailability,
-        academicResources,
-        knowledgeEntries,
+        tutorials,
+        academicResources: tutorials,
+        knowledgeDirectory,
+        knowledgeEntries: knowledgeDirectory,
         events,
-        createAcademicResource,
         rankings,
-        arenaAnnouncements,
-        createArenaAnnouncement,
+        tournaments,
+        arenaAnnouncements: [
+          { id: 'ann-1', title: 'National Collegiate Debate Bracket Announced', content: 'Debate motions for 2026 Season 1 released across private universities.', date: 'Oct 15, 2026' },
+          { id: 'ann-2', title: 'Private Varsity Esports Tournament Registration', content: 'Valorant & EA FC 26 collegiate qualifiers open for verified scholars.', date: 'Oct 12, 2026' }
+        ],
+        stores: [
+          { id: 'store-1', name: 'Covenant Scent Studio', description: 'Student-run perfumery & collegiate grooming essentials.', vendorName: 'Covenant Scent Studio', universityName: 'Covenant University' },
+          { id: 'store-2', name: 'Ilishan Tech Vault', description: 'Gadgets, chargers, and computing accessories for campus labs.', vendorName: 'Ilishan Tech Vault', universityName: 'Babcock University' },
+          { id: 'store-3', name: 'Ado Legal Print & Robes', description: 'Collegiate formal attire, legal drafts, and study stationery.', vendorName: 'Ado Legal Print & Robes', universityName: 'Afe Babalola University (ABUAD)' }
+        ],
+        arenaWaitlistJoined,
+        joinArenaWaitlist,
         reports,
         submitReport,
         resolveReport,
@@ -608,15 +740,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsDrawerOpen,
         isComposerOpen,
         setIsComposerOpen,
-        selectedPostForModal,
-        setSelectedPostForModal,
-        theme,
-        setTheme,
-        font,
-        setFont,
+        selectedPostForDetail,
+        setSelectedPostForDetail,
+        isAdminAuthenticated,
+        adminLogin,
+        adminLogout,
+        adminPath,
+        setAdminPath,
         toastMessage,
-        showToast,
-        isSupabaseConfigured
+        showToast
       }}
     >
       {children}

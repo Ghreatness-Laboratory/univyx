@@ -39,8 +39,25 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportReason, setReportReason] = useState('');
 
-  const isOwner = currentUser?.id === post.author_id;
+  const authorName = post.authorName || post.author?.fullName || post.author?.full_name || 'Scholar';
+  const authorUsername = post.username || post.author?.username || 'user';
+  const authorInitial = authorName.charAt(0).toUpperCase();
+  const authorId = post.authorId || post.author_id || post.author?.id;
+  const isVerified = post.author?.isVerified ?? post.author?.is_verified ?? true;
+  const universityName = post.universityName || post.university_name || post.author?.universityName || post.author?.university_name;
+  const createdAtTime = post.createdAt || post.created_at || new Date().toISOString();
+  const isOwner = currentUser?.id === authorId;
   const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'superadmin' || currentUser?.role === 'moderator';
+
+  const likesCount = post.likesCount ?? post.likes_count ?? 0;
+  const commentsCount = post.commentsCount ?? post.comments_count ?? 0;
+  const repostsCount = post.repostsCount ?? post.reposts_count ?? 0;
+  const isLiked = post.isLiked ?? post.is_liked ?? false;
+  const isBookmarked = post.isBookmarked ?? post.is_bookmarked ?? false;
+  const isReposted = post.isReposted ?? post.is_reposted ?? false;
+  const isPinned = post.isPinned ?? post.is_pinned ?? false;
+
+  const quotedPost = post.quotedPost || (post as unknown as { quoted_post?: { id?: string; author_name?: string; author_username?: string; content?: string } }).quoted_post;
 
   // Format relative timestamp
   const formatTime = (isoString: string) => {
@@ -60,7 +77,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
 
   const handleShare = async () => {
     const shareData = {
-      title: `Post by @${post.author.username} on univyX`,
+      title: `Post by @${authorUsername} on Univyx`,
       text: post.content,
       url: window.location.href
     };
@@ -115,7 +132,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
   return (
     <article className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0A0A0A] hover:bg-slate-50/50 dark:hover:bg-[#111316] transition-colors relative">
       {/* Pinned note if pinned */}
-      {post.is_pinned && (
+      {isPinned && (
         <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-2 pl-12 font-medium">
           <span>Pinned Announcement</span>
         </div>
@@ -123,35 +140,35 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
 
       <div className="flex items-start gap-3">
         {/* Author Avatar Initial */}
-        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700">
-          {post.author.full_name.charAt(0)}
+        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700 text-sm">
+          {authorInitial}
         </div>
 
         {/* Content Body */}
         <div className="flex-1 min-w-0">
-          {/* Header Metadata (Unboxed text with · separators, Anti-pill discipline) */}
+          {/* Header Metadata */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 flex-wrap text-xs">
               <span className="font-semibold text-slate-900 dark:text-white text-sm hover:underline cursor-pointer">
-                {post.author.full_name}
+                {authorName}
               </span>
-              {post.author.is_verified && (
+              {isVerified && (
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#1D9BF0] shrink-0" />
               )}
               <span className="text-slate-500 dark:text-slate-400">
-                @{post.author.username}
+                @{authorUsername}
               </span>
               <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">·</span>
-              {post.university_name && (
+              {universityName && (
                 <>
                   <span className="text-slate-500 dark:text-slate-400 font-medium">
-                    {post.university_name}
+                    {universityName}
                   </span>
                   <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">·</span>
                 </>
               )}
               <span className="text-slate-400 dark:text-slate-500">
-                {formatTime(post.created_at)}
+                {formatTime(createdAtTime)}
               </span>
               <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">·</span>
               <span className="text-slate-500 dark:text-slate-400 capitalize">
@@ -242,21 +259,21 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
               </div>
             </div>
           ) : (
-            <p className="mt-1.5 text-sm text-slate-800 dark:text-slate-200 leading-relaxed break-words whitespace-pre-wrap">
+            <p className="mt-1.5 post-text text-slate-800 dark:text-slate-200 leading-relaxed break-words whitespace-pre-wrap">
               {renderFormattedText(post.content)}
             </p>
           )}
 
           {/* Quoted Post Card (if quote-post) */}
-          {post.quoted_post && (
+          {quotedPost && (
             <div className="mt-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-[#16181C]/60 text-xs">
               <div className="flex items-center gap-1 font-semibold text-slate-900 dark:text-white mb-1">
                 <CornerDownRight className="w-3.5 h-3.5 text-slate-400" />
-                <span>{post.quoted_post.author_name}</span>
-                <span className="font-normal text-slate-500">@{post.quoted_post.author_username}</span>
+                <span>{quotedPost.authorName || (quotedPost as { author_name?: string }).author_name || 'Scholar'}</span>
+                <span className="font-normal text-slate-500">@{quotedPost.username || (quotedPost as { author_username?: string }).author_username}</span>
               </div>
               <p className="text-slate-700 dark:text-slate-300 line-clamp-3">
-                {post.quoted_post.content}
+                {quotedPost.content}
               </p>
             </div>
           )}
@@ -271,7 +288,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
               <div className="p-1.5 rounded-full group-hover:bg-[#1D9BF0]/10 transition-colors">
                 <MessageCircle className="w-4 h-4" />
               </div>
-              <span className="tabular-nums font-medium">{post.comments_count}</span>
+              <span className="tabular-nums font-medium">{commentsCount}</span>
             </button>
 
             {/* Repost / Quote */}
@@ -280,13 +297,13 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
                 onClick={() => repostPost(post.id)}
                 title="Repost"
                 className={`flex items-center gap-1.5 transition-colors group ${
-                  post.is_reposted ? 'text-green-500 font-semibold' : 'hover:text-green-500'
+                  isReposted ? 'text-green-500 font-semibold' : 'hover:text-green-500'
                 }`}
               >
                 <div className="p-1.5 rounded-full group-hover:bg-green-500/10 transition-colors">
                   <Repeat2 className="w-4 h-4" />
                 </div>
-                <span className="tabular-nums font-medium">{post.reposts_count}</span>
+                <span className="tabular-nums font-medium">{repostsCount}</span>
               </button>
               {onQuote && (
                 <button
@@ -303,30 +320,30 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
             <button
               onClick={() => toggleLikePost(post.id)}
               className={`flex items-center gap-1.5 transition-colors group ${
-                post.is_liked ? 'text-rose-500 font-semibold' : 'hover:text-rose-500'
+                isLiked ? 'text-rose-500 font-semibold' : 'hover:text-rose-500'
               }`}
             >
               <div className="p-1.5 rounded-full group-hover:bg-rose-500/10 transition-colors">
                 <Heart
                   className={`w-4 h-4 transition-transform ${
-                    post.is_liked ? 'fill-rose-500 scale-110' : ''
+                    isLiked ? 'fill-rose-500 scale-110' : ''
                   }`}
                 />
               </div>
-              <span className="tabular-nums font-medium">{post.likes_count}</span>
+              <span className="tabular-nums font-medium">{likesCount}</span>
             </button>
 
             {/* Bookmark */}
             <button
               onClick={() => toggleBookmarkPost(post.id)}
-              title={post.is_bookmarked ? 'Remove Bookmark' : 'Bookmark Post'}
+              title={isBookmarked ? 'Remove Bookmark' : 'Bookmark Post'}
               className={`p-1.5 rounded-full transition-colors ${
-                post.is_bookmarked
+                isBookmarked
                   ? 'text-[#1D9BF0] bg-[#1D9BF0]/10'
                   : 'hover:text-[#1D9BF0] hover:bg-[#1D9BF0]/10'
               }`}
             >
-              <Bookmark className={`w-4 h-4 ${post.is_bookmarked ? 'fill-[#1D9BF0]' : ''}`} />
+              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-[#1D9BF0]' : ''}`} />
             </button>
 
             {/* Share */}

@@ -132,13 +132,13 @@ export default defineConfig({
       includeAssets: ['icon.svg', 'apple-touch-icon.png', 'favicon.ico', 'pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
         id: '/',
-        name: 'univyX — University Social Network',
-        short_name: 'univyX',
-        description: 'Text-first university social network, campus culture, academics, CIVYN careers, student marketplace, and arena.',
+        name: 'Univyx',
+        short_name: 'Univyx',
+        description: 'Revolutionizing the student experience. The social platform exclusively for private university students.',
         start_url: '/',
         scope: '/',
         display: 'standalone',
-        theme_color: '#0A0A0A',
+        theme_color: '#1D9BF0',
         background_color: '#0A0A0A',
         icons: [
           {

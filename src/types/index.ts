@@ -1,276 +1,144 @@
+import { PrivateUniversity } from '../data/universities';
+import { MockPost, PostCategory } from '../data/posts';
+import { CivynOpportunity, CivynType } from '../data/civyn';
+import { StoreProduct, StoreCategory } from '../data/store';
+import { AcademicTutorial, UniversityKnowledgeEntry } from '../data/academics';
+import { CollegiateRanking, ArenaTournament } from '../data/arena';
+import { CampusEvent } from '../data/events';
+
+// Core User Roles
 export type UserRole = 'user' | 'moderator' | 'admin' | 'superadmin';
 
-export interface University {
-  id: string;
-  name: string;
-  short_name: string;
-  code: string;
-  country: string;
-  state: string;
-  city: string;
-  website?: string;
-}
-
+// User Profile model with full camelCase and compatibility snake_case access
 export interface UserProfile {
   id: string;
+  fullName: string;
+  full_name?: string;
   username: string;
-  full_name: string;
+  email: string;
   bio?: string;
+  universityId: string;
   university_id?: string;
+  universityName: string;
   university_name?: string;
   faculty?: string;
   department?: string;
-  academic_level?: string; // '100L', '200L', '300L', '400L', '500L', 'Postgraduate', 'Alumni'
+  academicLevel?: '100L' | '200L' | '300L' | '400L' | '500L' | 'Postgraduate' | 'Alumni';
+  academic_level?: '100L' | '200L' | '300L' | '400L' | '500L' | 'Postgraduate' | 'Alumni';
+  interests?: string[];
+  isVerified?: boolean;
   is_verified?: boolean;
   role: UserRole;
-  created_at: string;
-  post_count?: number;
+  createdAt: string;
+  created_at?: string;
+  postsCount?: number;
+  posts_count?: number;
+  followersCount?: number;
   followers_count?: number;
+  followingCount?: number;
   following_count?: number;
+  store_name?: string;
 }
 
-export type PostCategory =
-  | 'general'
-  | 'entertainment'
-  | 'academics'
-  | 'career'
-  | 'gaming'
-  | 'campus_news'
-  | 'events'
-  | 'marketplace';
+// Re-exported Domain Models & Aliases
+export type Post = MockPost;
+export { MockPost, PostCategory };
 
-export interface Post {
-  id: string;
-  author_id: string;
-  author: {
-    username: string;
-    full_name: string;
-    is_verified?: boolean;
-    university_name?: string;
-    role?: UserRole;
-  };
-  content: string;
-  category: PostCategory;
-  university_id?: string;
-  university_name?: string;
-  likes_count: number;
-  comments_count: number;
-  reposts_count: number;
-  quotes_count: number;
-  is_pinned?: boolean;
-  created_at: string;
-  // Client state
-  is_liked?: boolean;
-  is_bookmarked?: boolean;
-  is_reposted?: boolean;
-  quoted_post?: {
-    id: string;
-    author_name: string;
-    author_username: string;
-    content: string;
-  };
-}
+export type University = PrivateUniversity;
+export { PrivateUniversity };
 
-export interface PostComment {
-  id: string;
-  post_id: string;
-  author_id: string;
-  author: {
-    username: string;
-    full_name: string;
-    is_verified?: boolean;
-    university_name?: string;
-  };
-  content: string;
-  likes_count: number;
-  is_liked?: boolean;
-  created_at: string;
-}
+export type CareerOpportunity = CivynOpportunity;
+export type OpportunityType = CivynType;
+export { CivynOpportunity, CivynType };
 
-export interface CampusEvent {
-  id: string;
-  title: string;
-  description: string;
-  organizer: string;
-  university_id?: string;
-  university_name?: string;
-  venue: string;
-  start_time: string;
-  end_time?: string;
-  registration_url?: string;
-  category: string;
-  status: 'draft' | 'published' | 'archived' | 'cancelled';
-  created_at: string;
-}
-
-export type AcademicResourceType =
-  | 'book'
-  | 'tutorial'
-  | 'study_note'
-  | 'course_summary'
-  | 'exam_paper'
-  | 'reference';
-
-export interface AcademicResource {
-  id: string;
-  title: string;
-  author: string;
-  subject: string;
-  description: string;
-  university_id?: string;
-  university_name?: string;
-  resource_type: AcademicResourceType;
-  external_url?: string;
-  is_free: boolean;
-  contributor_name?: string;
-  status: 'pending' | 'published' | 'rejected';
-  created_at: string;
-}
-
-export interface KnowledgeEntry {
-  id: string;
-  title: string;
-  summary: string;
-  content: string;
-  category:
-    | 'university_info'
-    | 'faculty'
-    | 'department'
-    | 'academic_procedure'
-    | 'grading_system'
-    | 'campus_facility'
-    | 'student_service'
-    | 'faq';
-  university_id?: string;
-  tags: string[];
-  source_attribution?: string;
-  last_updated: string;
-}
-
-export type OpportunityType =
-  | 'student_job'
-  | 'internship'
-  | 'siwes'
-  | 'graduate_trainee'
-  | 'scholarship'
-  | 'fellowship'
-  | 'volunteering'
-  | 'entry_level'
-  | 'career_event';
-
-export interface CareerOpportunity {
-  id: string;
-  title: string;
-  organization: string;
-  type: OpportunityType;
-  location: string;
-  workplace_type: 'remote' | 'hybrid' | 'onsite';
-  compensation?: string;
-  eligibility: string;
-  required_skills: string[];
-  deadline: string;
-  description: string;
-  application_url: string;
-  university_id?: string;
-  university_name?: string;
-  status: 'draft' | 'published' | 'expired' | 'archived';
-  created_at: string;
-  is_bookmarked?: boolean;
-}
-
-export type ProductCategory =
-  | 'perfumes'
-  | 'clothing'
-  | 'shoes'
-  | 'gadgets'
-  | 'phones_accessories'
-  | 'books_stationery'
-  | 'beauty_care'
-  | 'food_snacks'
-  | 'essentials'
-  | 'thrift_preowned'
-  | 'other';
+export type Product = StoreProduct;
+export type ProductCategory = StoreCategory;
+export { StoreProduct, StoreCategory };
 
 export interface Store {
   id: string;
   name: string;
-  owner_id: string;
-  owner_name: string;
-  university_id: string;
-  university_name: string;
   description: string;
-  contact_email?: string;
-  contact_phone?: string;
-  contact_whatsapp?: string;
-  is_verified: boolean;
-  status: 'active' | 'suspended' | 'closed';
-  created_at: string;
+  vendorName: string;
+  universityName: string;
 }
 
-export interface Product {
-  id: string;
-  store_id: string;
-  store_name: string;
-  name: string;
-  description: string;
-  price: number;
-  currency: string;
-  category: ProductCategory;
-  condition: 'new' | 'pre-owned';
-  pickup_location: string;
-  university_name: string;
-  contact_url?: string;
-  is_available: boolean;
-  created_at: string;
-}
+export type AcademicResource = AcademicTutorial;
+export type KnowledgeEntry = UniversityKnowledgeEntry;
+export { AcademicTutorial, UniversityKnowledgeEntry };
+
+export type UniversityRanking = CollegiateRanking;
+export { CollegiateRanking, ArenaTournament, CampusEvent };
 
 export interface ArenaAnnouncement {
   id: string;
   title: string;
-  description: string;
-  category: string;
-  event_date?: string;
-  status: string;
-  created_at: string;
-}
-
-export interface UniversityRanking {
-  id: string;
-  university_id: string;
-  university_name: string;
-  university_short: string;
-  power_score: number;
-  academic_score: number;
-  gaming_score: number;
-  sports_score: number;
-  tournaments_won: number;
-  badge?: string;
-}
-
-export interface NotificationItem {
-  id: string;
-  user_id: string;
-  actor_name: string;
-  actor_username: string;
-  type: 'like' | 'comment' | 'mention' | 'repost' | 'quote' | 'follow' | 'announcement' | 'opportunity_deadline';
   content: string;
-  target_id?: string;
-  target_type?: string;
-  is_read: boolean;
-  created_at: string;
+  date: string;
 }
 
+// Comment Model
+export interface PostComment {
+  id: string;
+  postId: string;
+  post_id?: string;
+  authorId: string;
+  author_id?: string;
+  authorName: string;
+  author?: {
+    id: string;
+    fullName: string;
+    full_name: string;
+    username: string;
+  };
+  username: string;
+  universityName: string;
+  university_name?: string;
+  content: string;
+  likesCount: number;
+  likes_count?: number;
+  isLiked?: boolean;
+  createdAt: string;
+  created_at?: string;
+}
+
+// Moderation & Reports
 export interface ContentReport {
   id: string;
-  reporter_username: string;
-  content_id: string;
-  content_type: 'post' | 'comment' | 'opportunity' | 'product' | 'user';
-  content_snippet: string;
+  reporterUsername: string;
+  reporter_username?: string;
+  contentId: string;
+  content_id?: string;
+  contentType: 'post' | 'comment' | 'opportunity' | 'product' | 'user';
+  content_type?: 'post' | 'comment' | 'opportunity' | 'product' | 'user';
+  contentSnippet: string;
+  content_snippet?: string;
   reason: string;
   status: 'pending' | 'reviewed' | 'dismissed' | 'action_taken';
-  moderator_notes?: string;
-  created_at: string;
+  moderatorNotes?: string;
+  createdAt: string;
+  created_at?: string;
 }
 
-export type FontPreference = 'inter' | 'roboto' | 'georgia' | 'dyslexic' | 'system';
+// In-App Notification
+export interface NotificationItem {
+  id: string;
+  userId: string;
+  user_id?: string;
+  actorName: string;
+  actor_name?: string;
+  actorUsername: string;
+  actor_username?: string;
+  type: 'like' | 'comment' | 'mention' | 'repost' | 'quote' | 'follow' | 'announcement' | 'opportunity_deadline';
+  content: string;
+  targetId?: string;
+  targetType?: string;
+  isRead: boolean;
+  is_read?: boolean;
+  createdAt: string;
+  created_at?: string;
+}
+
+// Typography & Appearance Preferences
+export type FontPreference = 'jakarta' | 'inter' | 'roboto' | 'georgia' | 'dyslexic' | 'system';
 export type ThemePreference = 'light' | 'dark' | 'system';

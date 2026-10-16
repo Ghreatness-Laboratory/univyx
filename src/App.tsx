@@ -8,13 +8,15 @@ import { SideDrawer } from './components/SideDrawer';
 import { ComposerModal } from './components/ComposerModal';
 import { Toast } from './components/Toast';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { WelcomeAuthModal } from './components/WelcomeAuthModal';
 
 import { HomeView } from './views/HomeView';
 import { EntertainmentView } from './views/EntertainmentView';
 import { AcademicsView } from './views/AcademicsView';
 import { ArenaView } from './views/ArenaView';
 import { StoreView } from './views/StoreView';
-import { AdminView } from './views/AdminView';
+import { AdminLoginView } from './views/AdminLoginView';
+import { AdminDashboardView } from './views/AdminDashboardView';
 import { SettingsView } from './views/SettingsView';
 import { ProfileView } from './views/ProfileView';
 import { NotificationsView } from './views/NotificationsView';
@@ -24,6 +26,8 @@ import { PrivacyView } from './views/PrivacyView';
 
 export const App: React.FC = () => {
   const { activeTab } = useApp();
+
+  const isAdminRoute = activeTab === 'admin_login' || activeTab === 'admin_panel' || activeTab === 'admin';
 
   const renderActiveView = () => {
     switch (activeTab) {
@@ -37,8 +41,11 @@ export const App: React.FC = () => {
         return <ArenaView />;
       case 'store':
         return <StoreView />;
+      case 'admin_login':
+        return <AdminLoginView />;
+      case 'admin_panel':
       case 'admin':
-        return <AdminView />;
+        return <AdminDashboardView />;
       case 'settings':
         return <SettingsView />;
       case 'profile':
@@ -56,6 +63,19 @@ export const App: React.FC = () => {
         return <HomeView />;
     }
   };
+
+  if (isAdminRoute) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-[#0A0A0A] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+        <Header />
+        <main className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-6">
+          {renderActiveView()}
+        </main>
+        <Toast />
+        <OfflineIndicator />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0A0A0A] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
@@ -82,6 +102,7 @@ export const App: React.FC = () => {
       {/* Modals & Overlays */}
       <SideDrawer />
       <ComposerModal />
+      <WelcomeAuthModal />
       <Toast />
       <OfflineIndicator />
     </div>

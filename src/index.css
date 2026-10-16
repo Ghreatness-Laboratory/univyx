@@ -2,55 +2,109 @@
 
 @layer base {
   :root {
-    --primary-blue: #1D9BF0;
-    --primary-dark: #000000;
-    --light-bg: #FFFFFF;
-    --dark-bg: #0A0A0A;
-    --light-surface: #F7F9FC;
-    --dark-surface: #16181C;
-    --border-light: #E5E7EB;
-    --border-dark: #2F3336;
+    --bg-canvas: #FFFFFF;
+    --bg-surface: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --border-color: #E2E8F0;
+    --border-subtle: #F1F5F9;
+    --text-primary: #0F172A;
+    --text-secondary: #64748B;
+    --text-muted: #94A3B8;
+    --brand-blue: #1D9BF0;
+    --brand-hover: #1A8CD8;
+    color-scheme: light;
+  }
+
+  .dark {
+    --bg-canvas: #0A0A0A;
+    --bg-surface: #121417;
+    --bg-card: #16181C;
+    --border-color: #272B30;
+    --border-subtle: #1C1F24;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --brand-blue: #1D9BF0;
+    --brand-hover: #1A8CD8;
+    color-scheme: dark;
   }
 
   body {
-    transition: background-color 0.2s ease, color 0.2s ease;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   }
 }
 
-/* User-selectable font classes */
-.font-pref-inter {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* User-selectable font preferences */
+html[data-font="jakarta"] body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-.font-pref-roboto {
+html[data-font="inter"] body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html[data-font="roboto"] body {
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.font-pref-georgia {
+html[data-font="georgia"] body {
   font-family: Georgia, 'Times New Roman', serif;
 }
 
-.font-pref-dyslexic {
-  font-family: 'Atkinson Hyperlegible', 'Comic Sans MS', sans-serif;
+html[data-font="dyslexic"] body {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
   letter-spacing: 0.02em;
-  word-spacing: 0.05em;
+  word-spacing: 0.04em;
   line-height: 1.65;
 }
 
-.font-pref-system {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* Micro typography classes */
+.post-text {
+  font-size: 16.5px;
+  line-height: 1.6;
 }
 
-/* Safe area padding for mobile notch and navigation */
+.meta-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.btn-text {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.page-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.wordmark {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+}
+
+/* Safe area padding utilities for mobile */
 .pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 16px);
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 16px));
 }
 
 .pt-safe {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* Hide scrollbars cleanly for mobile horizontal filter carousels */
+/* Hide scrollbar utility */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
