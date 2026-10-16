@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 260" width="840" height="260">
+  <rect width="840" height="260" fill="#000000"/>
+  
+  <!-- Emblem on left -->
+  <g transform="translate(15, -15) scale(0.6)" fill="#FFFFFF" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top detached dot/pill -->
+    <rect x="186" y="112" width="34" height="52" rx="17" transform="rotate(-22 203 138)" stroke="none"/>
+    
+    <!-- Bottom-left detached dot/pill -->
+    <rect x="178" y="348" width="52" height="34" rx="17" transform="rotate(-30 204 365)" stroke="none"/>
+    
+    <!-- Left arm -->
+    <path d="M 235,260 L 98,228" stroke-width="50"/>
+    
+    <!-- Upper right arm -->
+    <path d="M 235,260 L 420,180" stroke-width="50"/>
+    
+    <!-- Neck -->
+    <path d="M 235,260 L 210,195" stroke-width="50"/>
+    
+    <!-- Bottom right leg -->
+    <path d="M 235,260 L 338,416" stroke-width="52"/>
+    
+    <!-- Central fillet -->
+    <circle cx="235" cy="260" r="30" stroke="none"/>
+  </g>
+  
+  <!-- Custom Geometrical UNIVYX Wordmark -->
+  <g fill="#FFFFFF" transform="translate(340, 100)">
+    <!-- U -->
+    <path d="M 0,0 L 0,38 C 0,54 12,66 28,66 C 44,66 56,54 56,38 L 56,0 L 40,0 L 40,36 C 40,43 35,48 28,48 C 21,48 16,43 16,36 L 16,0 Z"/>
+    
+    <!-- N -->
+    <path d="M 74,0 L 74,66 L 90,66 L 90,26 L 118,66 L 132,66 L 132,0 L 116,0 L 116,40 L 88,0 Z"/>
+    
+    <!-- I -->
+    <rect x="150" y="0" width="16" height="66" rx="8"/>
+    
+    <!-- V -->
+    <path d="M 182,0 L 202,52 C 204,57 208,62 214,62 C 220,62 224,57 226,52 L 246,0 L 230,0 L 214,44 L 198,0 Z"/>
+    
+    <!-- Y -->
+    <path d="M 262,0 L 282,34 L 282,66 L 298,66 L 298,34 L 318,0 L 300,0 L 290,20 L 280,0 Z"/>
+    
+    <!-- X -->
+    <path d="M 334,0 L 354,32 L 334,66 L 352,66 L 364,46 L 376,66 L 394,66 L 374,32 L 394,0 L 376,0 L 364,20 L 352,0 Z"/>
+    <!-- Dot accent under X -->
+    <circle cx="364" cy="58" r="4"/>
+  </g>
+</svg>

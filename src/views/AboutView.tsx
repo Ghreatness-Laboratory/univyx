@@ -5,7 +5,26 @@ export const AboutView: React.FC = () => {
   return (
     <div className="w-full min-w-0 p-5 sm:p-7 space-y-6 text-xs text-slate-700 dark:text-slate-300">
       <div className="pb-4 border-b border-slate-200 dark:border-slate-800">
-        <span className="text-[#1D9BF0] font-bold text-xs uppercase tracking-wider">About univyX</span>
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center p-2 shadow-sm">
+            <svg viewBox="0 0 512 512" className="w-full h-full fill-white dark:fill-black stroke-white dark:stroke-black stroke-[30] stroke-linecap-round stroke-linejoin-round">
+              <rect x="186" y="112" width="34" height="52" rx="17" transform="rotate(-22 203 138)" stroke="none"/>
+              <rect x="178" y="348" width="52" height="34" rx="17" transform="rotate(-30 204 365)" stroke="none"/>
+              <path d="M 235,260 L 98,228" strokeWidth="50"/>
+              <path d="M 235,260 L 420,180" strokeWidth="50"/>
+              <path d="M 235,260 L 210,195" strokeWidth="50"/>
+              <path d="M 235,260 L 338,416" strokeWidth="52"/>
+              <circle cx="235" cy="260" r="30" stroke="none"/>
+            </svg>
+          </div>
+          <div>
+            <span className="text-[#1D9BF0] font-bold text-xs uppercase tracking-wider block">Official Brand Identity</span>
+            <span className="text-lg font-black tracking-wider text-slate-900 dark:text-white uppercase font-sans">
+              univy<span className="text-[#1D9BF0]">X</span>
+            </span>
+          </div>
+        </div>
+
         <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
           One Platform. Every Campus. Every Opportunity.
         </h1>

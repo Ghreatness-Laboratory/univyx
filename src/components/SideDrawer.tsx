@@ -52,7 +52,34 @@ export const SideDrawer: React.FC = () => {
 
       {/* Drawer Container */}
       <div className="absolute inset-y-0 left-0 max-w-xs w-full bg-white dark:bg-[#16181C] shadow-2xl flex flex-col z-10 border-r border-slate-200 dark:border-slate-800 transition-transform">
-        {/* Header / User Card */}
+        {/* Brand Banner */}
+        <div className="px-4 pt-4 pb-2 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md bg-black dark:bg-white text-white dark:text-black flex items-center justify-center p-1">
+              <svg viewBox="0 0 512 512" className="w-full h-full fill-white dark:fill-black stroke-white dark:stroke-black stroke-[30] stroke-linecap-round stroke-linejoin-round">
+                <rect x="186" y="112" width="34" height="52" rx="17" transform="rotate(-22 203 138)" stroke="none"/>
+                <rect x="178" y="348" width="52" height="34" rx="17" transform="rotate(-30 204 365)" stroke="none"/>
+                <path d="M 235,260 L 98,228" strokeWidth="50"/>
+                <path d="M 235,260 L 420,180" strokeWidth="50"/>
+                <path d="M 235,260 L 210,195" strokeWidth="50"/>
+                <path d="M 235,260 L 338,416" strokeWidth="52"/>
+                <circle cx="235" cy="260" r="30" stroke="none"/>
+              </svg>
+            </div>
+            <span className="text-sm font-black tracking-wider text-slate-900 dark:text-white uppercase font-sans">
+              univy<span className="text-[#1D9BF0]">X</span>
+            </span>
+          </div>
+
+          <button
+            onClick={() => setIsDrawerOpen(false)}
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* User Card */}
         <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between">
           {currentUser ? (
             <div className="flex items-center gap-3">

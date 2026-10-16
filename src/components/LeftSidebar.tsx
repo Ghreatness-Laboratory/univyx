@@ -42,6 +42,31 @@ export const LeftSidebar: React.FC = () => {
     <aside className="w-64 shrink-0 hidden lg:flex flex-col justify-between py-4 px-3 sticky top-14 h-[calc(100vh-3.5rem)] border-r border-slate-200 dark:border-slate-800">
       {/* Top Navigation Links */}
       <div className="space-y-1">
+        {/* Brand Lockup in sidebar */}
+        <div
+          onClick={() => setActiveTab('home')}
+          className="flex items-center gap-2.5 px-3.5 py-3 mb-2 rounded-2xl cursor-pointer hover:bg-slate-50 dark:hover:bg-[#111316] transition-colors"
+        >
+          <div className="w-8 h-8 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center p-1.5 shadow-sm">
+            <svg viewBox="0 0 512 512" className="w-full h-full fill-white dark:fill-black stroke-white dark:stroke-black stroke-[30] stroke-linecap-round stroke-linejoin-round">
+              <rect x="186" y="112" width="34" height="52" rx="17" transform="rotate(-22 203 138)" stroke="none"/>
+              <rect x="178" y="348" width="52" height="34" rx="17" transform="rotate(-30 204 365)" stroke="none"/>
+              <path d="M 235,260 L 98,228" strokeWidth="50"/>
+              <path d="M 235,260 L 420,180" strokeWidth="50"/>
+              <path d="M 235,260 L 210,195" strokeWidth="50"/>
+              <path d="M 235,260 L 338,416" strokeWidth="52"/>
+              <circle cx="235" cy="260" r="30" stroke="none"/>
+            </svg>
+          </div>
+          <div>
+            <div className="text-base font-black tracking-wider text-slate-900 dark:text-white uppercase font-sans leading-none">
+              univy<span className="text-[#1D9BF0]">X</span>
+            </div>
+            <div className="text-[10px] text-slate-400 font-medium tracking-tight mt-0.5">
+              Campus Ecosystem
+            </div>
+          </div>
+        </div>
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
