@@ -6,17 +6,24 @@ export interface AcademicTutorial {
   universityName: string;
   level: string;
   resourceType: 'tutorial' | 'study_note' | 'book' | 'exam_prep';
+  resource_type?: string;
   summary: string;
+  description?: string;
+  is_free?: boolean;
+  subject?: string;
   downloadOrSourceUrl: string;
+  external_url?: string;
 }
 
 export interface UniversityKnowledgeEntry {
   id: string;
   title: string;
-  category: 'grading_system' | 'academic_regulations' | 'siwes_clearance' | 'library_access' | 'exam_rules';
+  category: 'grading_system' | 'academic_regulations' | 'siwes_clearance' | 'library_access' | 'exam_rules' | string;
   summary: string;
   content: string;
   source: string;
+  last_updated?: string;
+  source_attribution?: string;
 }
 
 export const ACADEMIC_TUTORIALS: AcademicTutorial[] = [
@@ -25,44 +32,64 @@ export const ACADEMIC_TUTORIALS: AcademicTutorial[] = [
     title: 'Differential Calculus & Complex Numbers Made Easy',
     author: 'Engr. D. Adeleke',
     department: 'Computer & Electrical Engineering',
+    subject: 'Computer & Electrical Engineering',
     universityName: 'Covenant University',
     level: '100L / 200L',
     resourceType: 'tutorial',
+    resource_type: 'tutorial',
     summary: 'Step-by-step mathematical guide covering limits, derivatives, L\'Hopital\'s rule, and De Moivre\'s theorem with worked collegiate drills.',
-    downloadOrSourceUrl: 'https://open.umn.edu/opentextbooks'
+    description: 'Step-by-step mathematical guide covering limits, derivatives, L\'Hopital\'s rule, and De Moivre\'s theorem with worked collegiate drills.',
+    is_free: true,
+    downloadOrSourceUrl: 'https://open.umn.edu/opentextbooks',
+    external_url: 'https://open.umn.edu/opentextbooks'
   },
   {
     id: 'tut-2',
     title: 'Epidemiology, Biostatistics & Pathogen Surveillance Notes',
     author: 'Dr. O. Adebayo',
     department: 'Public Health & Nursing Sciences',
+    subject: 'Public Health & Nursing Sciences',
     universityName: 'Babcock University',
     level: '300L',
     resourceType: 'study_note',
+    resource_type: 'study_note',
     summary: 'Summary tables of disease incidence rates, confidence intervals, p-value interpretation, and WHO outbreak protocols.',
-    downloadOrSourceUrl: 'https://ncbi.nlm.nih.gov'
+    description: 'Summary tables of disease incidence rates, confidence intervals, p-value interpretation, and WHO outbreak protocols.',
+    is_free: true,
+    downloadOrSourceUrl: 'https://ncbi.nlm.nih.gov',
+    external_url: 'https://ncbi.nlm.nih.gov'
   },
   {
     id: 'tut-3',
     title: 'Law of Evidence & Judicial Cross-Examination Handbook',
     author: 'Barr. Folake Thomas',
     department: 'Faculty of Law',
+    subject: 'Faculty of Law',
     universityName: 'Afe Babalola University (ABUAD)',
     level: '400L',
     resourceType: 'book',
+    resource_type: 'book',
     summary: 'In-depth analysis of admissibility of electronic evidence under the Nigerian Evidence Act with appellate precedents.',
-    downloadOrSourceUrl: 'https://nigerianlawguru.com'
+    description: 'In-depth analysis of admissibility of electronic evidence under the Nigerian Evidence Act with appellate precedents.',
+    is_free: true,
+    downloadOrSourceUrl: 'https://nigerianlawguru.com',
+    external_url: 'https://nigerianlawguru.com'
   },
   {
     id: 'tut-4',
     title: 'Media Ethics & Digital Communication Strategy',
     author: 'Prof. K. Nwachukwu',
     department: 'School of Media & Communication',
+    subject: 'School of Media & Communication',
     universityName: 'Pan-Atlantic University',
     level: '200L / 300L',
     resourceType: 'exam_prep',
+    resource_type: 'exam_prep',
     summary: 'Review framework covering copyright fair use, broadcast defamation laws, and journalistic truth in digital newsrooms.',
-    downloadOrSourceUrl: 'https://core.ac.uk'
+    description: 'Review framework covering copyright fair use, broadcast defamation laws, and journalistic truth in digital newsrooms.',
+    is_free: true,
+    downloadOrSourceUrl: 'https://core.ac.uk',
+    external_url: 'https://core.ac.uk'
   }
 ];
 
@@ -89,7 +116,9 @@ Graduation Honors:
 • 3.50 – 4.49: Second Class Honours (Upper Division)
 • 2.40 – 3.49: Second Class Honours (Lower Division)
 • 1.50 – 2.39: Third Class Honours`,
-    source: 'National Universities Commission (NUC) Benchmark Minimum Academic Standards'
+    source: 'National Universities Commission (NUC) Benchmark Minimum Academic Standards',
+    source_attribution: 'National Universities Commission (NUC) Benchmark Minimum Academic Standards',
+    last_updated: '2026-10-01T00:00:00Z'
   },
   {
     id: 'know-2',
@@ -101,7 +130,9 @@ Graduation Honors:
 2. Fully documented Weekly Logbook featuring technical summaries, system architecture diagrams, and weekly supervisor endorsement.
 3. Formatted Technical Report (minimum 25–40 pages according to faculty typography standard).
 4. Powerpoint slide deck (maximum 10 slides, 10-minute presentation followed by question-and-answer panel).`,
-    source: 'Industrial Training Fund (ITF) Collegiate Advisory'
+    source: 'Industrial Training Fund (ITF) Collegiate Advisory',
+    source_attribution: 'Industrial Training Fund (ITF) Collegiate Advisory',
+    last_updated: '2026-10-05T00:00:00Z'
   },
   {
     id: 'know-3',
@@ -110,6 +141,8 @@ Graduation Honors:
     summary: 'Official protocol for adjusting semester course loads or requesting temporary academic leave.',
     content: `1. Course Add/Drop Period: Students may adjust elective or general courses during the first three (3) weeks of semester resumption through the student portal. Once the window closes, un-dropped courses receive automatic F grades if examinations are unattended.
 2. Semester Deferment: Requests for deferment on medical or compassionate grounds must be formally addressed through the Course Advisor and Head of Department (HOD) to the Dean of Faculty, accompanied by medical validation from the University Health Centre.`,
-    source: 'Private University Academic Senate Handbook'
+    source: 'Private University Academic Senate Handbook',
+    source_attribution: 'Private University Academic Senate Handbook',
+    last_updated: '2026-10-10T00:00:00Z'
   }
 ];

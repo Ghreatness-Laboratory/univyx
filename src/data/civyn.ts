@@ -12,15 +12,15 @@ export interface CivynOpportunity {
   organization: string;
   type: CivynType;
   location: string;
-  workplaceType: 'remote' | 'hybrid' | 'onsite';
+  workplaceType?: 'remote' | 'hybrid' | 'onsite';
   workplace_type?: 'remote' | 'hybrid' | 'onsite';
   compensation: string;
   eligibility: string;
-  requiredSkills: string[];
+  requiredSkills?: string[];
   required_skills?: string[];
   deadline: string;
   description: string;
-  applicationUrl: string;
+  applicationUrl?: string;
   application_url?: string;
   universityEligibility?: string;
   status: 'published' | 'expired';

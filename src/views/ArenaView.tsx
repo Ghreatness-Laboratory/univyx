@@ -54,10 +54,10 @@ export const ArenaView: React.FC = () => {
 
   // Sort rankings based on active leaderboard criteria
   const sortedRankings = [...rankings].sort((a, b) => {
-    if (activeLeaderboardTab === 'academic') return b.academic_score - a.academic_score;
-    if (activeLeaderboardTab === 'gaming') return b.gaming_score - a.gaming_score;
-    if (activeLeaderboardTab === 'sports') return b.sports_score - a.sports_score;
-    return b.power_score - a.power_score;
+    if (activeLeaderboardTab === 'academic') return (b.academic_score ?? b.academicScore ?? 0) - (a.academic_score ?? a.academicScore ?? 0);
+    if (activeLeaderboardTab === 'gaming') return (b.gaming_score ?? b.gamingScore ?? 0) - (a.gaming_score ?? a.gamingScore ?? 0);
+    if (activeLeaderboardTab === 'sports') return (b.sports_score ?? b.sportsScore ?? 0) - (a.sports_score ?? a.sportsScore ?? 0);
+    return (b.power_score ?? b.powerScore ?? 0) - (a.power_score ?? a.powerScore ?? 0);
   });
 
   const plannedFeatures = [
@@ -230,13 +230,13 @@ export const ArenaView: React.FC = () => {
           {sortedRankings.map((rank, index) => {
             const isTop3 = index < 3;
             const score =
-              activeLeaderboardTab === 'academic'
-                ? rank.academic_score
+              (activeLeaderboardTab === 'academic'
+                ? (rank.academic_score ?? rank.academicScore)
                 : activeLeaderboardTab === 'gaming'
-                ? rank.gaming_score
+                ? (rank.gaming_score ?? rank.gamingScore)
                 : activeLeaderboardTab === 'sports'
-                ? rank.sports_score
-                : rank.power_score;
+                ? (rank.sports_score ?? rank.sportsScore)
+                : (rank.power_score ?? rank.powerScore)) ?? 0;
 
             return (
               <div
@@ -260,9 +260,9 @@ export const ArenaView: React.FC = () => {
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-slate-900 dark:text-white text-sm">
-                        {rank.university_name}
+                        {rank.university_name || rank.universityName}
                       </span>
-                      <span className="text-slate-400">({rank.university_short})</span>
+                      <span className="text-slate-400">({rank.university_short || rank.shortName})</span>
                     </div>
                     {rank.badge && (
                       <span className="text-[11px] text-[#1D9BF0] font-medium">
@@ -277,7 +277,7 @@ export const ArenaView: React.FC = () => {
                     {score.toFixed(1)}
                   </span>
                   <div className="text-[10px] text-slate-400">
-                    {rank.tournaments_won} titles won
+                    {rank.tournaments_won ?? rank.tournamentsWon ?? 0} titles won
                   </div>
                 </div>
               </div>

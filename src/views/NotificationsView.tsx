@@ -84,10 +84,10 @@ export const NotificationsView: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
                   <span className="font-semibold text-slate-900 dark:text-white">
-                    {notif.actor_name}
+                    {notif.actor_name || notif.actorName || 'Scholar'}
                   </span>
                   <span>
-                    {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(notif.created_at || notif.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
                 <p className="text-slate-800 dark:text-slate-200 leading-normal">
@@ -95,7 +95,7 @@ export const NotificationsView: React.FC = () => {
                 </p>
               </div>
 
-              {!notif.is_read && (
+              {!(notif.is_read ?? notif.isRead) && (
                 <span className="w-2 h-2 rounded-full bg-[#1D9BF0] shrink-0 mt-2" />
               )}
             </div>

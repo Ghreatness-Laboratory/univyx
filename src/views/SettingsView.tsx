@@ -220,7 +220,7 @@ export const SettingsView: React.FC = () => {
               <label className="font-medium text-slate-700 dark:text-slate-300">Academic Level</label>
               <select
                 value={academicLevel}
-                onChange={(e) => setAcademicLevel(e.target.value)}
+                onChange={(e) => setAcademicLevel(e.target.value as any)}
                 className="w-full p-2 mt-1 rounded-lg bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               >
                 <option value="100L">100L (Freshman)</option>

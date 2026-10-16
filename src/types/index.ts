@@ -42,18 +42,18 @@ export interface UserProfile {
 
 // Re-exported Domain Models & Aliases
 export type Post = MockPost;
-export { MockPost, PostCategory };
+export type { MockPost, PostCategory };
 
 export type University = PrivateUniversity;
-export { PrivateUniversity };
+export type { PrivateUniversity };
 
 export type CareerOpportunity = CivynOpportunity;
 export type OpportunityType = CivynType;
-export { CivynOpportunity, CivynType };
+export type { CivynOpportunity, CivynType };
 
 export type Product = StoreProduct;
 export type ProductCategory = StoreCategory;
-export { StoreProduct, StoreCategory };
+export type { StoreProduct, StoreCategory };
 
 export interface Store {
   id: string;
@@ -65,16 +65,19 @@ export interface Store {
 
 export type AcademicResource = AcademicTutorial;
 export type KnowledgeEntry = UniversityKnowledgeEntry;
-export { AcademicTutorial, UniversityKnowledgeEntry };
+export type { AcademicTutorial, UniversityKnowledgeEntry };
 
 export type UniversityRanking = CollegiateRanking;
-export { CollegiateRanking, ArenaTournament, CampusEvent };
+export type { CollegiateRanking, ArenaTournament, CampusEvent };
 
 export interface ArenaAnnouncement {
   id: string;
   title: string;
   content: string;
+  description?: string;
   date: string;
+  event_date?: string;
+  category?: string;
 }
 
 // Comment Model

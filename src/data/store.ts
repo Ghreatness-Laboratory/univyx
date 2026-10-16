@@ -19,18 +19,19 @@ export interface StoreProduct {
   currency: string;
   category: StoreCategory;
   condition: 'new' | 'pre-owned';
-  pickupLocation: string;
+  pickupLocation?: string;
   pickup_location?: string;
-  storeName: string;
+  storeName?: string;
   store_name?: string;
   store_id?: string;
-  vendorUniversityId: string;
-  vendorUniversityName: string;
+  vendorUniversityId?: string;
+  vendorUniversityName?: string;
   university_name?: string;
-  vendorPhone: string;
-  vendorWhatsapp: string;
+  vendorPhone?: string;
+  vendorWhatsapp?: string;
   contact_url?: string;
-  isAvailable: boolean;
+  isAvailable?: boolean;
+  is_available?: boolean;
   createdAt: string;
   created_at?: string;
 }

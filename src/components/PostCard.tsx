@@ -269,8 +269,8 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
             <div className="mt-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-[#16181C]/60 text-xs">
               <div className="flex items-center gap-1 font-semibold text-slate-900 dark:text-white mb-1">
                 <CornerDownRight className="w-3.5 h-3.5 text-slate-400" />
-                <span>{quotedPost.authorName || (quotedPost as { author_name?: string }).author_name || 'Scholar'}</span>
-                <span className="font-normal text-slate-500">@{quotedPost.username || (quotedPost as { author_username?: string }).author_username}</span>
+                <span>{(quotedPost as any).authorName || (quotedPost as any).author_name || 'Scholar'}</span>
+                <span className="font-normal text-slate-500">@{(quotedPost as any).username || (quotedPost as any).author_username || ''}</span>
               </div>
               <p className="text-slate-700 dark:text-slate-300 line-clamp-3">
                 {quotedPost.content}

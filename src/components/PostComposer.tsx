@@ -83,7 +83,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             <div className="my-2 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#16181C] text-xs">
               <div className="flex items-center gap-1 font-medium text-slate-800 dark:text-slate-200 mb-0.5">
                 <CornerDownRight className="w-3.5 h-3.5 text-slate-400" />
-                <span>Quoting @{quotePost.author.username}</span>
+                <span>Quoting @{quotePost.author?.username || quotePost.username}</span>
               </div>
               <p className="text-slate-600 dark:text-slate-400 line-clamp-2">
                 {quotePost.content}

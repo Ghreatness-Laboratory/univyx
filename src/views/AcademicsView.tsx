@@ -94,14 +94,16 @@ export const AcademicsView: React.FC = () => {
 
   // Filter CIVYN opportunities
   const filteredOpportunities = opportunities.filter((opp) => {
-    if (onlySavedCivyn && !opp.is_bookmarked) return false;
+    if (onlySavedCivyn && !(opp.is_bookmarked ?? opp.isBookmarked)) return false;
     if (civynTypeFilter !== 'all' && opp.type !== civynTypeFilter) return false;
-    if (civynWorkplaceFilter !== 'all' && opp.workplace_type !== civynWorkplaceFilter) return false;
+    const wp = opp.workplace_type || opp.workplaceType;
+    if (civynWorkplaceFilter !== 'all' && wp !== civynWorkplaceFilter) return false;
     if (civynSearch.trim()) {
       const q = civynSearch.toLowerCase();
       const matchTitle = opp.title.toLowerCase().includes(q);
       const matchOrg = opp.organization.toLowerCase().includes(q);
-      const matchSkills = opp.required_skills.some((s) => s.toLowerCase().includes(q));
+      const skills = opp.required_skills || opp.requiredSkills || [];
+      const matchSkills = skills.some((s) => s.toLowerCase().includes(q));
       if (!matchTitle && !matchOrg && !matchSkills) return false;
     }
     return true;
@@ -658,7 +660,7 @@ export const AcademicsView: React.FC = () => {
                     <span className="font-medium text-[#1D9BF0] uppercase tracking-wider">
                       {entry.category.replace('_', ' ')}
                     </span>
-                    <span>Updated {new Date(entry.last_updated).toLocaleDateString()}</span>
+                    <span>Updated {new Date(entry.last_updated || Date.now()).toLocaleDateString()}</span>
                   </div>
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">
                     {entry.title}
@@ -669,9 +671,9 @@ export const AcademicsView: React.FC = () => {
                   <p className="text-slate-800 dark:text-slate-200 text-xs mt-3 leading-relaxed whitespace-pre-line border-t border-slate-100 dark:border-slate-800 pt-2.5">
                     {entry.content}
                   </p>
-                  {entry.source_attribution && (
+                  {(entry.source_attribution || entry.source) && (
                     <div className="mt-3 text-[11px] text-slate-400">
-                      <strong>Source:</strong> {entry.source_attribution}
+                      <strong>Source:</strong> {entry.source_attribution || entry.source}
                     </div>
                   )}
                 </div>
@@ -693,23 +695,23 @@ export const AcademicsView: React.FC = () => {
               >
                 <div>
                   <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-                    <span className="capitalize font-medium text-[#1D9BF0]">{res.resource_type.replace('_', ' ')}</span>
-                    <span>{res.is_free ? 'Free Educational Resource' : 'Reference'}</span>
+                    <span className="capitalize font-medium text-[#1D9BF0]">{(res.resource_type || res.resourceType || 'tutorial').replace('_', ' ')}</span>
+                    <span>{(res.is_free ?? true) ? 'Free Educational Resource' : 'Reference'}</span>
                   </div>
                   <h4 className="font-bold text-slate-900 dark:text-white text-sm">
                     {res.title}
                   </h4>
                   <p className="text-slate-500 text-xs mt-0.5">Author: {res.author}</p>
                   <p className="text-slate-600 dark:text-slate-400 text-xs mt-2 leading-relaxed">
-                    {res.description}
+                    {res.description || res.summary}
                   </p>
                 </div>
 
                 <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-400">{res.subject}</span>
-                  {res.external_url && (
+                  <span className="text-[11px] text-slate-400">{res.subject || res.department}</span>
+                  {(res.external_url || res.downloadOrSourceUrl) && (
                     <a
-                      href={res.external_url}
+                      href={res.external_url || res.downloadOrSourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#1D9BF0] hover:underline flex items-center gap-1 font-semibold"

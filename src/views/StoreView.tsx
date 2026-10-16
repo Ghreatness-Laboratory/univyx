@@ -104,7 +104,7 @@ export const StoreView: React.FC = () => {
         const q = searchQuery.toLowerCase();
         const matchName = prod.name.toLowerCase().includes(q);
         const matchDesc = prod.description.toLowerCase().includes(q);
-        const matchStore = prod.store_name.toLowerCase().includes(q);
+        const matchStore = (prod.store_name || prod.storeName || '').toLowerCase().includes(q);
         if (!matchName && !matchDesc && !matchStore) return false;
       }
 
@@ -113,7 +113,7 @@ export const StoreView: React.FC = () => {
     .sort((a, b) => {
       if (sortBy === 'price_low') return a.price - b.price;
       if (sortBy === 'price_high') return b.price - a.price;
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      return new Date(b.created_at || b.createdAt || Date.now()).getTime() - new Date(a.created_at || a.createdAt || Date.now()).getTime();
     });
 
   const handleCreateProduct = (e: React.FormEvent) => {

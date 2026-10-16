@@ -13,8 +13,8 @@ export const SearchView: React.FC = () => {
 
   const q = query.trim().toLowerCase();
 
-  const matchingPosts = q ? posts.filter((p) => p.content.toLowerCase().includes(q) || p.author.username.toLowerCase().includes(q)) : [];
-  const matchingOpps = q ? opportunities.filter((o) => o.title.toLowerCase().includes(q) || o.organization.toLowerCase().includes(q) || o.required_skills.some(s => s.toLowerCase().includes(q))) : [];
+  const matchingPosts = q ? posts.filter((p) => p.content.toLowerCase().includes(q) || (p.author?.username || p.username).toLowerCase().includes(q)) : [];
+  const matchingOpps = q ? opportunities.filter((o) => o.title.toLowerCase().includes(q) || o.organization.toLowerCase().includes(q) || (o.required_skills || o.requiredSkills || []).some(s => s.toLowerCase().includes(q))) : [];
   const matchingProducts = q ? products.filter((p) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)) : [];
   const matchingKnowledge = q ? knowledgeEntries.filter((k) => k.title.toLowerCase().includes(q) || k.content.toLowerCase().includes(q)) : [];
 

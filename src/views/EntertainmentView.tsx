@@ -99,7 +99,7 @@ export const EntertainmentView: React.FC = () => {
                 <div className="flex items-center justify-between text-[11px] text-[#1D9BF0] font-medium">
                   <span>{evt.category}</span>
                   <span className="text-slate-400">
-                    {new Date(evt.start_time).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                    {new Date(evt.start_time || evt.date || Date.now()).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                   </span>
                 </div>
                 <h4 className="font-semibold text-slate-900 dark:text-white text-sm mt-1 line-clamp-1">

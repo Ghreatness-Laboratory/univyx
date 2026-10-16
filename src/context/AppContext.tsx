@@ -6,7 +6,8 @@ import {
   NotificationItem,
   FontPreference,
   ThemePreference,
-  UserRole
+  UserRole,
+  ArenaAnnouncement
 } from '../types';
 import { PRIVATE_UNIVERSITIES, PrivateUniversity } from '../data/universities';
 import { INITIAL_POSTS, MockPost, PostCategory } from '../data/posts';
@@ -74,7 +75,7 @@ interface AppContextType {
   // Univyx Arena
   rankings: CollegiateRanking[];
   tournaments: ArenaTournament[];
-  arenaAnnouncements: { id: string; title: string; content: string; date: string }[];
+  arenaAnnouncements: ArenaAnnouncement[];
   stores: { id: string; name: string; description: string; vendorName: string; universityName: string }[];
   arenaWaitlistJoined: boolean;
   joinArenaWaitlist: (email: string) => void;
@@ -436,6 +437,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `post-${Date.now()}`,
       authorId: currentUser.id,
       authorName: currentUser.fullName,
+      author: {
+        id: currentUser.id,
+        fullName: currentUser.fullName,
+        full_name: currentUser.fullName,
+        username: currentUser.username,
+        isVerified: currentUser.isVerified,
+        is_verified: currentUser.isVerified,
+        universityName: uObj?.name || currentUser.universityName,
+        university_name: uObj?.name || currentUser.universityName
+      },
       username: currentUser.username,
       universityId: uId,
       universityName: uObj?.name || currentUser.universityName,
@@ -717,8 +728,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         rankings,
         tournaments,
         arenaAnnouncements: [
-          { id: 'ann-1', title: 'National Collegiate Debate Bracket Announced', content: 'Debate motions for 2026 Season 1 released across private universities.', date: 'Oct 15, 2026' },
-          { id: 'ann-2', title: 'Private Varsity Esports Tournament Registration', content: 'Valorant & EA FC 26 collegiate qualifiers open for verified scholars.', date: 'Oct 12, 2026' }
+          {
+            id: 'ann-1',
+            title: 'National Collegiate Debate Bracket Announced',
+            content: 'Debate motions for 2026 Season 1 released across private universities.',
+            description: 'Debate motions for 2026 Season 1 released across private universities.',
+            date: '2026-10-15',
+            event_date: '2026-10-15',
+            category: 'Debate'
+          },
+          {
+            id: 'ann-2',
+            title: 'Private Varsity Esports Tournament Registration',
+            content: 'Valorant & EA FC 26 collegiate qualifiers open for verified scholars.',
+            description: 'Valorant & EA FC 26 collegiate qualifiers open for verified scholars.',
+            date: '2026-10-12',
+            event_date: '2026-10-12',
+            category: 'Esports'
+          }
         ],
         stores: [
           { id: 'store-1', name: 'Covenant Scent Studio', description: 'Student-run perfumery & collegiate grooming essentials.', vendorName: 'Covenant Scent Studio', universityName: 'Covenant University' },

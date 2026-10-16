@@ -38,14 +38,14 @@ export const ProfileView: React.FC = () => {
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4">
             <div className="w-16 h-16 rounded-full bg-[#1D9BF0]/15 text-[#1D9BF0] font-bold text-2xl flex items-center justify-center border-2 border-[#1D9BF0]/30 shrink-0">
-              {currentUser.full_name.charAt(0)}
+              {(currentUser.full_name || currentUser.fullName || 'U').charAt(0)}
             </div>
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                  {currentUser.full_name}
+                  {currentUser.full_name || currentUser.fullName}
                 </h2>
-                {currentUser.is_verified && (
+                {(currentUser.is_verified ?? currentUser.isVerified) && (
                   <CheckCircle2 className="w-4 h-4 text-[#1D9BF0]" />
                 )}
                 <span className="text-xs text-slate-400 font-mono">

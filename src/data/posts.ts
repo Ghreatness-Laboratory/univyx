@@ -24,7 +24,7 @@ export interface MockPost {
   authorId: string;
   author_id?: string;
   authorName: string;
-  author: PostAuthor;
+  author?: PostAuthor;
   username: string;
   universityId: string;
   university_id?: string;
@@ -51,10 +51,12 @@ export interface MockPost {
   createdAt: string;
   created_at?: string;
   quotedPost?: {
-    id: string;
-    authorName: string;
-    username: string;
-    content: string;
+    id?: string;
+    authorName?: string;
+    author_name?: string;
+    username?: string;
+    author_username?: string;
+    content?: string;
   };
 }
 

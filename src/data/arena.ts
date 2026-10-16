@@ -7,15 +7,15 @@ export interface CollegiateRanking {
   shortName: string;
   university_short?: string;
   powerScore: number;
-  power_score: number;
+  power_score?: number;
   academicScore: number;
-  academic_score: number;
+  academic_score?: number;
   gamingScore: number;
-  gaming_score: number;
+  gaming_score?: number;
   sportsScore: number;
-  sports_score: number;
+  sports_score?: number;
   tournamentsWon: number;
-  tournaments_won: number;
+  tournaments_won?: number;
   badge?: string;
 }
 
