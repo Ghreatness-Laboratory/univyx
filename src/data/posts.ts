@@ -34,6 +34,8 @@ export interface MockPost {
   university_id?: string;
   universityName: string;
   university_name?: string;
+  isVerified?: boolean;
+  is_verified?: boolean;
   verificationTier?: 'none' | 'blue' | 'gold';
   verification_tier?: 'none' | 'blue' | 'gold';
   content: string;
