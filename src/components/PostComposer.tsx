@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useApp } from '../context/AppContext';
-import { Post, PostCategory } from '../types';
+import { Post, PostCategory, VerificationTier } from '../types';
+import { VerifiedBadge } from './VerifiedBadge';
 import {
   X,
   Send,
   Building2,
   Tag,
   CornerDownRight,
-  Sparkles
+  Sparkles,
+  AtSign,
+  Users
 } from 'lucide-react';
 
 interface PostComposerProps {
@@ -34,6 +37,94 @@ export const PostComposer: React.FC<PostComposerProps> = ({
   const [universityId, setUniversityId] = useState<string>(
     selectedUniversityId !== 'all' ? selectedUniversityId : currentUser?.universityId || currentUser?.university_id || ''
   );
+  const [showMentionMenu, setShowMentionMenu] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const mentionableAccounts = [
+    {
+      name: 'Covenant University',
+      username: 'covenant_official',
+      tier: 'gold' as VerificationTier,
+      university: 'Covenant University'
+    },
+    {
+      name: 'CST Student Council',
+      username: 'cst_council',
+      tier: 'gold' as VerificationTier,
+      university: 'Covenant University'
+    },
+    {
+      name: 'Korede Balogun',
+      username: 'korede_babcock',
+      tier: 'blue' as VerificationTier,
+      university: 'Babcock University'
+    },
+    {
+      name: 'Tobi Adebayo',
+      username: 'tobi_adebayo',
+      tier: 'none' as VerificationTier,
+      university: 'Babcock University'
+    },
+    {
+      name: 'Zainab Al-Hassan',
+      username: 'zainab_nile',
+      tier: 'blue' as VerificationTier,
+      university: 'Nile University of Nigeria'
+    },
+    {
+      name: 'Adedamola Adeleke',
+      username: 'damola_abuad',
+      tier: 'blue' as VerificationTier,
+      university: 'Afe Babalola University (ABUAD)'
+    }
+  ];
+
+  const filteredMentions = mentionableAccounts.filter(
+    (acc) =>
+      acc.username.toLowerCase().includes(mentionQuery.toLowerCase()) ||
+      acc.name.toLowerCase().includes(mentionQuery.toLowerCase())
+  );
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setContent(val);
+
+    // Detect if typing a mention
+    const cursorPos = e.target.selectionEnd || val.length;
+    const textBeforeCursor = val.slice(0, cursorPos);
+    const lastAtPos = textBeforeCursor.lastIndexOf('@');
+
+    if (lastAtPos !== -1 && (lastAtPos === 0 || /\s/.test(textBeforeCursor[lastAtPos - 1]))) {
+      const query = textBeforeCursor.slice(lastAtPos + 1);
+      if (!/\s/.test(query)) {
+        setMentionQuery(query);
+        setShowMentionMenu(true);
+        return;
+      }
+    }
+    setShowMentionMenu(false);
+  };
+
+  const insertMention = (username: string) => {
+    const cursorPos = textareaRef.current?.selectionEnd || content.length;
+    const textBeforeCursor = content.slice(0, cursorPos);
+    const textAfterCursor = content.slice(cursorPos);
+    const lastAtPos = textBeforeCursor.lastIndexOf('@');
+
+    let newContent = '';
+    if (lastAtPos !== -1) {
+      newContent = textBeforeCursor.slice(0, lastAtPos) + `@${username} ` + textAfterCursor;
+    } else {
+      newContent = content ? `${content} @${username} ` : `@${username} `;
+    }
+
+    setContent(newContent);
+    setShowMentionMenu(false);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  };
 
   const MAX_CHARS = 280;
   const charsRemaining = MAX_CHARS - content.length;
@@ -68,15 +159,56 @@ export const PostComposer: React.FC<PostComposerProps> = ({
           {(currentUser?.fullName || currentUser?.full_name || 'U').charAt(0).toUpperCase()}
         </div>
 
-        <form onSubmit={handleSubmit} className="flex-1 min-w-0">
+        <form onSubmit={handleSubmit} className="flex-1 min-w-0 relative">
           {/* Post Textarea */}
           <textarea
+            ref={textareaRef}
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="What's happening on your campus?"
+            onChange={handleTextChange}
+            placeholder="What's happening on your campus? Type @ to mention scholars or accounts..."
             rows={3}
             className="w-full bg-transparent text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none resize-none leading-relaxed"
           />
+
+          {/* Interactive Mention Suggestions Dropdown */}
+          {showMentionMenu && filteredMentions.length > 0 && (
+            <div className="absolute z-30 left-0 top-16 w-72 rounded-xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+              <div className="p-2 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                <span>Mention Account</span>
+                <span className="text-[#1D9BF0] font-mono">@{mentionQuery}</span>
+              </div>
+              <div className="max-h-48 overflow-y-auto p-1 space-y-0.5">
+                {filteredMentions.map((acc) => (
+                  <button
+                    type="button"
+                    key={acc.username}
+                    onClick={() => insertMention(acc.username)}
+                    className="w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-between gap-2 group cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold flex items-center justify-center shrink-0 text-[10px]">
+                        {acc.name.charAt(0)}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
+                            {acc.name}
+                          </span>
+                          <VerifiedBadge type={acc.tier} size="small" showPopover={false} />
+                        </div>
+                        <div className="text-[10px] text-slate-400 font-mono">
+                          @{acc.username}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-slate-400 group-hover:text-[#1D9BF0] font-medium shrink-0">
+                      Insert
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Quoted Post Preview */}
           {quotePost && (
@@ -84,6 +216,15 @@ export const PostComposer: React.FC<PostComposerProps> = ({
               <div className="flex items-center gap-1 font-medium text-slate-800 dark:text-slate-200 mb-0.5">
                 <CornerDownRight className="w-3.5 h-3.5 text-slate-400" />
                 <span>Quoting @{quotePost.author?.username || quotePost.username}</span>
+                <VerifiedBadge
+                  type={
+                    quotePost.verificationTier ||
+                    quotePost.verification_tier ||
+                    quotePost.author?.verificationTier ||
+                    (quotePost.isVerified ? 'blue' : 'none')
+                  }
+                  size="small"
+                />
               </div>
               <p className="text-slate-600 dark:text-slate-400 line-clamp-2">
                 {quotePost.content}
@@ -91,8 +232,20 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             </div>
           )}
 
-          {/* Quick Hashtag suggestions */}
+          {/* Quick Hashtag & Mention suggestions */}
           <div className="flex items-center gap-1.5 flex-wrap my-2">
+            <button
+              type="button"
+              onClick={() => {
+                setShowMentionMenu(true);
+                setMentionQuery('');
+              }}
+              className="text-[11px] font-medium text-[#1D9BF0] hover:text-[#0284C7] bg-[#1D9BF0]/10 hover:bg-[#1D9BF0]/20 transition-colors py-0.5 px-2 rounded-lg flex items-center gap-1 cursor-pointer"
+            >
+              <AtSign className="w-3 h-3" />
+              <span>Mention Scholar</span>
+            </button>
+
             <span className="text-[11px] text-slate-400 flex items-center gap-1">
               <Tag className="w-3 h-3" />
             </span>
@@ -101,7 +254,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                 type="button"
                 key={tag}
                 onClick={() => handleAddHashtag(tag)}
-                className="text-[11px] text-slate-600 dark:text-slate-400 hover:text-[#1D9BF0] transition-colors py-0.5 px-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
+                className="text-[11px] text-slate-600 dark:text-slate-400 hover:text-[#1D9BF0] transition-colors py-0.5 px-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
               >
                 {tag}
               </button>

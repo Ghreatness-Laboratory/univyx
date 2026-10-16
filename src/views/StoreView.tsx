@@ -17,6 +17,7 @@ import {
   DollarSign
 } from 'lucide-react';
 import { Product, ProductCategory } from '../types';
+import { VerifiedBadge } from '../components/VerifiedBadge';
 
 export const StoreView: React.FC = () => {
   const {
@@ -324,9 +325,13 @@ export const StoreView: React.FC = () => {
 
                   {/* Vendor & Pickup Location */}
                   <div className="mt-3 p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-100 dark:border-slate-800/80 text-xs space-y-1">
-                    <div className="flex items-center gap-1 text-slate-700 dark:text-slate-300">
+                    <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 flex-wrap">
                       <StoreIcon className="w-3 h-3 text-[#1D9BF0] shrink-0" />
                       <span className="font-semibold">{prod.store_name}</span>
+                      <VerifiedBadge
+                        type={prod.vendorVerificationTier || prod.vendor_verification_tier || 'none'}
+                        size="small"
+                      />
                       <span className="text-slate-400">({prod.university_name})</span>
                     </div>
                     <div className="flex items-center gap-1 text-slate-500">

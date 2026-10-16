@@ -7,7 +7,9 @@ import {
   FontPreference,
   ThemePreference,
   UserRole,
-  ArenaAnnouncement
+  ArenaAnnouncement,
+  VerificationTier,
+  VerificationAuditLog
 } from '../types';
 import { PRIVATE_UNIVERSITIES, PrivateUniversity } from '../data/universities';
 import { INITIAL_POSTS, MockPost, PostCategory } from '../data/posts';
@@ -108,6 +110,11 @@ interface AppContextType {
   adminPath: string;
   setAdminPath: (path: string) => void;
 
+  // Verification System
+  verificationLogs: VerificationAuditLog[];
+  setVerificationTierForUser: (userId: string, tier: VerificationTier, reason: string) => void;
+  gainFollowers: (count: number) => void;
+
   // Toasts
   toastMessage: string | null;
   showToast: (msg: string) => void;
@@ -131,15 +138,17 @@ const DEFAULT_USER: UserProfile = {
   academicLevel: '400L',
   academic_level: '400L',
   interests: ['Technology', 'Academics', 'Campus Gist', 'Collegiate Gaming'],
-  isVerified: true,
-  is_verified: true,
+  isVerified: false,
+  is_verified: false,
+  verificationTier: 'none',
+  verification_tier: 'none',
   role: 'user',
   createdAt: '2026-01-15T09:00:00Z',
   created_at: '2026-01-15T09:00:00Z',
   postsCount: 12,
   posts_count: 12,
-  followersCount: 310,
-  followers_count: 310,
+  followersCount: 742,
+  followers_count: 742,
   followingCount: 185,
   following_count: 185
 };
@@ -203,14 +212,111 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           authorId: 'usr-korede',
           authorName: 'Korede Balogun',
           username: 'korede_babcock',
+          verificationTier: 'blue',
+          verification_tier: 'blue',
           universityName: 'Babcock University',
           content: 'Huge congratulations Chidi! The CST faculty projects this year are setting national standards.',
           likesCount: 14,
           isLiked: false,
           createdAt: '2026-10-16T11:45:00Z'
+        },
+        {
+          id: 'comm-2',
+          postId: 'post-1',
+          authorId: 'usr-cst-council',
+          authorName: 'CST Student Council',
+          username: 'cst_council',
+          verificationTier: 'gold',
+          verification_tier: 'gold',
+          universityName: 'Covenant University',
+          content: 'Exemplary project presentation! The council is proud to have CST scholars driving software innovation.',
+          likesCount: 29,
+          isLiked: true,
+          createdAt: '2026-10-16T11:50:00Z'
+        },
+        {
+          id: 'comm-3',
+          postId: 'post-1',
+          authorId: 'usr-tobi',
+          authorName: 'Tobi Adebayo',
+          username: 'tobi_adebayo',
+          verificationTier: 'none',
+          verification_tier: 'none',
+          universityName: 'Babcock University',
+          content: 'Solid work bro! Looking forward to seeing your live demo at the inter-varsity expo.',
+          likesCount: 5,
+          isLiked: false,
+          createdAt: '2026-10-16T11:55:00Z'
+        }
+      ],
+      'post-official-cu': [
+        {
+          id: 'comm-4',
+          postId: 'post-official-cu',
+          authorId: 'usr-zainab',
+          authorName: 'Zainab Al-Hassan',
+          username: 'zainab_nile',
+          verificationTier: 'blue',
+          verification_tier: 'blue',
+          universityName: 'Nile University of Nigeria',
+          content: 'Noted with thanks. Sharing this with our collegiate academic liaisons.',
+          likesCount: 12,
+          isLiked: false,
+          createdAt: '2026-10-16T12:15:00Z'
         }
       ]
     };
+  });
+
+  const [verificationLogs, setVerificationLogs] = useState<VerificationAuditLog[]>(() => {
+    const saved = localStorage.getItem('univyx_verification_logs');
+    if (saved) return JSON.parse(saved);
+    return [
+      {
+        id: 'val-1',
+        userId: 'usr-pulse',
+        username: 'univyx_official',
+        oldTier: 'none',
+        newTier: 'gold',
+        adminId: 'adm-super',
+        adminUsername: 'superadmin@univyx.ng',
+        reason: 'Official Univyx collegiate announcement & platform operations channel',
+        createdAt: '2026-01-01T00:00:00Z'
+      },
+      {
+        id: 'val-2',
+        userId: 'usr-covenant-admin',
+        username: 'covenant_official',
+        oldTier: 'none',
+        newTier: 'gold',
+        adminId: 'adm-super',
+        adminUsername: 'superadmin@univyx.ng',
+        reason: 'Verified university administration & senate registry representative',
+        createdAt: '2026-02-15T09:30:00Z'
+      },
+      {
+        id: 'val-3',
+        userId: 'usr-cst-council',
+        username: 'cst_council',
+        oldTier: 'none',
+        newTier: 'gold',
+        adminId: 'adm-super',
+        adminUsername: 'superadmin@univyx.ng',
+        reason: 'Accredited student faculty association (College of Science & Technology)',
+        createdAt: '2026-03-10T14:15:00Z'
+      },
+      {
+        id: 'val-4',
+        userId: 'usr-korede',
+        username: 'korede_babcock',
+        oldTier: 'none',
+        newTier: 'blue',
+        adminId: 'system',
+        adminUsername: 'Univyx Automation Trigger',
+        reason: 'Automated achievement: Reached 1,000 collegiate follower milestone',
+        createdAt: '2026-10-16T10:45:00Z'
+      }
+    ];
   });
 
   const [opportunities, setOpportunities] = useState<CivynOpportunity[]>(() => {
@@ -437,13 +543,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `post-${Date.now()}`,
       authorId: currentUser.id,
       authorName: currentUser.fullName,
+      verificationTier: currentUser.verificationTier || currentUser.verification_tier || 'none',
+      verification_tier: currentUser.verificationTier || currentUser.verification_tier || 'none',
       author: {
         id: currentUser.id,
         fullName: currentUser.fullName,
         full_name: currentUser.fullName,
         username: currentUser.username,
-        isVerified: currentUser.isVerified,
-        is_verified: currentUser.isVerified,
+        isVerified: (currentUser.verificationTier === 'blue' || currentUser.verificationTier === 'gold'),
+        is_verified: (currentUser.verificationTier === 'blue' || currentUser.verificationTier === 'gold'),
+        verificationTier: currentUser.verificationTier || currentUser.verification_tier || 'none',
+        verification_tier: currentUser.verificationTier || currentUser.verification_tier || 'none',
         universityName: uObj?.name || currentUser.universityName,
         university_name: uObj?.name || currentUser.universityName
       },
@@ -543,12 +653,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const addComment = (postId: string, content: string) => {
     if (!currentUser) return;
+    const tier = currentUser.verificationTier || currentUser.verification_tier || 'none';
     const newComment: PostComment = {
       id: `comm-${Date.now()}`,
       postId,
       authorId: currentUser.id,
       authorName: currentUser.fullName,
       username: currentUser.username,
+      verificationTier: tier,
+      verification_tier: tier,
+      author: {
+        id: currentUser.id,
+        fullName: currentUser.fullName,
+        full_name: currentUser.fullName,
+        username: currentUser.username,
+        verificationTier: tier,
+        verification_tier: tier
+      },
       universityName: currentUser.universityName,
       content: content.trim(),
       likesCount: 0,
@@ -566,6 +687,213 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
 
     showToast('Reply posted');
+  };
+
+  // Save verification logs to localStorage
+  useEffect(() => {
+    localStorage.setItem('univyx_verification_logs', JSON.stringify(verificationLogs));
+  }, [verificationLogs]);
+
+  const setVerificationTierForUser = (userId: string, tier: VerificationTier, reason: string) => {
+    if (!reason || reason.trim().length === 0) {
+      showToast('A reason is required to adjust verification');
+      return;
+    }
+
+    const trimmedReason = reason.trim();
+    let oldTier: VerificationTier = 'none';
+    let targetUsername = '';
+
+    // If target is current user
+    if (currentUser && currentUser.id === userId) {
+      oldTier = currentUser.verificationTier || currentUser.verification_tier || 'none';
+      targetUsername = currentUser.username;
+      const updatedUser: UserProfile = {
+        ...currentUser,
+        verificationTier: tier,
+        verification_tier: tier,
+        isVerified: tier !== 'none',
+        is_verified: tier !== 'none',
+        verifiedAt: tier !== 'none' ? new Date().toISOString() : undefined,
+        verified_at: tier !== 'none' ? new Date().toISOString() : undefined,
+        verifiedBy: 'adm-super',
+        verified_by: 'adm-super',
+        verificationSource: 'manual',
+        verification_source: 'manual',
+        verificationLocked: true,
+        verification_locked: true
+      };
+      setCurrentUser(updatedUser);
+      localStorage.setItem('univyx_user', JSON.stringify(updatedUser));
+    } else {
+      const p = posts.find((post) => post.authorId === userId || post.author?.id === userId);
+      if (p) {
+        oldTier = p.verificationTier || p.verification_tier || 'none';
+        targetUsername = p.username;
+      }
+    }
+
+    // Update posts authored by this user
+    setPosts((prev) =>
+      prev.map((post) => {
+        if (post.authorId === userId || post.author?.id === userId) {
+          return {
+            ...post,
+            verificationTier: tier,
+            verification_tier: tier,
+            isVerified: tier !== 'none',
+            is_verified: tier !== 'none',
+            author: post.author
+              ? {
+                  ...post.author,
+                  verificationTier: tier,
+                  verification_tier: tier,
+                  isVerified: tier !== 'none',
+                  is_verified: tier !== 'none'
+                }
+              : undefined
+          };
+        }
+        return post;
+      })
+    );
+
+    // Update comments authored by this user
+    setComments((prev) => {
+      const updated: Record<string, PostComment[]> = {};
+      Object.entries(prev).forEach(([postId, commentList]) => {
+        updated[postId] = commentList.map((c) =>
+          c.authorId === userId
+            ? {
+                ...c,
+                verificationTier: tier,
+                verification_tier: tier,
+                author: c.author
+                  ? {
+                      ...c.author,
+                      verificationTier: tier,
+                      verification_tier: tier
+                    }
+                  : undefined
+              }
+            : c
+        );
+      });
+      return updated;
+    });
+
+    // Create Audit Log Entry
+    const logEntry: VerificationAuditLog = {
+      id: `val-${Date.now()}`,
+      userId,
+      username: targetUsername || userId,
+      oldTier,
+      newTier: tier,
+      adminId: 'adm-super',
+      adminUsername: 'superadmin@univyx.ng',
+      reason: trimmedReason,
+      createdAt: new Date().toISOString()
+    };
+
+    setVerificationLogs((prev) => [logEntry, ...prev]);
+
+    // Send in-app notification if user was affected
+    if (currentUser && currentUser.id === userId) {
+      const notifContent =
+        tier === 'gold'
+          ? 'Your account has been granted the Univyx Gold Tick by administration.'
+          : tier === 'blue'
+          ? 'Your account has been granted the Univyx Blue Tick by administration.'
+          : `Your verification status has been updated by administration: ${trimmedReason}`;
+
+      const newNotif: NotificationItem = {
+        id: `notif-${Date.now()}`,
+        userId,
+        actorName: 'Univyx Administration',
+        actorUsername: 'univyx_admin',
+        actorVerificationTier: 'gold',
+        type: 'announcement',
+        content: notifContent,
+        isRead: false,
+        createdAt: new Date().toISOString()
+      };
+      setNotifications((prev) => [newNotif, ...prev]);
+    }
+
+    showToast(
+      tier === 'none'
+        ? `Verification revoked for @${targetUsername || userId}`
+        : `Granted ${tier === 'gold' ? 'Gold' : 'Blue'} tick to @${targetUsername || userId}`
+    );
+  };
+
+  const gainFollowers = (count: number) => {
+    if (!currentUser) return;
+    const oldFollowers = currentUser.followersCount ?? 0;
+    const newFollowers = oldFollowers + count;
+    const currentTier = currentUser.verificationTier || currentUser.verification_tier || 'none';
+    const isLocked = currentUser.verificationLocked || currentUser.verification_locked || false;
+
+    let willEarnBlue = false;
+    let newTier: VerificationTier = currentTier;
+
+    if (newFollowers >= 1000 && oldFollowers < 1000 && currentTier === 'none' && !isLocked) {
+      willEarnBlue = true;
+      newTier = 'blue';
+    }
+
+    const updatedUser: UserProfile = {
+      ...currentUser,
+      followersCount: newFollowers,
+      followers_count: newFollowers,
+      verificationTier: newTier,
+      verification_tier: newTier,
+      isVerified: newTier !== 'none',
+      is_verified: newTier !== 'none',
+      verifiedAt: willEarnBlue ? new Date().toISOString() : currentUser.verifiedAt,
+      verified_at: willEarnBlue ? new Date().toISOString() : currentUser.verified_at,
+      verifiedBy: willEarnBlue ? 'system' : currentUser.verifiedBy,
+      verified_by: willEarnBlue ? 'system' : currentUser.verified_by,
+      verificationSource: willEarnBlue ? 'auto' : currentUser.verificationSource,
+      verification_source: willEarnBlue ? 'auto' : currentUser.verification_source
+    };
+
+    setCurrentUser(updatedUser);
+    localStorage.setItem('univyx_user', JSON.stringify(updatedUser));
+
+    if (willEarnBlue) {
+      // Add audit log
+      const logEntry: VerificationAuditLog = {
+        id: `val-${Date.now()}`,
+        userId: currentUser.id,
+        username: currentUser.username,
+        oldTier: 'none',
+        newTier: 'blue',
+        adminId: 'system',
+        adminUsername: 'Univyx Automation Trigger',
+        reason: 'Automated promotion: Reached 1,000 collegiate follower milestone',
+        createdAt: new Date().toISOString()
+      };
+      setVerificationLogs((prev) => [logEntry, ...prev]);
+
+      // Add celebratory notification
+      const newNotif: NotificationItem = {
+        id: `notif-${Date.now()}`,
+        userId: currentUser.id,
+        actorName: 'Univyx Campus Pulse',
+        actorUsername: 'univyx_official',
+        actorVerificationTier: 'gold',
+        type: 'announcement',
+        content: "Congratulations! You've reached 1,000 followers and earned your Univyx Blue Tick!",
+        isRead: false,
+        createdAt: new Date().toISOString()
+      };
+      setNotifications((prev) => [newNotif, ...prev]);
+
+      showToast("🎉 Milestone Reached: You earned your Univyx Blue Tick!");
+    } else {
+      showToast(`+${count} collegiate followers joined your network`);
+    }
   };
 
   const getCommentsForPost = (postId: string) => comments[postId] || [];
@@ -774,6 +1102,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         adminLogout,
         adminPath,
         setAdminPath,
+        verificationLogs,
+        setVerificationTierForUser,
+        gainFollowers,
         toastMessage,
         showToast
       }}

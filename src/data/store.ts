@@ -30,6 +30,8 @@ export interface StoreProduct {
   vendorPhone?: string;
   vendorWhatsapp?: string;
   contact_url?: string;
+  vendorVerificationTier?: 'none' | 'blue' | 'gold';
+  vendor_verification_tier?: 'none' | 'blue' | 'gold';
   isAvailable?: boolean;
   is_available?: boolean;
   createdAt: string;
@@ -51,6 +53,8 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     vendorUniversityName: 'Covenant University',
     vendorPhone: '+2348012345678',
     vendorWhatsapp: 'https://wa.me/2348012345678',
+    vendorVerificationTier: 'gold',
+    vendor_verification_tier: 'gold',
     isAvailable: true,
     createdAt: '2026-10-15T09:00:00Z'
   },
@@ -68,6 +72,8 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     vendorUniversityName: 'Babcock University',
     vendorPhone: '+2348023456789',
     vendorWhatsapp: 'https://wa.me/2348023456789',
+    vendorVerificationTier: 'blue',
+    vendor_verification_tier: 'blue',
     isAvailable: true,
     createdAt: '2026-10-14T15:00:00Z'
   },
@@ -85,6 +91,8 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     vendorUniversityName: 'Afe Babalola University (ABUAD)',
     vendorPhone: '+2348034567890',
     vendorWhatsapp: 'https://wa.me/2348034567890',
+    vendorVerificationTier: 'gold',
+    vendor_verification_tier: 'gold',
     isAvailable: true,
     createdAt: '2026-10-13T12:00:00Z'
   },
@@ -102,6 +110,8 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     vendorUniversityName: 'Pan-Atlantic University',
     vendorPhone: '+2348045678901',
     vendorWhatsapp: 'https://wa.me/2348045678901',
+    vendorVerificationTier: 'blue',
+    vendor_verification_tier: 'blue',
     isAvailable: true,
     createdAt: '2026-10-15T18:00:00Z'
   },
@@ -119,6 +129,8 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     vendorUniversityName: 'Baze University',
     vendorPhone: '+2348056789012',
     vendorWhatsapp: 'https://wa.me/2348056789012',
+    vendorVerificationTier: 'none',
+    vendor_verification_tier: 'none',
     isAvailable: true,
     createdAt: '2026-10-16T08:00:00Z'
   }

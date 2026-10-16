@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Post } from '../types';
 import { useApp } from '../context/AppContext';
-import { X, Send, CheckCircle2 } from 'lucide-react';
+import { X, Send } from 'lucide-react';
+import { VerifiedBadge } from './VerifiedBadge';
 
 interface CommentsModalProps {
   post: Post;
@@ -15,7 +16,7 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
   const comments = getCommentsForPost(post.id);
   const commentsCount = post.commentsCount ?? post.comments_count ?? comments.length;
   const authorName = post.authorName || post.author?.fullName || post.author?.full_name || 'Scholar';
-  const isVerified = post.author?.isVerified ?? post.author?.is_verified ?? true;
+  const postTier = post.verificationTier || post.verification_tier || post.author?.verificationTier || post.author?.verification_tier || 'none';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,9 +45,7 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
         <div className="p-4 bg-slate-50/50 dark:bg-[#0A0A0A]/50 border-b border-slate-100 dark:border-slate-800 text-xs">
           <div className="flex items-center gap-1.5 font-medium text-slate-900 dark:text-white mb-1">
             <span>{authorName}</span>
-            {isVerified && (
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#1D9BF0]" />
-            )}
+            <VerifiedBadge type={postTier} size="small" />
             <span className="text-slate-400">@{post.username || post.author?.username}</span>
           </div>
           <p className="text-slate-700 dark:text-slate-300 line-clamp-3">
@@ -65,6 +64,7 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
               const cName = comment.authorName || comment.author?.fullName || comment.author?.full_name || 'Scholar';
               const cInitial = cName.charAt(0).toUpperCase();
               const cDate = comment.createdAt || comment.created_at || new Date().toISOString();
+              const cTier = comment.verificationTier || comment.verification_tier || comment.author?.verificationTier || comment.author?.verification_tier || 'none';
               return (
                 <div key={comment.id} className="flex items-start gap-2.5 text-xs">
                   <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 text-[11px] border border-slate-200 dark:border-slate-700">
@@ -72,9 +72,13 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
                   </div>
                   <div className="flex-1 min-w-0 bg-slate-50 dark:bg-[#0A0A0A] p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-slate-900 dark:text-white">
-                        {cName}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-semibold text-slate-900 dark:text-white">
+                          {cName}
+                        </span>
+                        <VerifiedBadge type={cTier} size="small" />
+                        <span className="text-[10px] text-slate-400">@{comment.username}</span>
+                      </div>
                       <span className="text-[10px] text-slate-400">
                         {new Date(cDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>

@@ -14,6 +14,7 @@ import {
   Flag,
   CornerDownRight
 } from 'lucide-react';
+import { VerifiedBadge } from './VerifiedBadge';
 
 interface PostCardProps {
   post: Post;
@@ -138,6 +139,18 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
         </div>
       )}
 
+      {/* Repost indicator with VerifiedBadge */}
+      {isReposted && (
+        <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-2 pl-12 font-medium">
+          <Repeat2 className="w-3.5 h-3.5 text-emerald-500" />
+          <span>You reposted</span>
+          <VerifiedBadge
+            type={currentUser?.verificationTier || currentUser?.verification_tier || 'none'}
+            size="small"
+          />
+        </div>
+      )}
+
       <div className="flex items-start gap-3">
         {/* Author Avatar Initial */}
         <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700 text-sm">
@@ -152,9 +165,16 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
               <span className="font-semibold text-slate-900 dark:text-white text-sm hover:underline cursor-pointer">
                 {authorName}
               </span>
-              {isVerified && (
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#1D9BF0] shrink-0" />
-              )}
+              <VerifiedBadge
+                type={
+                  post.verificationTier ||
+                  post.verification_tier ||
+                  post.author?.verificationTier ||
+                  post.author?.verification_tier ||
+                  (isVerified ? 'blue' : 'none')
+                }
+                size="medium"
+              />
               <span className="text-slate-500 dark:text-slate-400">
                 @{authorUsername}
               </span>
@@ -267,9 +287,13 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
           {/* Quoted Post Card (if quote-post) */}
           {quotedPost && (
             <div className="mt-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-[#16181C]/60 text-xs">
-              <div className="flex items-center gap-1 font-semibold text-slate-900 dark:text-white mb-1">
+              <div className="flex items-center gap-1.5 font-semibold text-slate-900 dark:text-white mb-1">
                 <CornerDownRight className="w-3.5 h-3.5 text-slate-400" />
                 <span>{(quotedPost as any).authorName || (quotedPost as any).author_name || 'Scholar'}</span>
+                <VerifiedBadge
+                  type={(quotedPost as any).verificationTier || (quotedPost as any).verification_tier || 'none'}
+                  size="small"
+                />
                 <span className="font-normal text-slate-500">@{(quotedPost as any).username || (quotedPost as any).author_username || ''}</span>
               </div>
               <p className="text-slate-700 dark:text-slate-300 line-clamp-3">

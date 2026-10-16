@@ -10,6 +10,7 @@ import {
   Briefcase,
   Megaphone
 } from 'lucide-react';
+import { VerifiedBadge } from '../components/VerifiedBadge';
 
 export const NotificationsView: React.FC = () => {
   const {
@@ -83,9 +84,13 @@ export const NotificationsView: React.FC = () => {
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
-                  <span className="font-semibold text-slate-900 dark:text-white">
-                    {notif.actor_name || notif.actorName || 'Scholar'}
-                  </span>
+                  <div className="flex items-center gap-1 font-semibold text-slate-900 dark:text-white">
+                    <span>{notif.actor_name || notif.actorName || 'Scholar'}</span>
+                    <VerifiedBadge
+                      type={notif.actor_verification_tier || notif.actorVerificationTier || 'none'}
+                      size="small"
+                    />
+                  </div>
                   <span>
                     {new Date(notif.created_at || notif.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>

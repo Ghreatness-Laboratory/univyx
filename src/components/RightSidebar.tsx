@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { VerifiedBadge } from './VerifiedBadge';
+import { VerificationTier } from '../types';
 import {
   TrendingUp,
   Calendar,
   Briefcase,
   Trophy,
   Building2,
-  ChevronRight
+  ChevronRight,
+  Users,
+  UserPlus,
+  Check
 } from 'lucide-react';
 
 export const RightSidebar: React.FC = () => {
@@ -20,6 +25,8 @@ export const RightSidebar: React.FC = () => {
     setSelectedUniversityId,
     universities
   } = useApp();
+
+  const [followedMap, setFollowedMap] = useState<Record<string, boolean>>({});
 
   // Extract dynamic trending hashtags and topics from actual posts
   const hashtagMap: Record<string, number> = {};
@@ -70,6 +77,99 @@ export const RightSidebar: React.FC = () => {
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Suggested Campus Accounts (Who to follow) */}
+      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#16181C] border border-slate-200/80 dark:border-slate-800">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900 dark:text-white">
+            <Users className="w-4 h-4 text-[#1D9BF0]" />
+            <span>Suggested Accounts</span>
+          </div>
+          <button
+            onClick={() => setActiveTab('search')}
+            className="text-[11px] text-[#1D9BF0] hover:underline"
+          >
+            View all
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {[
+            {
+              id: 'usr-covenant-admin',
+              name: 'Covenant University',
+              username: 'covenant_official',
+              university: 'Covenant University',
+              tier: 'gold' as VerificationTier
+            },
+            {
+              id: 'usr-cst-council',
+              name: 'CST Student Council',
+              username: 'cst_council',
+              university: 'Covenant University',
+              tier: 'gold' as VerificationTier
+            },
+            {
+              id: 'usr-korede',
+              name: 'Korede Balogun',
+              username: 'korede_babcock',
+              university: 'Babcock University',
+              tier: 'blue' as VerificationTier
+            },
+            {
+              id: 'usr-tobi',
+              name: 'Tobi Adebayo',
+              username: 'tobi_adebayo',
+              university: 'Babcock University',
+              tier: 'none' as VerificationTier
+            },
+            {
+              id: 'usr-zainab',
+              name: 'Zainab Al-Hassan',
+              username: 'zainab_nile',
+              university: 'Nile University of Nigeria',
+              tier: 'blue' as VerificationTier
+            }
+          ].map((acc) => (
+            <div
+              key={acc.id}
+              className="flex items-center justify-between gap-2 text-xs group"
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700 text-[11px]">
+                  {acc.name.charAt(0)}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1 truncate font-semibold text-slate-900 dark:text-white">
+                    <span className="truncate group-hover:text-[#1D9BF0] transition-colors">{acc.name}</span>
+                    <VerifiedBadge type={acc.tier} size="small" />
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-mono truncate">
+                    @{acc.username}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setFollowedMap((prev) => ({
+                    ...prev,
+                    [acc.id]: !prev[acc.id]
+                  }));
+                }}
+                className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all shrink-0 cursor-pointer ${
+                  followedMap[acc.id]
+                    ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                    : 'bg-[#1D9BF0] hover:bg-[#1A8CD8] text-white shadow-2xs active:scale-95'
+                }`}
+              >
+                {followedMap[acc.id] ? 'Following' : 'Follow'}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Trending Campus Topics */}
