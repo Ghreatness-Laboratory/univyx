@@ -23,6 +23,7 @@ import { INITIAL_ROOMS, GistRoom } from '../data/rooms';
 import { INITIAL_CONVERSATIONS, INITIAL_MESSAGES, Conversation, DirectMessage, ConversationParticipant } from '../data/messages';
 import { INITIAL_ADS, SponsoredAd } from '../data/ads';
 import { INITIAL_LIBRARY_RESOURCES, AcademicLibraryResource } from '../data/academicLibrary';
+import { supabase } from '../lib/supabase';
 
 interface AppContextType {
   // Theme & Font
@@ -34,18 +35,30 @@ interface AppContextType {
   setTextSize: (size: TextSizePreference) => void;
   resetTextSize: () => void;
 
-  // User Profile & Onboarding
+  // User Profile & Authentication
   currentUser: UserProfile | null;
   setCurrentUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
   onboardUser: (userData: Partial<UserProfile>) => void;
   signOut: () => void;
+  logout: () => Promise<void>;
   showWelcomeModal: boolean;
   setShowWelcomeModal: (show: boolean) => void;
-  authModalType: 'login' | 'signup' | null;
-  setAuthModalType: (type: 'login' | 'signup' | null) => void;
+  authModalType: 'login' | 'signup' | 'student_email' | 'onboarding' | 'forgot_password' | null;
+  setAuthModalType: (type: 'login' | 'signup' | 'student_email' | 'onboarding' | 'forgot_password' | null) => void;
   updateLocation: (loc: string) => void;
   toggleShowLocationOnProfile: () => void;
   toggleAllowLocationTags: () => void;
+
+  // Multi-Provider Auth & Verification
+  signInWithGoogle: () => Promise<{ error?: string }>;
+  signInWithEmail: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
+  signUpWithEmail: (data: any) => Promise<{ success: boolean; error?: string; requireVerification?: boolean }>;
+  sendStudentEmailCode: (email: string) => Promise<{ success: boolean; error?: string }>;
+  verifyStudentEmailCode: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
+  completeOnboarding: (data: { username: string; universityId: string; universityName: string; department: string; academicLevel: string }) => Promise<{ success: boolean; error?: string }>;
+  sendPasswordResetEmail: (email: string) => Promise<{ success: boolean; error?: string }>;
+  updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string }>;
+  verifyStudentEmailFromSettings: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
 
   // Universities
   universities: PrivateUniversity[];
@@ -193,6 +206,14 @@ const DEFAULT_USER: UserProfile = {
   interests: ['Technology', 'Academics', 'Campus Gist', 'Collegiate Gaming'],
   isVerified: false,
   is_verified: false,
+  studentVerified: true,
+  student_verified: true,
+  studentEmail: 'chidi.okafor@student.placeholder-cu.edu',
+  student_email: 'chidi.okafor@student.placeholder-cu.edu',
+  studentVerifiedAt: '2026-01-15T09:00:00Z',
+  student_verified_at: '2026-01-15T09:00:00Z',
+  emailVerified: true,
+  email_verified: true,
   verificationTier: 'none',
   verification_tier: 'none',
   role: 'user',
@@ -207,9 +228,9 @@ const DEFAULT_USER: UserProfile = {
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Theme state
+  // Theme state (White / Light mode is the default)
   const [theme, setThemeState] = useState<ThemePreference>(() => {
-    return (localStorage.getItem('univyx_theme') as ThemePreference) || 'system';
+    return (localStorage.getItem('univyx_theme') as ThemePreference) || 'light';
   });
 
   // Font state
@@ -217,22 +238,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return (localStorage.getItem('univyx_font') as FontPreference) || 'figtree';
   });
 
-  // Text Size state (Small 13px, Default 15px, Large 17px, Extra large 19px)
+  // Text Size state (Small 12px, Default 15px, Large 17px, Extra large 19px)
   const [textSize, setTextSizeState] = useState<TextSizePreference>(() => {
     return (localStorage.getItem('univyx_text_size') as TextSizePreference) || 'default';
   });
 
-  // Current User
+  // Current User (Session persistence & route protection)
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
+    if (localStorage.getItem('univyx_logged_out') === 'true') {
+      return null;
+    }
     const saved = localStorage.getItem('univyx_user');
     return saved ? JSON.parse(saved) : DEFAULT_USER;
   });
 
   // Welcome modal and Auth states
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(() => {
+    if (localStorage.getItem('univyx_logged_out') === 'true') return true;
     return localStorage.getItem('univyx_welcomed') !== 'true';
   });
-  const [authModalType, setAuthModalType] = useState<'login' | 'signup' | null>(null);
+  const [authModalType, setAuthModalType] = useState<
+    'login' | 'signup' | 'student_email' | 'onboarding' | 'forgot_password' | null
+  >(null);
 
   // University selector
   const [universities] = useState<PrivateUniversity[]>(PRIVATE_UNIVERSITIES);

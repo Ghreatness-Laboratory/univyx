@@ -30,14 +30,14 @@
     <script>
       (function() {
         try {
-          var savedTheme = localStorage.getItem('univyx_theme') || 'system';
+          var savedTheme = localStorage.getItem('univyx_theme') || 'light';
           var isDark = false;
           if (savedTheme === 'dark') {
             isDark = true;
-          } else if (savedTheme === 'light') {
-            isDark = false;
-          } else {
+          } else if (savedTheme === 'system') {
             isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          } else {
+            isDark = false; // 'light' is default
           }
           if (isDark) {
             document.documentElement.classList.add('dark');

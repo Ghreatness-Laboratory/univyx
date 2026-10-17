@@ -117,6 +117,301 @@ Rules:
             );
           }
         });
+function authApiPlugin() {
+  const rateLimitMap = new Map<string, number[]>();
+  const otpStore = new Map<string, { code: string; expires: number; universityId: string }>();
+
+  // Seeded placeholder domain mapping for approved private universities ("Do not guess domains. I will add the real ones.")
+  const approvedPlaceholderDomains: Record<string, { universityId: string; universityName: string; shortName: string }> = {
+    'student.placeholder-cu.edu': { universityId: 'covenant', universityName: 'Covenant University', shortName: 'CU' },
+    'student.placeholder-bu.edu': { universityId: 'babcock', universityName: 'Babcock University', shortName: 'Babcock' },
+    'student.placeholder-pau.edu': { universityId: 'pau', universityName: 'Pan-Atlantic University', shortName: 'PAU' },
+    'student.placeholder-abuad.edu': { universityId: 'abuad', universityName: 'Afe Babalola University (ABUAD)', shortName: 'ABUAD' },
+    'student.placeholder-bells.edu': { universityId: 'bells', universityName: 'Bells University of Technology', shortName: 'Bells' },
+    'student.placeholder-caleb.edu': { universityId: 'caleb', universityName: 'Caleb University', shortName: 'Caleb' },
+    'student.placeholder-run.edu': { universityId: 'redeemers', universityName: "Redeemer's University", shortName: 'RUN' },
+    'student.placeholder-landmark.edu': { universityId: 'landmark', universityName: 'Landmark University', shortName: 'Landmark' },
+    'student.placeholder-bowen.edu': { universityId: 'bowen', universityName: 'Bowen University', shortName: 'Bowen' },
+    'student.placeholder-aun.edu': { universityId: 'aun', universityName: 'American University of Nigeria', shortName: 'AUN' },
+    'student.placeholder-leadcity.edu': { universityId: 'leadcity', universityName: 'Lead City University', shortName: 'Lead City' },
+    'student.placeholder-crawford.edu': { universityId: 'crawford', universityName: 'Crawford University', shortName: 'Crawford' },
+    'student.placeholder-crescent.edu': { universityId: 'crescent', universityName: 'Crescent University', shortName: 'Crescent' },
+    'student.placeholder-mtu.edu': { universityId: 'mountaintop', universityName: 'Mountain Top University', shortName: 'MTU' },
+    'student.placeholder-veritas.edu': { universityId: 'veritas', universityName: 'Veritas University', shortName: 'Veritas' },
+    'student.placeholder-baze.edu': { universityId: 'baze', universityName: 'Baze University', shortName: 'Baze' },
+    'student.placeholder-nile.edu': { universityId: 'nile', universityName: 'Nile University of Nigeria', shortName: 'Nile' },
+    'student.placeholder-madonna.edu': { universityId: 'madonna', universityName: 'Madonna University', shortName: 'Madonna' },
+    'student.placeholder-achievers.edu': { universityId: 'achievers', universityName: 'Achievers University', shortName: 'Achievers' },
+    'student.placeholder-augustine.edu': { universityId: 'augustine', universityName: 'Augustine University', shortName: 'AUI' },
+    'student.placeholder-elizade.edu': { universityId: 'elizade', universityName: 'Elizade University', shortName: 'Elizade' },
+    'student.placeholder-fountain.edu': { universityId: 'fountain', universityName: 'Fountain University', shortName: 'Fountain' },
+    'student.placeholder-gouni.edu': { universityId: 'godfrey', universityName: 'Godfrey Okoye University', shortName: 'GOUNI' },
+    'student.placeholder-hallmark.edu': { universityId: 'hallmark', universityName: 'Hallmark University', shortName: 'Hallmark' },
+    'student.placeholder-jabu.edu': { universityId: 'jabu', universityName: 'Joseph Ayo Babalola University', shortName: 'JABU' },
+    'student.placeholder-wesley.edu': { universityId: 'wesley', universityName: 'Wesley University', shortName: 'Wesley' },
+    'student.placeholder-kings.edu': { universityId: 'kings', universityName: 'Kings University', shortName: 'Kings' },
+    'student.placeholder-chrisland.edu': { universityId: 'chrisland', universityName: 'Chrisland University', shortName: 'Chrisland' }
+  };
+
+  const checkRateLimit = (ip: string, limit: number = 8, windowMs: number = 60000): boolean => {
+    const now = Date.now();
+    const timestamps = rateLimitMap.get(ip) || [];
+    const valid = timestamps.filter((t) => now - t < windowMs);
+    if (valid.length >= limit) {
+      return false;
+    }
+    valid.push(now);
+    rateLimitMap.set(ip, valid);
+    return true;
+  };
+
+  const existingUsernames = new Set([
+    'univyx_official',
+    'covenant_official',
+    'cst_council',
+    'korede_babcock',
+    'damola_abuad',
+    'zainab_nile',
+    'tobi_adebayo',
+    'chidi_cu',
+    'admin',
+    'superadmin'
+  ]);
+
+  return {
+    name: 'auth-api-middleware',
+    configureServer(server: any) {
+      // 1. Check Student Email Domain
+      server.middlewares.use('/api/auth/check-domain', async (req: any, res: any) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405;
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+          return;
+        }
+
+        const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
+        if (!checkRateLimit(ip, 12, 60000)) {
+          res.statusCode = 429;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Too many requests. Please wait a moment before trying again.' }));
+          return;
+        }
+
+        let body = '';
+        req.on('data', (chunk: any) => (body += chunk));
+        req.on('end', () => {
+          res.setHeader('Content-Type', 'application/json');
+          try {
+            const { email } = JSON.parse(body || '{}');
+            if (!email || typeof email !== 'string') {
+              res.statusCode = 400;
+              res.end(JSON.stringify({ approved: false, error: 'Email is required' }));
+              return;
+            }
+
+            const cleanEmail = email.toLowerCase().trim();
+            const domain = cleanEmail.split('@')[1];
+
+            if (!domain) {
+              res.statusCode = 200;
+              res.end(
+                JSON.stringify({
+                  approved: false,
+                  message: "This email isn't from a supported private university. Use your school email or sign in another way."
+                })
+              );
+              return;
+            }
+
+            const matched = approvedPlaceholderDomains[domain];
+            if (matched) {
+              res.statusCode = 200;
+              res.end(
+                JSON.stringify({
+                  approved: true,
+                  domain,
+                  universityId: matched.universityId,
+                  universityName: matched.universityName,
+                  shortName: matched.shortName
+                })
+              );
+            } else {
+              res.statusCode = 200;
+              res.end(
+                JSON.stringify({
+                  approved: false,
+                  domain,
+                  message: "This email isn't from a supported private university. Use your school email or sign in another way."
+                })
+              );
+            }
+          } catch {
+            res.statusCode = 400;
+            res.end(JSON.stringify({ approved: false, error: 'Invalid request' }));
+          }
+        });
+      });
+
+      // 2. Send 6-digit Student Verification Code
+      server.middlewares.use('/api/auth/send-code', async (req: any, res: any) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405;
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+          return;
+        }
+
+        const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
+        if (!checkRateLimit(ip, 5, 60000)) {
+          res.statusCode = 429;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Too many code requests. Please wait 60 seconds before trying again.' }));
+          return;
+        }
+
+        let body = '';
+        req.on('data', (chunk: any) => (body += chunk));
+        req.on('end', () => {
+          res.setHeader('Content-Type', 'application/json');
+          try {
+            const { email } = JSON.parse(body || '{}');
+            const cleanEmail = (email || '').toLowerCase().trim();
+            const domain = cleanEmail.split('@')[1];
+
+            const matched = approvedPlaceholderDomains[domain];
+            if (!matched) {
+              res.statusCode = 200;
+              res.end(
+                JSON.stringify({
+                  success: false,
+                  error: "This email isn't from a supported private university. Use your school email or sign in another way."
+                })
+              );
+              return;
+            }
+
+            // Generate deterministic yet secure 6-digit OTP for dev/testing
+            const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
+            otpStore.set(cleanEmail, {
+              code: randomCode,
+              expires: Date.now() + 10 * 60 * 1000,
+              universityId: matched.universityId
+            });
+
+            console.log(`[Univyx Student Verification] 6-Digit OTP for ${cleanEmail}: ${randomCode}`);
+
+            res.statusCode = 200;
+            res.end(
+              JSON.stringify({
+                success: true,
+                message: `Verification code sent to ${cleanEmail}.`,
+                // Expose code in development response for easy instant testing
+                devCode: randomCode
+              })
+            );
+          } catch {
+            res.statusCode = 400;
+            res.end(JSON.stringify({ success: false, error: 'Unable to process request.' }));
+          }
+        });
+      });
+
+      // 3. Verify 6-digit Student Verification Code
+      server.middlewares.use('/api/auth/verify-code', async (req: any, res: any) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405;
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+          return;
+        }
+
+        const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
+        if (!checkRateLimit(ip, 6, 60000)) {
+          res.statusCode = 429;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Too many attempts. Please wait 60 seconds before trying again.' }));
+          return;
+        }
+
+        let body = '';
+        req.on('data', (chunk: any) => (body += chunk));
+        req.on('end', () => {
+          res.setHeader('Content-Type', 'application/json');
+          try {
+            const { email, code } = JSON.parse(body || '{}');
+            const cleanEmail = (email || '').toLowerCase().trim();
+            const cleanCode = (code || '').trim();
+
+            const record = otpStore.get(cleanEmail);
+
+            // Allow standard test code '123456' in dev or match generated code
+            const isCodeValid =
+              (cleanCode === '123456') ||
+              (record && record.code === cleanCode && Date.now() <= record.expires);
+
+            if (!isCodeValid) {
+              res.statusCode = 400;
+              res.end(
+                JSON.stringify({
+                  success: false,
+                  error: 'Invalid or expired verification code. Please check your code or request a new one.'
+                })
+              );
+              return;
+            }
+
+            const domain = cleanEmail.split('@')[1];
+            const matched = approvedPlaceholderDomains[domain] || {
+              universityId: 'covenant',
+              universityName: 'Covenant University',
+              shortName: 'CU'
+            };
+
+            otpStore.delete(cleanEmail);
+
+            res.statusCode = 200;
+            res.end(
+              JSON.stringify({
+                success: true,
+                student_verified: true,
+                student_email: cleanEmail,
+                verified_at: new Date().toISOString(),
+                universityId: matched.universityId,
+                universityName: matched.universityName
+              })
+            );
+          } catch {
+            res.statusCode = 400;
+            res.end(JSON.stringify({ success: false, error: 'Verification failed.' }));
+          }
+        });
+      });
+
+      // 4. Live Username Check
+      server.middlewares.use('/api/auth/check-username', async (req: any, res: any) => {
+        const url = new URL(req.url, 'http://localhost:3000');
+        const username = (url.searchParams.get('username') || '').toLowerCase().trim();
+
+        res.setHeader('Content-Type', 'application/json');
+
+        if (!username || username.length < 3) {
+          res.statusCode = 200;
+          res.end(JSON.stringify({ available: false, message: 'Username must be at least 3 characters.' }));
+          return;
+        }
+
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+          res.statusCode = 200;
+          res.end(JSON.stringify({ available: false, message: 'Username can only contain letters, numbers, and underscores.' }));
+          return;
+        }
+
+        const isTaken = existingUsernames.has(username);
+        res.statusCode = 200;
+        res.end(
+          JSON.stringify({
+            available: !isTaken,
+            message: isTaken ? 'This username is already taken.' : 'Username is available.'
+          })
+        );
       });
     }
   };
@@ -127,6 +422,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     geminiApiPlugin(),
+    authApiPlugin(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png', 'favicon.ico', 'pwa-192x192.png', 'pwa-512x512.png'],

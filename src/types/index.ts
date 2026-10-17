@@ -55,6 +55,24 @@ export interface UserProfile {
   location?: string;
   showLocationOnProfile?: boolean;
   allowLocationTags?: boolean;
+  studentVerified?: boolean;
+  student_verified?: boolean;
+  studentEmail?: string;
+  student_email?: string;
+  studentVerifiedAt?: string;
+  student_verified_at?: string;
+  emailVerified?: boolean;
+  email_verified?: boolean;
+  needsOnboarding?: boolean;
+  authProvider?: 'google' | 'email' | 'student_email';
+}
+
+export interface ApprovedUniversityDomain {
+  id: string;
+  university_id: string;
+  domain: string;
+  active: boolean;
+  created_at?: string;
 }
 
 export type { GistRoom, RoomParticipant, RoomTopic, RoomScope, RoomStatus } from '../data/rooms';
