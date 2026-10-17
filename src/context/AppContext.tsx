@@ -10,7 +10,11 @@ import {
   UserRole,
   ArenaAnnouncement,
   VerificationTier,
-  VerificationAuditLog
+  VerificationAuditLog,
+  AvatarStatus,
+  ProfilePictureMethod,
+  AvatarAuditLog,
+  AvatarReport
 } from '../types';
 import { PRIVATE_UNIVERSITIES, PrivateUniversity } from '../data/universities';
 import { INITIAL_POSTS, MockPost, PostCategory, PostPoll } from '../data/posts';
@@ -181,6 +185,18 @@ interface AppContextType {
   setVerificationTierForUser: (userId: string, tier: VerificationTier, reason: string) => void;
   gainFollowers: (count: number) => void;
 
+  // Profile Picture & Avatar Management
+  profilePictureMethod: ProfilePictureMethod;
+  setProfilePictureMethod: (method: ProfilePictureMethod) => void;
+  uploadAvatarImage: (imageDataUrl: string) => Promise<{ success: boolean; avatarUrl?: string; error?: string }>;
+  uploadAvatarFromUrl: (url: string) => Promise<{ success: boolean; avatarUrl?: string; error?: string }>;
+  removeAvatarImage: () => Promise<{ success: boolean; error?: string }>;
+  avatarReports: AvatarReport[];
+  submitAvatarReport: (targetUserId: string, targetUsername: string, avatarUrl: string, reason: 'nudity' | 'violence' | 'harassment' | 'other', details?: string) => Promise<{ success: boolean; error?: string }>;
+  avatarAuditLogs: AvatarAuditLog[];
+  reviewAvatar: (targetUserId: string, action: 'approve' | 'remove' | 'remove_and_block' | 'unblock', reason: string) => Promise<{ success: boolean; error?: string }>;
+  avatarUsers: UserProfile[];
+
   // Toasts
   toastMessage: string | null;
   showToast: (msg: string) => void;
@@ -276,6 +292,160 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return sessionStorage.getItem('univyx_admin_auth') === 'true';
   });
   const [adminPath, setAdminPath] = useState<string>('overview');
+
+  // Avatar Management & Moderation State
+  const [profilePictureMethod, setProfilePictureMethodState] = useState<ProfilePictureMethod>(() => {
+    return (localStorage.getItem('univyx_avatar_method') as ProfilePictureMethod) || 'upload';
+  });
+
+  const [avatarReports, setAvatarReports] = useState<AvatarReport[]>(() => {
+    const saved = localStorage.getItem('univyx_avatar_reports');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return [
+      {
+        id: 'rep-seed-1',
+        reporterId: 'usr-chidi',
+        reporterUsername: 'chidi_cu',
+        targetUserId: 'usr-zainab',
+        targetUsername: 'zainab_nile',
+        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=512&q=80',
+        reason: 'harassment',
+        details: 'Reported profile picture contains provocative text targeting fellow collegiate scholars.',
+        status: 'pending',
+        createdAt: '2026-10-16T14:30:00Z'
+      }
+    ];
+  });
+
+  const [avatarAuditLogs, setAvatarAuditLogs] = useState<AvatarAuditLog[]>(() => {
+    const saved = localStorage.getItem('univyx_avatar_audit_logs');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return [
+      {
+        id: 'log-seed-1',
+        adminId: 'usr-admin',
+        adminUsername: 'campus_governance',
+        targetUserId: 'usr-korede',
+        targetUsername: 'korede_babcock',
+        action: 'approve',
+        reason: 'Verified official collegiate profile portrait meeting campus guidelines.',
+        createdAt: '2026-10-15T11:20:00Z'
+      },
+      {
+        id: 'log-seed-2',
+        adminId: 'usr-admin',
+        adminUsername: 'campus_governance',
+        targetUserId: 'usr-damola',
+        targetUsername: 'damola_abuad',
+        action: 'remove',
+        reason: 'Violated community standards: Inappropriate graphic.',
+        createdAt: '2026-10-14T09:15:00Z'
+      }
+    ];
+  });
+
+  const [avatarUsers, setAvatarUsers] = useState<UserProfile[]>(() => {
+    const saved = localStorage.getItem('univyx_avatar_users');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return [
+      {
+        id: 'usr-chidi',
+        fullName: 'Chidi Okafor',
+        full_name: 'Chidi Okafor',
+        username: 'chidi_cu',
+        universityName: 'Covenant University',
+        university_name: 'Covenant University',
+        avatarUrl: undefined,
+        avatar_url: undefined,
+        avatarStatus: 'approved',
+        avatar_status: 'approved',
+        avatarUpdatedAt: '2026-10-15T08:00:00Z',
+        avatarUploadBlocked: false,
+        role: 'user'
+      },
+      {
+        id: 'usr-korede',
+        fullName: 'Korede Balogun',
+        full_name: 'Korede Balogun',
+        username: 'korede_babcock',
+        universityName: 'Babcock University',
+        university_name: 'Babcock University',
+        avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=512&q=80',
+        avatar_url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=512&q=80',
+        avatarStatus: 'approved',
+        avatar_status: 'approved',
+        avatarUpdatedAt: '2026-10-16T12:00:00Z',
+        avatarUploadBlocked: false,
+        role: 'user'
+      },
+      {
+        id: 'usr-tobi',
+        fullName: 'Tobi Adebayo',
+        full_name: 'Tobi Adebayo',
+        username: 'tobi_adebayo',
+        universityName: 'Babcock University',
+        university_name: 'Babcock University',
+        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=512&q=80',
+        avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=512&q=80',
+        avatarStatus: 'flagged',
+        avatar_status: 'flagged',
+        avatarUpdatedAt: '2026-10-16T15:20:00Z',
+        avatarUploadBlocked: false,
+        role: 'user'
+      },
+      {
+        id: 'usr-zainab',
+        fullName: 'Zainab Al-Hassan',
+        full_name: 'Zainab Al-Hassan',
+        username: 'zainab_nile',
+        universityName: 'Nile University of Nigeria',
+        university_name: 'Nile University of Nigeria',
+        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=512&q=80',
+        avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=512&q=80',
+        avatarStatus: 'reported',
+        avatar_status: 'reported',
+        avatarUpdatedAt: '2026-10-16T14:10:00Z',
+        avatarUploadBlocked: false,
+        role: 'user'
+      },
+      {
+        id: 'usr-damola',
+        fullName: 'Adedamola Adeleke',
+        full_name: 'Adedamola Adeleke',
+        username: 'damola_abuad',
+        universityName: 'Afe Babalola University (ABUAD)',
+        university_name: 'Afe Babalola University (ABUAD)',
+        avatarUrl: undefined,
+        avatar_url: undefined,
+        avatarStatus: 'removed',
+        avatar_status: 'removed',
+        avatarUpdatedAt: '2026-10-14T09:15:00Z',
+        avatarUploadBlocked: false,
+        role: 'user'
+      },
+      {
+        id: 'usr-cst-council',
+        fullName: 'CST Student Council',
+        full_name: 'CST Student Council',
+        username: 'cst_council',
+        universityName: 'Covenant University',
+        university_name: 'Covenant University',
+        avatarUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=512&q=80',
+        avatar_url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=512&q=80',
+        avatarStatus: 'approved',
+        avatar_status: 'approved',
+        avatarUpdatedAt: '2026-10-12T10:00:00Z',
+        avatarUploadBlocked: false,
+        role: 'user'
+      }
+    ];
+  });
 
   // Toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -1021,6 +1191,369 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const verifyStudentEmailFromSettings = async (email: string, code: string): Promise<{ success: boolean; error?: string }> => {
     return verifyStudentEmailCode(email, code);
+  };
+
+  // --- AVATAR & PROFILE PICTURE METHODS ---
+
+  const setProfilePictureMethod = async (method: ProfilePictureMethod) => {
+    setProfilePictureMethodState(method);
+    localStorage.setItem('univyx_avatar_method', method);
+    if (supabase) {
+      try {
+        await supabase.from('app_settings').upsert({
+          key: 'profile_picture_method',
+          value: JSON.stringify(method),
+          updated_at: new Date().toISOString()
+        });
+      } catch (e) {
+        console.warn('Could not update profile_picture_method in Supabase:', e);
+      }
+    }
+    showToast(`Profile picture method updated: ${method === 'both' ? 'File upload & Image URL' : method === 'url' ? 'Image URL' : 'File upload'}`);
+  };
+
+  const uploadAvatarImage = async (
+    imageDataUrl: string
+  ): Promise<{ success: boolean; avatarUrl?: string; error?: string }> => {
+    if (!currentUser) {
+      return { success: false, error: 'You must be signed in to upload a profile picture.' };
+    }
+
+    if (currentUser.avatarUploadBlocked || currentUser.avatar_upload_blocked) {
+      return {
+        success: false,
+        error: 'Your account has been restricted from uploading a profile picture by campus moderation.'
+      };
+    }
+
+    try {
+      const res = await fetch('/api/avatar/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image: imageDataUrl,
+          userId: currentUser.id
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || 'Failed to upload image' };
+      }
+
+      const finalAvatarUrl = data.avatarUrl;
+      const status: AvatarStatus = data.status || 'approved';
+      const now = new Date().toISOString();
+
+      const updatedUser: UserProfile = {
+        ...currentUser,
+        avatarUrl: finalAvatarUrl,
+        avatar_url: finalAvatarUrl,
+        avatarStatus: status,
+        avatar_status: status,
+        avatarUpdatedAt: now,
+        avatar_updated_at: now
+      };
+
+      setCurrentUser(updatedUser);
+      localStorage.setItem('univyx_user', JSON.stringify(updatedUser));
+
+      setAvatarUsers((prev) => {
+        const remaining = prev.filter((u) => u.id !== currentUser.id);
+        const next = [updatedUser, ...remaining];
+        localStorage.setItem('univyx_avatar_users', JSON.stringify(next));
+        return next;
+      });
+
+      if (supabase) {
+        try {
+          await supabase.from('profiles').upsert({
+            id: currentUser.id,
+            avatar_url: finalAvatarUrl,
+            avatar_status: status,
+            avatar_updated_at: now
+          });
+        } catch (e) {
+          console.warn('Supabase profile avatar save error:', e);
+        }
+      }
+
+      return { success: true, avatarUrl: finalAvatarUrl };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Network error uploading profile picture' };
+    }
+  };
+
+  const uploadAvatarFromUrl = async (
+    url: string
+  ): Promise<{ success: boolean; avatarUrl?: string; error?: string }> => {
+    if (!currentUser) {
+      return { success: false, error: 'You must be signed in to upload a profile picture.' };
+    }
+
+    if (currentUser.avatarUploadBlocked || currentUser.avatar_upload_blocked) {
+      return {
+        success: false,
+        error: 'Your account has been restricted from uploading a profile picture by campus moderation.'
+      };
+    }
+
+    try {
+      const res = await fetch('/api/avatar/fetch-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: url.trim(),
+          userId: currentUser.id
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || 'Failed to fetch image from URL' };
+      }
+
+      const finalAvatarUrl = data.avatarUrl;
+      const status: AvatarStatus = data.status || 'approved';
+      const now = new Date().toISOString();
+
+      const updatedUser: UserProfile = {
+        ...currentUser,
+        avatarUrl: finalAvatarUrl,
+        avatar_url: finalAvatarUrl,
+        avatarStatus: status,
+        avatar_status: status,
+        avatarUpdatedAt: now,
+        avatar_updated_at: now
+      };
+
+      setCurrentUser(updatedUser);
+      localStorage.setItem('univyx_user', JSON.stringify(updatedUser));
+
+      setAvatarUsers((prev) => {
+        const remaining = prev.filter((u) => u.id !== currentUser.id);
+        const next = [updatedUser, ...remaining];
+        localStorage.setItem('univyx_avatar_users', JSON.stringify(next));
+        return next;
+      });
+
+      if (supabase) {
+        try {
+          await supabase.from('profiles').upsert({
+            id: currentUser.id,
+            avatar_url: finalAvatarUrl,
+            avatar_status: status,
+            avatar_updated_at: now
+          });
+        } catch (e) {
+          console.warn('Supabase profile avatar save error:', e);
+        }
+      }
+
+      return { success: true, avatarUrl: finalAvatarUrl };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Network error fetching image URL' };
+    }
+  };
+
+  const removeAvatarImage = async (): Promise<{ success: boolean; error?: string }> => {
+    if (!currentUser) return { success: false, error: 'Not authenticated' };
+
+    const now = new Date().toISOString();
+    const updatedUser: UserProfile = {
+      ...currentUser,
+      avatarUrl: undefined,
+      avatar_url: undefined,
+      avatarStatus: undefined,
+      avatar_status: undefined,
+      avatarUpdatedAt: now,
+      avatar_updated_at: now
+    };
+
+    setCurrentUser(updatedUser);
+    localStorage.setItem('univyx_user', JSON.stringify(updatedUser));
+
+    setAvatarUsers((prev) => {
+      const next = prev.map((u) => (u.id === currentUser.id ? updatedUser : u));
+      localStorage.setItem('univyx_avatar_users', JSON.stringify(next));
+      return next;
+    });
+
+    if (supabase) {
+      try {
+        await supabase.from('profiles').upsert({
+          id: currentUser.id,
+          avatar_url: null,
+          avatar_status: 'removed',
+          avatar_updated_at: now
+        });
+      } catch (e) {
+        console.warn('Supabase remove avatar error:', e);
+      }
+    }
+
+    return { success: true };
+  };
+
+  const submitAvatarReport = async (
+    targetUserId: string,
+    targetUsername: string,
+    avatarUrl: string,
+    reason: 'nudity' | 'violence' | 'harassment' | 'other',
+    details?: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    const newReport: AvatarReport = {
+      id: `rep-${Date.now()}`,
+      reporterId: currentUser?.id || 'usr-anonymous',
+      reporterUsername: currentUser?.username || 'anonymous',
+      targetUserId,
+      targetUsername,
+      avatarUrl,
+      reason,
+      details,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+
+    const nextReports = [newReport, ...avatarReports];
+    setAvatarReports(nextReports);
+    localStorage.setItem('univyx_avatar_reports', JSON.stringify(nextReports));
+
+    setAvatarUsers((prev) => {
+      const next = prev.map((u) =>
+        u.id === targetUserId
+          ? { ...u, avatarStatus: 'reported' as AvatarStatus, avatar_status: 'reported' as AvatarStatus }
+          : u
+      );
+      localStorage.setItem('univyx_avatar_users', JSON.stringify(next));
+      return next;
+    });
+
+    showToast('Report submitted for campus moderation review');
+    return { success: true };
+  };
+
+  const reviewAvatar = async (
+    targetUserId: string,
+    action: 'approve' | 'remove' | 'remove_and_block' | 'unblock',
+    reason: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    const target = avatarUsers.find((u) => u.id === targetUserId);
+    const targetUsername = target?.username || 'scholar';
+
+    const newLog: AvatarAuditLog = {
+      id: `log-${Date.now()}`,
+      adminId: currentUser?.id || 'admin',
+      adminUsername: currentUser?.username || 'admin',
+      targetUserId,
+      targetUsername,
+      action,
+      reason,
+      createdAt: new Date().toISOString()
+    };
+
+    const nextLogs = [newLog, ...avatarAuditLogs];
+    setAvatarAuditLogs(nextLogs);
+    localStorage.setItem('univyx_avatar_audit_logs', JSON.stringify(nextLogs));
+
+    // Update avatar user status
+    setAvatarUsers((prev) => {
+      const next = prev.map((u) => {
+        if (u.id !== targetUserId) return u;
+
+        if (action === 'approve') {
+          return {
+            ...u,
+            avatarStatus: 'approved' as AvatarStatus,
+            avatar_status: 'approved' as AvatarStatus
+          };
+        } else if (action === 'remove') {
+          return {
+            ...u,
+            avatarUrl: undefined,
+            avatar_url: undefined,
+            avatarStatus: 'removed' as AvatarStatus,
+            avatar_status: 'removed' as AvatarStatus
+          };
+        } else if (action === 'remove_and_block') {
+          return {
+            ...u,
+            avatarUrl: undefined,
+            avatar_url: undefined,
+            avatarStatus: 'removed' as AvatarStatus,
+            avatar_status: 'removed' as AvatarStatus,
+            avatarUploadBlocked: true,
+            avatar_upload_blocked: true
+          };
+        } else if (action === 'unblock') {
+          return {
+            ...u,
+            avatarUploadBlocked: false,
+            avatar_upload_blocked: false
+          };
+        }
+        return u;
+      });
+      localStorage.setItem('univyx_avatar_users', JSON.stringify(next));
+      return next;
+    });
+
+    // If target is current logged in user, sync currentUser
+    if (currentUser && currentUser.id === targetUserId) {
+      let syncUser = { ...currentUser };
+      if (action === 'approve') {
+        syncUser.avatarStatus = 'approved';
+        syncUser.avatar_status = 'approved';
+      } else if (action === 'remove' || action === 'remove_and_block') {
+        syncUser.avatarUrl = undefined;
+        syncUser.avatar_url = undefined;
+        syncUser.avatarStatus = 'removed';
+        syncUser.avatar_status = 'removed';
+        if (action === 'remove_and_block') {
+          syncUser.avatarUploadBlocked = true;
+          syncUser.avatar_upload_blocked = true;
+        }
+      } else if (action === 'unblock') {
+        syncUser.avatarUploadBlocked = false;
+        syncUser.avatar_upload_blocked = false;
+      }
+      setCurrentUser(syncUser);
+      localStorage.setItem('univyx_user', JSON.stringify(syncUser));
+    }
+
+    // Resolve reports for target user
+    setAvatarReports((prev) => {
+      const next = prev.map((r) =>
+        r.targetUserId === targetUserId ? { ...r, status: 'reviewed' as const } : r
+      );
+      localStorage.setItem('univyx_avatar_reports', JSON.stringify(next));
+      return next;
+    });
+
+    // If action is remove or remove_and_block, notify user
+    if (action === 'remove' || action === 'remove_and_block') {
+      const notifMsg =
+        action === 'remove_and_block'
+          ? `Your profile picture was removed and avatar uploads have been restricted for breaking Univyx rules: ${reason}`
+          : `Your profile picture was removed for breaking Univyx rules: ${reason}`;
+
+      setNotifications((prev) => [
+        {
+          id: `notif-${Date.now()}`,
+          userId: targetUserId,
+          actorName: 'Campus Governance',
+          actorUsername: 'governance',
+          type: 'announcement',
+          content: notifMsg,
+          isRead: false,
+          createdAt: new Date().toISOString()
+        },
+        ...prev
+      ]);
+    }
+
+    showToast(`Moderation action "${action}" recorded in audit log.`);
+    return { success: true };
   };
 
   // Post Actions
@@ -1976,6 +2509,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         verificationLogs,
         setVerificationTierForUser,
         gainFollowers,
+        profilePictureMethod,
+        setProfilePictureMethod,
+        uploadAvatarImage,
+        uploadAvatarFromUrl,
+        removeAvatarImage,
+        avatarReports,
+        submitAvatarReport,
+        avatarAuditLogs,
+        reviewAvatar,
+        avatarUsers,
         toastMessage,
         showToast,
         textSize,

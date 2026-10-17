@@ -11,9 +11,13 @@ import {
   CheckCircle2,
   Bell,
   Lock,
-  Building2
+  Building2,
+  Camera,
+  Trash2
 } from 'lucide-react';
 import { PWAInstallButton } from '../components/PWAInstallButton';
+import { UserAvatar } from '../components/UserAvatar';
+import { AvatarEditorModal } from '../components/AvatarEditorModal';
 
 export const SettingsView: React.FC = () => {
   const {
@@ -24,8 +28,11 @@ export const SettingsView: React.FC = () => {
     currentUser,
     setCurrentUser,
     universities,
-    showToast
+    showToast,
+    removeAvatarImage
   } = useApp();
+
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
 
   // Profile Form state
   const [fullName, setFullName] = useState(currentUser?.full_name || '');
@@ -197,10 +204,74 @@ export const SettingsView: React.FC = () => {
       {/* 3. Profile & Campus Affiliation */}
       {currentUser && (
         <form onSubmit={handleSaveProfile} className="p-5 rounded-2xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800 shadow-xs space-y-4 text-xs">
-          <div className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white">
-            <User className="w-4 h-4 text-[#1D9BF0]" />
+          <div className="flex items-center gap-2 text-sm font-bold text-text">
+            <User className="w-4 h-4 text-accent" />
             <span>Profile & Campus Affiliation</span>
           </div>
+
+          {/* Profile Picture Upload & Controls */}
+          <div className="p-3.5 rounded-xl bg-bg border border-border flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <UserAvatar
+                src={currentUser.avatarUrl || currentUser.avatar_url}
+                name={currentUser.fullName || currentUser.full_name}
+                size="lg"
+              />
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[13px] text-text">Profile Picture</span>
+                  {currentUser.avatarStatus && (
+                    <span
+                      className={`text-[9.5px] uppercase font-bold px-1.5 py-0.5 rounded leading-none ${
+                        currentUser.avatarStatus === 'approved'
+                          ? 'bg-success/15 text-success'
+                          : currentUser.avatarStatus === 'flagged' || currentUser.avatarStatus === 'reported'
+                          ? 'bg-amber-500/15 text-amber-500'
+                          : 'bg-rose-500/15 text-rose-500'
+                      }`}
+                    >
+                      {currentUser.avatarStatus}
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-text-muted mt-0.5">
+                  {(currentUser.avatarUrl || currentUser.avatar_url)
+                    ? 'Custom picture uploaded (512x512 JPG/PNG/WebP)'
+                    : 'Default initials avatar active'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowAvatarModal(true)}
+                className="px-3 py-1.5 rounded-full bg-gradient-to-r from-accent to-accent-2 text-white font-medium text-xs hover:opacity-95 transition-opacity cursor-pointer flex items-center gap-1.5 shadow-xs"
+              >
+                <Camera className="w-3.5 h-3.5" />
+                <span>Change photo</span>
+              </button>
+
+              {(currentUser.avatarUrl || currentUser.avatar_url) && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await removeAvatarImage();
+                    showToast('Profile picture removed. Reverted to initials avatar.');
+                  }}
+                  className="px-3 py-1.5 rounded-full border border-border text-text-muted hover:text-rose-500 hover:border-rose-500/30 font-medium text-xs transition-colors cursor-pointer flex items-center gap-1"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove photo</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          <AvatarEditorModal
+            isOpen={showAvatarModal}
+            onClose={() => setShowAvatarModal(false)}
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>

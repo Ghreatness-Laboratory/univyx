@@ -17,9 +17,12 @@ import {
   AlertCircle,
   GraduationCap,
   Loader2,
-  RotateCcw
+  RotateCcw,
+  Camera
 } from 'lucide-react';
 import { PrivateUniversity } from '../data/universities';
+import { UserAvatar } from './UserAvatar';
+import { AvatarEditorModal } from './AvatarEditorModal';
 
 // Google SVG Multi-color Logo
 const GoogleLogo: React.FC = () => (
@@ -86,6 +89,7 @@ export const WelcomeAuthModal: React.FC = () => {
   const [academicLevel, setAcademicLevel] = useState<'100L' | '200L' | '300L' | '400L' | '500L' | 'Postgraduate'>('200L');
   const [department, setDepartment] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [showAvatarEditor, setShowAvatarEditor] = useState(false);
 
   // Form states - Login
   const [loginEmail, setLoginEmail] = useState('');
@@ -1272,6 +1276,36 @@ export const WelcomeAuthModal: React.FC = () => {
                     {errors.department && <p className="text-[11px] text-rose-500 mt-0.5 font-medium">{errors.department}</p>}
                   </div>
                 </div>
+
+                {/* Profile Picture Option during Onboarding */}
+                <div className="p-3 rounded-xl bg-bg border border-border flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <UserAvatar
+                      src={currentUser?.avatarUrl || currentUser?.avatar_url}
+                      name={username || currentUser?.fullName || 'Scholar'}
+                      size="md"
+                    />
+                    <div className="min-w-0">
+                      <div className="font-semibold text-xs text-text truncate">Profile Picture (Optional)</div>
+                      <p className="text-[10.5px] text-text-muted">
+                        {(currentUser?.avatarUrl || currentUser?.avatar_url) ? 'Custom photo uploaded' : 'Default initials avatar'}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowAvatarEditor(true)}
+                    className="px-3 py-1.5 rounded-full border border-border text-xs font-semibold text-text hover:bg-accent-soft/40 transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
+                  >
+                    <Camera className="w-3.5 h-3.5 text-accent" />
+                    <span>{(currentUser?.avatarUrl || currentUser?.avatar_url) ? 'Change' : 'Upload'}</span>
+                  </button>
+                </div>
+
+                <AvatarEditorModal
+                  isOpen={showAvatarEditor}
+                  onClose={() => setShowAvatarEditor(false)}
+                />
 
                 <div className="pt-2">
                   <button

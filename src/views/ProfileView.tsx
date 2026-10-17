@@ -18,8 +18,13 @@ import {
   CheckCircle2,
   TrendingUp,
   ArrowRight,
-  Mail
+  Mail,
+  Camera,
+  Flag,
+  AlertTriangle
 } from 'lucide-react';
+import { UserAvatar } from '../components/UserAvatar';
+import { AvatarEditorModal } from '../components/AvatarEditorModal';
 
 export const ProfileView: React.FC = () => {
   const {
@@ -29,11 +34,16 @@ export const ProfileView: React.FC = () => {
     gainFollowers,
     showToast,
     setActiveConversationId,
-    startConversation
+    startConversation,
+    submitAvatarReport
   } = useApp();
   const [profileTab, setProfileTab] = useState<'posts' | 'bookmarks'>('posts');
   const [activeCommentsPost, setActiveCommentsPost] = useState<Post | null>(null);
   const [showFollowModal, setShowFollowModal] = useState<'followers' | 'following' | null>(null);
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [reportingTarget, setReportingTarget] = useState<{ id: string; username: string; avatarUrl: string } | null>(null);
+  const [reportReason, setReportReason] = useState<'nudity' | 'violence' | 'harassment' | 'other'>('nudity');
+  const [reportDetails, setReportDetails] = useState('');
 
   if (!currentUser) {
     return (
@@ -65,6 +75,7 @@ export const ProfileView: React.FC = () => {
       name: 'Korede Balogun',
       username: 'korede_babcock',
       university: 'Babcock University',
+      avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=512&q=80',
       tier: 'blue' as VerificationTier,
       bio: 'Music & Arts scholar · Just hit 1,000 followers and earned Blue Tick!'
     },
@@ -73,6 +84,7 @@ export const ProfileView: React.FC = () => {
       name: 'Covenant University',
       username: 'covenant_official',
       university: 'Covenant University',
+      avatarUrl: undefined,
       tier: 'gold' as VerificationTier,
       bio: 'Official Covenant University senate, admissions, and campus communications.'
     },
@@ -81,6 +93,7 @@ export const ProfileView: React.FC = () => {
       name: 'CST Student Council',
       username: 'cst_council',
       university: 'Covenant University',
+      avatarUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=512&q=80',
       tier: 'gold' as VerificationTier,
       bio: 'College of Science & Technology student representative council.'
     },
@@ -89,6 +102,7 @@ export const ProfileView: React.FC = () => {
       name: 'Tobi Adebayo',
       username: 'tobi_adebayo',
       university: 'Babcock University',
+      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=512&q=80',
       tier: 'none' as VerificationTier,
       bio: '300L Pre-med scholar · 999 followers (1 follower away from Blue Tick!)'
     },
@@ -97,6 +111,7 @@ export const ProfileView: React.FC = () => {
       name: 'Zainab Al-Hassan',
       username: 'zainab_nile',
       university: 'Nile University of Nigeria',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=512&q=80',
       tier: 'blue' as VerificationTier,
       bio: 'Cybersecurity team captain · Inter-collegiate arena competitor.'
     },
@@ -105,6 +120,7 @@ export const ProfileView: React.FC = () => {
       name: 'Adedamola Adeleke',
       username: 'damola_abuad',
       university: 'Afe Babalola University (ABUAD)',
+      avatarUrl: undefined,
       tier: 'blue' as VerificationTier,
       bio: '400L Law undergraduate · ABUAD Law Clinic lead.'
     }
@@ -116,8 +132,19 @@ export const ProfileView: React.FC = () => {
       <div className="p-5 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0A0A0A]">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4">
-            <div className="w-16 h-16 rounded-full bg-[#1D9BF0]/15 text-[#1D9BF0] font-bold text-2xl flex items-center justify-center border-2 border-[#1D9BF0]/30 shrink-0">
-              {(currentUser.fullName || currentUser.full_name || 'U').charAt(0)}
+            <div
+              className="relative group cursor-pointer shrink-0"
+              onClick={() => setShowAvatarModal(true)}
+              title="Click to change profile picture"
+            >
+              <UserAvatar
+                src={currentUser.avatarUrl || currentUser.avatar_url}
+                name={currentUser.fullName || currentUser.full_name}
+                size="2xl"
+              />
+              <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                <Camera className="w-5 h-5" />
+              </div>
             </div>
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -157,7 +184,15 @@ export const ProfileView: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            <button
+              onClick={() => setShowAvatarModal(true)}
+              className="btn-pill flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-[13px] font-bold hover:bg-accent-soft/30 shrink-0 text-text transition-colors cursor-pointer"
+            >
+              <Camera className="w-3.5 h-3.5 text-accent" />
+              <span className="hidden sm:inline">Photo</span>
+            </button>
+
             <button
               onClick={() => {
                 setActiveConversationId('conv-self');
@@ -374,9 +409,11 @@ export const ProfileView: React.FC = () => {
                   className="p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-[#1f2329] transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700/60 flex items-start justify-between gap-3"
                 >
                   <div className="flex items-start gap-3 min-w-0 flex-1">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[15px]">
-                      {account.name.charAt(0)}
-                    </div>
+                    <UserAvatar
+                      src={account.avatarUrl}
+                      name={account.name}
+                      size="md"
+                    />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1 min-w-0 overflow-hidden leading-tight">
                         <span className="display-name font-bold text-[15px] text-[#0F1419] dark:text-[#E7E9EA] truncate shrink-0 max-w-[130px] sm:max-w-[160px]">
@@ -397,6 +434,22 @@ export const ProfileView: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-1.5 shrink-0">
+                    {account.avatarUrl && (
+                      <button
+                        onClick={() =>
+                          setReportingTarget({
+                            id: account.id,
+                            username: account.username,
+                            avatarUrl: account.avatarUrl!
+                          })
+                        }
+                        className="p-2 rounded-full border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                        title="Report profile picture"
+                      >
+                        <Flag className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+
                     <button
                       onClick={() => {
                         setShowFollowModal(null);
@@ -425,6 +478,109 @@ export const ProfileView: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Profile Picture Change Modal */}
+      <AvatarEditorModal
+        isOpen={showAvatarModal}
+        onClose={() => setShowAvatarModal(false)}
+      />
+
+      {/* Report Profile Picture Modal */}
+      {reportingTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-sm card-theme shadow-2xl rounded-2xl overflow-hidden border border-border p-4.5 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-rose-500" />
+                <h3 className="font-bold text-sm text-text">Report Profile Picture</h3>
+              </div>
+              <button
+                onClick={() => setReportingTarget(null)}
+                className="p-1 rounded-full text-text-muted hover:text-text hover:bg-accent-soft/30"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-bg border border-border">
+              <UserAvatar src={reportingTarget.avatarUrl} name={reportingTarget.username} size="lg" />
+              <div>
+                <span className="font-bold text-xs text-text">@{reportingTarget.username}</span>
+                <p className="text-[11px] text-text-muted mt-0.5">
+                  Report this picture to campus administration
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-text block">Reason for Report *</label>
+              {[
+                { key: 'nudity', label: 'Nudity or erotic content' },
+                { key: 'violence', label: 'Violent or graphic content' },
+                { key: 'harassment', label: 'Harassment, hate, or bullying' },
+                { key: 'other', label: 'Other policy violation' }
+              ].map((item) => (
+                <label
+                  key={item.key}
+                  className={`flex items-center gap-2.5 p-2 rounded-xl border text-xs cursor-pointer transition-colors ${
+                    reportReason === item.key
+                      ? 'border-accent bg-accent/10 font-bold text-accent'
+                      : 'border-border text-text hover:bg-accent-soft/30'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="avatar_report_reason"
+                    checked={reportReason === item.key}
+                    onChange={() => setReportReason(item.key as any)}
+                    className="accent-accent"
+                  />
+                  <span>{item.label}</span>
+                </label>
+              ))}
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-text block mb-1">Additional Details (Optional)</label>
+              <textarea
+                rows={2}
+                value={reportDetails}
+                onChange={(e) => setReportDetails(e.target.value)}
+                placeholder="Describe why this profile picture violates guidelines..."
+                className="w-full p-2 rounded-xl bg-bg border border-border text-xs text-text focus:outline-none focus:border-accent"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
+              <button
+                type="button"
+                onClick={() => setReportingTarget(null)}
+                className="px-3 py-1.5 rounded-full border border-border text-xs text-text-muted hover:text-text font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  await submitAvatarReport(
+                    reportingTarget.id,
+                    reportingTarget.username,
+                    reportingTarget.avatarUrl,
+                    reportReason,
+                    reportDetails.trim() || undefined
+                  );
+                  setReportingTarget(null);
+                  setReportDetails('');
+                  setReportReason('nudity');
+                }}
+                className="px-4 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
+              >
+                Submit Report
+              </button>
             </div>
           </div>
         </div>

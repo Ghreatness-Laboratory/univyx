@@ -65,6 +65,41 @@ export interface UserProfile {
   email_verified?: boolean;
   needsOnboarding?: boolean;
   authProvider?: 'google' | 'email' | 'student_email';
+  avatarUrl?: string;
+  avatar_url?: string;
+  avatarStatus?: 'approved' | 'flagged' | 'reported' | 'removed';
+  avatar_status?: 'approved' | 'flagged' | 'reported' | 'removed';
+  avatarUpdatedAt?: string;
+  avatar_updated_at?: string;
+  avatarUploadBlocked?: boolean;
+  avatar_upload_blocked?: boolean;
+}
+
+export type AvatarStatus = 'approved' | 'flagged' | 'reported' | 'removed';
+export type ProfilePictureMethod = 'upload' | 'url' | 'both';
+
+export interface AvatarAuditLog {
+  id: string;
+  adminId?: string;
+  adminUsername: string;
+  targetUserId: string;
+  targetUsername: string;
+  action: 'approve' | 'remove' | 'remove_and_block' | 'unblock';
+  reason: string;
+  createdAt: string;
+}
+
+export interface AvatarReport {
+  id: string;
+  reporterId: string;
+  reporterUsername: string;
+  targetUserId: string;
+  targetUsername: string;
+  avatarUrl: string;
+  reason: 'nudity' | 'violence' | 'harassment' | 'other';
+  details?: string;
+  status: 'pending' | 'reviewed' | 'dismissed';
+  createdAt: string;
 }
 
 export interface ApprovedUniversityDomain {

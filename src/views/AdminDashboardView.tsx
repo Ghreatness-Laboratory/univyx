@@ -25,8 +25,17 @@ import {
   Play,
   Pause,
   Plus,
-  Upload
+  Upload,
+  Camera,
+  Image as ImageIcon,
+  ShieldAlert,
+  ChevronLeft,
+  ChevronRight,
+  UserX,
+  Link as LinkIcon
 } from 'lucide-react';
+import { UserAvatar } from '../components/UserAvatar';
+import { UserProfile } from '../types';
 
 export const AdminDashboardView: React.FC = () => {
   const {
@@ -48,12 +57,27 @@ export const AdminDashboardView: React.FC = () => {
     ads,
     createAd,
     updateAd,
-    deleteAd
+    deleteAd,
+    profilePictureMethod,
+    setProfilePictureMethod,
+    avatarReports,
+    avatarAuditLogs,
+    reviewAvatar,
+    avatarUsers
   } = useApp();
 
   const [section, setSection] = useState<
-    'overview' | 'posts' | 'users' | 'universities' | 'opportunities' | 'stores' | 'reports' | 'ads' | 'settings'
+    'overview' | 'avatars' | 'posts' | 'users' | 'universities' | 'opportunities' | 'stores' | 'reports' | 'ads' | 'settings'
   >('overview');
+
+  // Profile Pictures Admin State
+  const [avatarSubTab, setAvatarSubTab] = useState<'queue' | 'audit_log'>('queue');
+  const [avatarFilter, setAvatarFilter] = useState<'all' | 'flagged' | 'reported' | 'removed'>('all');
+  const [avatarSearch, setAvatarSearch] = useState('');
+  const [avatarPage, setAvatarPage] = useState(1);
+  const [selectedAvatarUser, setSelectedAvatarUser] = useState<UserProfile | null>(null);
+  const [avatarActionReason, setAvatarActionReason] = useState('');
+  const [actionConfirmation, setActionConfirmation] = useState<'approve' | 'remove' | 'remove_and_block' | 'unblock' | null>(null);
 
   // Ad Center state
   const [adFilter, setAdFilter] = useState<'all' | 'Running' | 'Paused' | 'Pending' | 'Completed'>('all');
