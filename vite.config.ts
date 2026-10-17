@@ -117,6 +117,11 @@ Rules:
             );
           }
         });
+      });
+    }
+  };
+}
+
 function authApiPlugin() {
   const rateLimitMap = new Map<string, number[]>();
   const otpStore = new Map<string, { code: string; expires: number; universityId: string }>();

@@ -684,11 +684,343 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Welcome to Univyx, ${newUser.fullName}!`);
   };
 
-  const signOut = () => {
+  const logout = async () => {
+    if (supabase) {
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        console.warn('Supabase signOut error:', e);
+      }
+    }
     setCurrentUser(null);
     localStorage.removeItem('univyx_user');
+    localStorage.setItem('univyx_logged_out', 'true');
+    setShowWelcomeModal(true);
     setIsDrawerOpen(false);
     showToast('Signed out of Univyx');
+  };
+
+  const signOut = () => {
+    logout();
+  };
+
+  const signInWithGoogle = async (): Promise<{ error?: string }> => {
+    if (supabase) {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+      if (error) return { error: error.message };
+      return {};
+    } else {
+      const demoUser: UserProfile = {
+        id: `usr-${Date.now()}`,
+        fullName: 'Google Scholar',
+        username: 'google_scholar',
+        email: 'scholar@gmail.com',
+        universityId: 'covenant',
+        universityName: 'Covenant University',
+        department: 'Computer Science',
+        academicLevel: '200L',
+        interests: ['Academics', 'Tech'],
+        isVerified: true,
+        role: 'user',
+        createdAt: new Date().toISOString(),
+        postsCount: 0,
+        followersCount: 15,
+        followingCount: 30
+      };
+      setCurrentUser(demoUser);
+      localStorage.setItem('univyx_user', JSON.stringify(demoUser));
+      localStorage.removeItem('univyx_logged_out');
+      localStorage.setItem('univyx_welcomed', 'true');
+      setShowWelcomeModal(false);
+      setAuthModalType(null);
+      showToast('Signed in with Google');
+      return {};
+    }
+  };
+
+  const signInWithEmail = async (email: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+    if (supabase) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password: pass
+      });
+      if (error) {
+        return { success: false, error: error.message };
+      }
+      if (data.user) {
+        let isStudentVerified = false;
+        let uniId = data.user.user_metadata?.university_id || 'covenant';
+        let uniName = data.user.user_metadata?.university_name || 'Covenant University';
+
+        try {
+          const res = await fetch('/api/auth/check-domain', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: data.user.email })
+          });
+          const dRes = await res.json();
+          if (dRes.approved) {
+            isStudentVerified = true;
+            uniId = dRes.universityId || uniId;
+            uniName = dRes.universityName || uniName;
+          }
+        } catch {
+          // Non-blocking
+        }
+
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
+
+        const userObj: UserProfile = {
+          id: data.user.id,
+          fullName: profile?.full_name || data.user.user_metadata?.full_name || email.split('@')[0],
+          username: profile?.username || email.split('@')[0],
+          email: data.user.email || email,
+          universityId: profile?.university_id || uniId,
+          universityName: profile?.university_name || uniName,
+          department: profile?.department || 'Computer Science',
+          academicLevel: profile?.academic_level || '200L',
+          role: profile?.role || 'user',
+          isVerified: profile?.is_verified ?? true,
+          verificationTier: profile?.verification_tier || 'none',
+          studentVerified: profile?.student_verified ?? isStudentVerified,
+          studentEmail: profile?.student_email || (isStudentVerified ? data.user.email : undefined),
+          createdAt: profile?.created_at || new Date().toISOString(),
+          postsCount: 0,
+          followersCount: 10,
+          followingCount: 20
+        };
+
+        setCurrentUser(userObj);
+        localStorage.setItem('univyx_user', JSON.stringify(userObj));
+        localStorage.removeItem('univyx_logged_out');
+        localStorage.setItem('univyx_welcomed', 'true');
+        setShowWelcomeModal(false);
+        setAuthModalType(null);
+        return { success: true };
+      }
+      return { success: false, error: 'Sign in failed' };
+    } else {
+      const userObj: UserProfile = {
+        id: `usr-${Date.now()}`,
+        fullName: email.split('@')[0],
+        username: email.split('@')[0],
+        email: email,
+        universityId: 'covenant',
+        universityName: 'Covenant University',
+        department: 'Computer Science',
+        academicLevel: '200L',
+        interests: ['Academics'],
+        isVerified: true,
+        role: 'user',
+        createdAt: new Date().toISOString(),
+        postsCount: 0,
+        followersCount: 10,
+        followingCount: 20
+      };
+      setCurrentUser(userObj);
+      localStorage.setItem('univyx_user', JSON.stringify(userObj));
+      localStorage.removeItem('univyx_logged_out');
+      localStorage.setItem('univyx_welcomed', 'true');
+      setShowWelcomeModal(false);
+      setAuthModalType(null);
+      return { success: true };
+    }
+  };
+
+  const signUpWithEmail = async (data: any): Promise<{ success: boolean; error?: string; requireVerification?: boolean }> => {
+    if (supabase) {
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            full_name: data.fullName,
+            username: data.username,
+            university_id: data.universityId,
+            university_name: data.universityName,
+            department: data.department,
+            academic_level: data.academicLevel
+          }
+        }
+      });
+      if (error) {
+        return { success: false, error: error.message };
+      }
+      return { success: true, requireVerification: true };
+    } else {
+      const newUser: UserProfile = {
+        id: `usr-${Date.now()}`,
+        fullName: data.fullName,
+        username: data.username,
+        email: data.email,
+        universityId: data.universityId,
+        universityName: data.universityName,
+        department: data.department,
+        academicLevel: data.academicLevel,
+        interests: ['Academics'],
+        isVerified: true,
+        role: 'user',
+        createdAt: new Date().toISOString(),
+        postsCount: 0,
+        followersCount: 5,
+        followingCount: 15
+      };
+      setCurrentUser(newUser);
+      localStorage.setItem('univyx_user', JSON.stringify(newUser));
+      localStorage.removeItem('univyx_logged_out');
+      localStorage.setItem('univyx_welcomed', 'true');
+      return { success: true, requireVerification: false };
+    }
+  };
+
+  const sendStudentEmailCode = async (studentEmail: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const res = await fetch('/api/auth/send-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: studentEmail })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || data.message || 'Unable to send code' };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Network error sending code' };
+    }
+  };
+
+  const verifyStudentEmailCode = async (studentEmail: string, code: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const res = await fetch('/api/auth/verify-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: studentEmail, code })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || 'Invalid verification code' };
+      }
+
+      if (currentUser) {
+        const updated: UserProfile = {
+          ...currentUser,
+          studentVerified: true,
+          student_verified: true,
+          studentEmail: studentEmail,
+          student_email: studentEmail,
+          studentVerifiedAt: data.verified_at || new Date().toISOString(),
+          student_verified_at: data.verified_at || new Date().toISOString(),
+          universityId: data.universityId || currentUser.universityId,
+          university_id: data.universityId || currentUser.universityId,
+          universityName: data.universityName || currentUser.universityName,
+          university_name: data.universityName || currentUser.universityName
+        };
+        setCurrentUser(updated);
+        localStorage.setItem('univyx_user', JSON.stringify(updated));
+      } else {
+        const newUser: UserProfile = {
+          id: `usr-${Date.now()}`,
+          fullName: 'Verified Scholar',
+          username: '',
+          email: studentEmail,
+          universityId: data.universityId || 'covenant',
+          universityName: data.universityName || 'Covenant University',
+          department: '',
+          academicLevel: '200L',
+          role: 'user',
+          isVerified: true,
+          studentVerified: true,
+          studentEmail: studentEmail,
+          createdAt: new Date().toISOString(),
+          postsCount: 0,
+          followersCount: 15,
+          followingCount: 30,
+          needsOnboarding: true
+        };
+        setCurrentUser(newUser);
+        localStorage.setItem('univyx_user', JSON.stringify(newUser));
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Verification failed' };
+    }
+  };
+
+  const completeOnboarding = async (data: {
+    username: string;
+    universityId: string;
+    universityName: string;
+    department: string;
+    academicLevel: string;
+  }): Promise<{ success: boolean; error?: string }> => {
+    if (!currentUser) return { success: false, error: 'User session not found' };
+
+    const updatedUser: UserProfile = {
+      ...currentUser,
+      username: data.username,
+      universityId: data.universityId,
+      universityName: data.universityName,
+      department: data.department,
+      academicLevel: data.academicLevel as any,
+      needsOnboarding: false
+    };
+
+    setCurrentUser(updatedUser);
+    localStorage.setItem('univyx_user', JSON.stringify(updatedUser));
+    localStorage.setItem('univyx_welcomed', 'true');
+    setShowWelcomeModal(false);
+    setAuthModalType(null);
+
+    if (supabase) {
+      try {
+        await supabase.from('profiles').upsert({
+          id: currentUser.id,
+          username: data.username,
+          university_id: data.universityId,
+          university_name: data.universityName,
+          department: data.department,
+          academic_level: data.academicLevel
+        });
+      } catch (err) {
+        console.warn('Could not persist profile to Supabase:', err);
+      }
+    }
+
+    return { success: true };
+  };
+
+  const sendPasswordResetEmail = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    if (supabase) {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/#reset-password`
+      });
+      if (error) return { success: false, error: error.message };
+      return { success: true };
+    }
+    return { success: true };
+  };
+
+  const updatePassword = async (newPassword: string): Promise<{ success: boolean; error?: string }> => {
+    if (supabase) {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) return { success: false, error: error.message };
+      return { success: true };
+    }
+    return { success: true };
+  };
+
+  const verifyStudentEmailFromSettings = async (email: string, code: string): Promise<{ success: boolean; error?: string }> => {
+    return verifyStudentEmailCode(email, code);
   };
 
   // Post Actions
@@ -1552,6 +1884,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setCurrentUser,
         onboardUser,
         signOut,
+        logout,
+        signInWithGoogle,
+        signInWithEmail,
+        signUpWithEmail,
+        sendStudentEmailCode,
+        verifyStudentEmailCode,
+        completeOnboarding,
+        sendPasswordResetEmail,
+        updatePassword,
+        verifyStudentEmailFromSettings,
         showWelcomeModal,
         setShowWelcomeModal,
         authModalType,
