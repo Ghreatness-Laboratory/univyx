@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { VerifiedBadge } from '../components/VerifiedBadge';
+import { VerificationTier } from '../types';
 import {
   ShieldCheck,
   FileText,
@@ -15,7 +17,10 @@ import {
   X,
   Search,
   Eye,
-  CheckCircle2
+  CheckCircle2,
+  Award,
+  Clock,
+  Edit3
 } from 'lucide-react';
 
 export const AdminDashboardView: React.FC = () => {
@@ -31,7 +36,10 @@ export const AdminDashboardView: React.FC = () => {
     universities,
     reports,
     resolveReport,
-    showToast
+    showToast,
+    currentUser,
+    verificationLogs,
+    setVerificationTierForUser
   } = useApp();
 
   const [section, setSection] = useState<
@@ -40,6 +48,18 @@ export const AdminDashboardView: React.FC = () => {
 
   const [searchPost, setSearchPost] = useState('');
   const [modNote, setModNote] = useState<Record<string, string>>({});
+
+  // Verification modal state
+  const [selectedUserForVerification, setSelectedUserForVerification] = useState<{
+    id: string;
+    name: string;
+    username: string;
+    university: string;
+    followersCount: number;
+    currentTier: VerificationTier;
+  } | null>(null);
+  const [newTierSelection, setNewTierSelection] = useState<VerificationTier>('gold');
+  const [verificationReason, setVerificationReason] = useState<string>('');
 
   useEffect(() => {
     // Route guard: redirect unauthenticated visitor to admin login
@@ -60,12 +80,73 @@ export const AdminDashboardView: React.FC = () => {
 
   const pendingReports = reports.filter((r) => r.status === 'pending');
 
-  const mockUsers = [
-    { id: 'usr-1', name: 'Chidi Okafor', username: 'chidi_cu', university: 'Covenant University', level: '400L', role: 'Student' },
-    { id: 'usr-2', name: 'Korede Balogun', username: 'korede_babcock', university: 'Babcock University', level: '300L', role: 'Student' },
-    { id: 'usr-3', name: 'Zainab Al-Hassan', username: 'zainab_nile', university: 'Nile University of Nigeria', level: '200L', role: 'Student' },
-    { id: 'usr-4', name: 'Adedamola Adeleke', username: 'damola_abuad', university: 'Afe Babalola University (ABUAD)', level: '400L', role: 'Student' },
-    { id: 'usr-5', name: 'Somtochukwu Eze', username: 'somto_pau', university: 'Pan-Atlantic University', level: '300L', role: 'Student' }
+  const mockUsersList = [
+    {
+      id: 'usr-covenant-admin',
+      name: 'Covenant University',
+      username: 'covenant_official',
+      university: 'Covenant University',
+      level: 'Official Admin',
+      followersCount: 18400,
+      tier: 'gold' as VerificationTier,
+      isLocked: true,
+      source: 'manual'
+    },
+    {
+      id: 'usr-cst-council',
+      name: 'CST Student Council',
+      username: 'cst_council',
+      university: 'Covenant University',
+      level: 'Student Org',
+      followersCount: 4200,
+      tier: 'gold' as VerificationTier,
+      isLocked: true,
+      source: 'manual'
+    },
+    {
+      id: 'usr-korede',
+      name: 'Korede Balogun',
+      username: 'korede_babcock',
+      university: 'Babcock University',
+      level: '300L',
+      followersCount: 1000,
+      tier: 'blue' as VerificationTier,
+      isLocked: false,
+      source: 'auto'
+    },
+    {
+      id: 'usr-tobi',
+      name: 'Tobi Adebayo',
+      username: 'tobi_adebayo',
+      university: 'Babcock University',
+      level: '300L',
+      followersCount: 999,
+      tier: 'none' as VerificationTier,
+      isLocked: false,
+      source: 'auto'
+    },
+    {
+      id: 'usr-zainab',
+      name: 'Zainab Al-Hassan',
+      username: 'zainab_nile',
+      university: 'Nile University of Nigeria',
+      level: '200L',
+      followersCount: 2150,
+      tier: 'blue' as VerificationTier,
+      isLocked: false,
+      source: 'auto'
+    },
+    {
+      id: currentUser?.id || 'usr-chidi',
+      name: currentUser?.fullName || currentUser?.full_name || 'Chidi Okafor',
+      username: currentUser?.username || 'chidi_cu',
+      university: currentUser?.universityName || currentUser?.university_name || 'Covenant University',
+      level: currentUser?.academicLevel || currentUser?.academic_level || '400L',
+      followersCount: currentUser?.followersCount ?? currentUser?.followers_count ?? 742,
+      tier: (currentUser?.verificationTier || currentUser?.verification_tier || 'none') as VerificationTier,
+      isLocked: currentUser?.verificationLocked || currentUser?.verification_locked || false,
+      source: currentUser?.verificationSource || currentUser?.verification_source || 'auto'
+    }
   ];
 
   return (
@@ -223,37 +304,193 @@ export const AdminDashboardView: React.FC = () => {
         </div>
       )}
 
-      {/* 3. USERS */}
+      {/* 3. USERS & VERIFICATION GOVERNANCE */}
       {section === 'users' && (
-        <div className="space-y-3 text-xs">
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#16181C] overflow-hidden">
-            <table className="w-full text-left">
-              <thead className="bg-slate-50 dark:bg-[#0A0A0A] text-slate-500 text-[11px] border-b border-slate-200 dark:border-slate-800">
-                <tr>
-                  <th className="p-3">Scholar</th>
-                  <th className="p-3">Handle</th>
-                  <th className="p-3">Private University</th>
-                  <th className="p-3">Level</th>
-                  <th className="p-3">Verification</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                {mockUsers.map((u) => (
-                  <tr key={u.id}>
-                    <td className="p-3 font-semibold">{u.name}</td>
-                    <td className="p-3 text-slate-400">@{u.username}</td>
-                    <td className="p-3 text-[#1D9BF0]">{u.university}</td>
-                    <td className="p-3">{u.level}</td>
-                    <td className="p-3">
-                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-500 font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Verified Student</span>
-                      </span>
-                    </td>
+        <div className="space-y-6 text-xs">
+          {/* Rules Summary Banner */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-500/10 via-amber-500/10 to-transparent border border-slate-200 dark:border-slate-800 space-y-2">
+            <div className="flex items-center gap-2">
+              <Award className="w-4 h-4 text-amber-500" />
+              <h3 className="font-bold text-slate-900 dark:text-white">Univyx Verification Governance</h3>
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-[11px]">
+              • <strong>Blue Tick:</strong> Automatically earned when a scholar reaches 1,000 collegiate followers (or manually assigned by admin). Once earned, it cannot be automatically revoked if followers drop.<br />
+              • <strong>Gold Tick:</strong> Special tier granted manually by Univyx admins only (official university administrations, student representative organisations, official vendors & partners). Never earned automatically.<br />
+              • <strong>Auditing:</strong> Every tier modification requires a valid reason and is permanently recorded in the <code>verification_audit_log</code> table.
+            </p>
+          </div>
+
+          {/* User Verification Management Table */}
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#16181C] overflow-hidden shadow-xs">
+            <div className="p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Users className="w-4 h-4 text-[#1D9BF0]" />
+                <span>Collegiate Profiles & Verification Status</span>
+              </div>
+              <span className="text-[11px] text-slate-400">
+                {mockUsersList.length} Accounts Monitored
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-slate-50 dark:bg-[#0A0A0A] text-slate-500 text-[11px] border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th className="p-3">Scholar / Entity</th>
+                    <th className="p-3">Private University</th>
+                    <th className="p-3">Followers</th>
+                    <th className="p-3">Current Badge</th>
+                    <th className="p-3">Source / Status</th>
+                    <th className="p-3 text-right">Admin Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+                  {mockUsersList.map((u) => {
+                    const activeTier = u.tier;
+                    return (
+                      <tr key={u.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
+                        <td className="p-3">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 text-xs border border-slate-200 dark:border-slate-700">
+                              {u.name.charAt(0)}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-1 font-semibold text-slate-900 dark:text-white">
+                                <span>{u.name}</span>
+                                <VerifiedBadge type={activeTier} size="small" />
+                              </div>
+                              <div className="text-[10px] text-slate-400 font-mono">@{u.username}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <span className="text-[#1D9BF0] font-medium">{u.university}</span>
+                          <div className="text-[10px] text-slate-400">{u.level}</div>
+                        </td>
+                        <td className="p-3 font-mono font-medium">
+                          {u.followersCount.toLocaleString()}
+                          {u.followersCount >= 1000 && activeTier === 'none' && (
+                            <span className="ml-1 text-[10px] text-amber-500 font-semibold">(Milestone reached)</span>
+                          )}
+                          {u.followersCount === 999 && (
+                            <span className="ml-1 text-[10px] text-slate-400 font-normal">(1 away from Blue)</span>
+                          )}
+                        </td>
+                        <td className="p-3">
+                          {activeTier === 'gold' && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 font-semibold border border-amber-300 dark:border-amber-700 text-[10px]">
+                              <VerifiedBadge type="gold" size="small" showPopover={false} />
+                              <span>Gold Tick</span>
+                            </span>
+                          )}
+                          {activeTier === 'blue' && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 font-semibold border border-sky-300 dark:border-sky-800 text-[10px]">
+                              <VerifiedBadge type="blue" size="small" showPopover={false} />
+                              <span>Blue Tick</span>
+                            </span>
+                          )}
+                          {activeTier === 'none' && (
+                            <span className="text-slate-400 text-[11px]">None</span>
+                          )}
+                        </td>
+                        <td className="p-3">
+                          {u.isLocked ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] text-purple-600 dark:text-purple-400 font-medium bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 rounded">
+                              Manual / Locked
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+                              Auto Eligible
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedUserForVerification({
+                                id: u.id,
+                                name: u.name,
+                                username: u.username,
+                                university: u.university,
+                                followersCount: u.followersCount,
+                                currentTier: activeTier
+                              });
+                              setNewTierSelection(activeTier === 'gold' ? 'blue' : 'gold');
+                              setVerificationReason('');
+                            }}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#1D9BF0] hover:text-[#1D9BF0] text-slate-700 dark:text-slate-300 font-semibold transition-colors cursor-pointer text-[11px]"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>Manage Tier</span>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Verification Audit Log Table */}
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#16181C] overflow-hidden shadow-xs">
+            <div className="p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Clock className="w-4 h-4 text-amber-500" />
+                <span>Verification Audit Log (<code>verification_audit_log</code>)</span>
+              </div>
+              <span className="text-[11px] text-slate-400 font-mono">
+                {verificationLogs.length} Logged Events
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-slate-50 dark:bg-[#0A0A0A] text-slate-500 text-[11px] border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th className="p-3">Timestamp</th>
+                    <th className="p-3">Account</th>
+                    <th className="p-3">Tier Transition</th>
+                    <th className="p-3">Authorised By</th>
+                    <th className="p-3">Mandatory Reason</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono text-[11px]">
+                  {verificationLogs.map((log) => (
+                    <tr key={log.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20">
+                      <td className="p-3 text-slate-400 whitespace-nowrap">
+                        {new Date(log.createdAt).toLocaleString()}
+                      </td>
+                      <td className="p-3 font-sans font-semibold text-slate-900 dark:text-white">
+                        @{log.username}
+                      </td>
+                      <td className="p-3 whitespace-nowrap">
+                        <span className="text-slate-400 uppercase font-bold text-[10px]">{log.oldTier}</span>
+                        <span className="mx-1 text-slate-400">→</span>
+                        <span
+                          className={`uppercase font-bold text-[10px] px-1.5 py-0.5 rounded ${
+                            log.newTier === 'gold'
+                              ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                              : log.newTier === 'blue'
+                              ? 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300'
+                              : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                          }`}
+                        >
+                          {log.newTier}
+                        </span>
+                      </td>
+                      <td className="p-3 text-slate-500 dark:text-slate-400">
+                        {log.adminUsername || log.adminId}
+                      </td>
+                      <td className="p-3 font-sans text-slate-700 dark:text-slate-300 max-w-xs truncate">
+                        {log.reason}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
@@ -378,6 +615,146 @@ export const AdminDashboardView: React.FC = () => {
             <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-[#0A0A0A]">
               <span>Private University Verification Enforcement</span>
               <span className="text-emerald-500 font-bold">Active & Enforced</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Verification Tier Adjustment Modal */}
+      {selectedUserForVerification && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800 shadow-2xl p-5 text-xs animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-start justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <Award className="w-4 h-4 text-amber-500" />
+                  <span>Manage Verification Status</span>
+                </h3>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Update verification tier for <strong>{selectedUserForVerification.name}</strong> (@{selectedUserForVerification.username})
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedUserForVerification(null)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="py-4 space-y-4">
+              <div>
+                <label className="font-semibold text-slate-800 dark:text-slate-200 block mb-1.5">
+                  Select Target Tier
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setNewTierSelection('none')}
+                    className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                      newTierSelection === 'none'
+                        ? 'border-slate-400 bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-white'
+                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <div className="text-sm">None</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Revoke / Unverified</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setNewTierSelection('blue')}
+                    className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                      newTierSelection === 'blue'
+                        ? 'border-[#1D9BF0] bg-sky-50 dark:bg-sky-950/50 font-bold text-[#1D9BF0]'
+                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-1 text-sm font-bold text-[#1D9BF0]">
+                      <VerifiedBadge type="blue" size="small" showPopover={false} />
+                      <span>Blue Tick</span>
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">1,000+ Followers</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setNewTierSelection('gold')}
+                    className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                      newTierSelection === 'gold'
+                        ? 'border-amber-400 bg-amber-50 dark:bg-amber-950/50 font-bold text-amber-600 dark:text-amber-400'
+                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-1 text-sm font-bold text-amber-500">
+                      <VerifiedBadge type="gold" size="small" showPopover={false} />
+                      <span>Gold Tick</span>
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Official Admin / Partner</div>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-800 dark:text-slate-200 block mb-1">
+                  Mandatory Reason for Audit Log *
+                </label>
+                <textarea
+                  rows={2}
+                  value={verificationReason}
+                  onChange={(e) => setVerificationReason(e.target.value)}
+                  placeholder="e.g. Official University communications channel, Accredited student association, Community guidelines violation..."
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:border-[#1D9BF0]"
+                />
+
+                {/* Quick suggestion templates */}
+                <div className="flex items-center gap-1 flex-wrap mt-2">
+                  <span className="text-[10px] text-slate-400">Quick template:</span>
+                  {[
+                    'Official university communications channel',
+                    'Accredited faculty student organization',
+                    'Official collegiate store vendor partnership',
+                    'Manual review: Verified collegiate notable account',
+                    'Community policy review: Verification revoked'
+                  ].map((tpl) => (
+                    <button
+                      type="button"
+                      key={tpl}
+                      onClick={() => setVerificationReason(tpl)}
+                      className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-[#1D9BF0] transition-colors"
+                    >
+                      {tpl}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setSelectedUserForVerification(null)}
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={!verificationReason.trim()}
+                onClick={() => {
+                  if (!verificationReason.trim()) return;
+                  setVerificationTierForUser(
+                    selectedUserForVerification.id,
+                    newTierSelection,
+                    verificationReason.trim()
+                  );
+                  setSelectedUserForVerification(null);
+                }}
+                className="px-4 py-1.5 rounded-xl bg-[#1D9BF0] hover:bg-[#1A8CD8] text-white font-semibold disabled:opacity-40 transition-colors cursor-pointer"
+              >
+                Apply & Record to Audit Log
+              </button>
             </div>
           </div>
         </div>

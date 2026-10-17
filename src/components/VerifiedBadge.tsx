@@ -100,19 +100,16 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
           className={`${sizeClasses} drop-shadow-xs`}
         >
           <defs>
-            {/* Warm Gold Gradient */}
+            {/* Warm Gold Gradient (#F7D358 to #D4A017) */}
             <linearGradient id={`gold-grad-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#FFF176" />
-              <stop offset="25%" stopColor="#F7D358" />
-              <stop offset="70%" stopColor="#D4A017" />
-              <stop offset="100%" stopColor="#B45309" />
+              <stop offset="0%" stopColor="#F7D358" />
+              <stop offset="100%" stopColor="#D4A017" />
             </linearGradient>
 
-            {/* Blue Gradient */}
+            {/* Primary Blue #1D9BF0 */}
             <linearGradient id={`blue-grad-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#38BDF8" />
-              <stop offset="35%" stopColor="#1D9BF0" />
-              <stop offset="100%" stopColor="#0284C7" />
+              <stop offset="0%" stopColor="#1D9BF0" />
+              <stop offset="100%" stopColor="#1A8CD8" />
             </linearGradient>
           </defs>
 
