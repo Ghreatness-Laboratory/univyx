@@ -66,7 +66,7 @@ export const App: React.FC = () => {
 
   if (isAdminRoute) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#000000] text-[#0F1419] dark:text-[#E7E9EA] flex flex-col font-sans transition-colors">
+      <div className="min-h-screen bg-white dark:bg-[#0A0F1E] text-[#0F1419] dark:text-[#F2F5FF] flex flex-col font-sans transition-colors duration-150">
         <Header />
         <main className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-6">
           {renderActiveView()}
@@ -78,7 +78,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#000000] text-[#0F1419] dark:text-[#E7E9EA] flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-white dark:bg-[#0A0F1E] text-[#0F1419] dark:text-[#F2F5FF] flex flex-col font-sans transition-colors duration-150 selection:bg-[#4C8DFF]/25 selection:text-[#4C8DFF]">
       {/* Global Top Navigation Bar */}
       <Header />
 
@@ -88,7 +88,7 @@ export const App: React.FC = () => {
         <LeftSidebar />
 
         {/* Center Main Content Container */}
-        <main className="flex-1 min-w-0 max-w-2xl border-x border-[#EFF3F4] dark:border-[#2F3336] pb-20 lg:pb-8 min-h-[calc(100vh-3.5rem)] bg-white dark:bg-[#000000]">
+        <main className="flex-1 min-w-0 max-w-2xl border-x border-[#EFF3F4] dark:border-[#1E2846] pb-24 lg:pb-8 min-h-[calc(100vh-3.5rem)] bg-white dark:bg-[#0A0F1E]">
           {renderActiveView()}
         </main>
 

@@ -8,13 +8,11 @@ import {
   Building2,
   Tag,
   CornerDownRight,
-  Sparkles,
   AtSign,
-  Users,
   BarChart2,
   Plus,
   Trash2,
-  MapPin
+  Globe
 } from 'lucide-react';
 
 interface PostComposerProps {
@@ -49,7 +47,6 @@ export const PostComposer: React.FC<PostComposerProps> = ({
   const [showPoll, setShowPoll] = useState(false);
   const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
   const [pollDuration, setPollDuration] = useState<'1h' | '1d' | '3d' | '7d'>('1d');
-  const [locationTag, setLocationTag] = useState(currentUser?.location || '');
 
   const mentionableAccounts = [
     {
@@ -136,6 +133,15 @@ export const PostComposer: React.FC<PostComposerProps> = ({
     }
   };
 
+  const handleAddHashtag = (tag: string) => {
+    const trimmed = content.trim();
+    if (trimmed.includes(tag)) return;
+    setContent(trimmed ? `${trimmed} ${tag}` : tag);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  };
+
   const MAX_CHARS = 280;
   const charsRemaining = MAX_CHARS - content.length;
   const isOverLimit = charsRemaining < 0;
@@ -159,49 +165,50 @@ export const PostComposer: React.FC<PostComposerProps> = ({
       }
     }
 
-    createPost(content, category, universityId || undefined, quotePost || undefined, pollData, locationTag || undefined);
+    createPost(
+      content.trim(),
+      category,
+      universityId || undefined,
+      quotePost || undefined,
+      pollData,
+      currentUser?.location || undefined
+    );
+
     setContent('');
     setShowPoll(false);
     setPollOptions(['', '']);
-    if (onClose) {
-      onClose();
-    } else {
-      setIsComposerOpen(false);
-    }
+    if (onClose) onClose();
+    setIsComposerOpen(false);
   };
 
-  const handleAddHashtag = (tag: string) => {
-    if (content.includes(tag)) return;
-    setContent((prev) => (prev ? `${prev} ${tag}` : tag));
-  };
-
-  const quickTags = ['#CampusLife', '#Exams', '#Tech', '#Gist', '#Marketplace'];
+  const authorInitial = (currentUser?.fullName || currentUser?.full_name || 'S').charAt(0).toUpperCase();
 
   return (
-    <div className="p-4 bg-white dark:bg-[#000000] border-b border-[#EFF3F4] dark:border-[#2F3336] transition-colors">
-      <div className="flex items-start gap-3">
-        {/* User Initial Avatar: exactly 40px round */}
-        <div className="w-10 h-10 rounded-full bg-[#1D9BF0]/15 text-[#1D9BF0] font-bold flex items-center justify-center shrink-0 border border-[#1D9BF0]/30 text-[15px] select-none">
-          {(currentUser?.fullName || currentUser?.full_name || 'U').charAt(0).toUpperCase()}
+    <div className="w-full bg-[#FFFFFF] dark:bg-[#121A30] border border-[#EFF3F4] dark:border-[#1E2846] rounded-[20px] p-4 shadow-sm mb-4 transition-colors duration-150">
+      <div className="flex gap-3">
+        {/* Requirement 4: Gradient Avatar */}
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4C8DFF] to-[#7B5CFF] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-md shadow-[#4C8DFF]/25 select-none">
+          {authorInitial}
         </div>
 
+        {/* Composer Form */}
         <form onSubmit={handleSubmit} className="flex-1 min-w-0 relative">
-          {/* Post Textarea: 20px size, zero letter spacing, antialiased */}
+          {/* Main Textarea */}
           <textarea
             ref={textareaRef}
+            rows={3}
+            placeholder="What's happening on your campus?"
             value={content}
             onChange={handleTextChange}
-            placeholder="What's happening on your campus?"
-            rows={3}
-            className="composer-input w-full bg-transparent text-[20px] leading-[26px] text-[#0F1419] dark:text-[#E7E9EA] placeholder-[#536471] dark:placeholder-[#71767B] focus:outline-none resize-none"
+            className="w-full bg-transparent border-none text-[16px] leading-[1.5] text-[#0F1419] dark:text-[#F2F5FF] placeholder-[#8A94B3] focus:outline-none resize-none font-sans"
           />
 
-          {/* Interactive Mention Suggestions Dropdown */}
+          {/* Autocomplete mention popover */}
           {showMentionMenu && filteredMentions.length > 0 && (
-            <div className="absolute z-30 left-0 top-16 w-72 rounded-xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
-              <div className="p-2 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <div className="absolute z-30 left-0 top-16 w-72 rounded-xl bg-white dark:bg-[#121A30] border border-slate-200 dark:border-[#1E2846] shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+              <div className="p-2 border-b border-slate-100 dark:border-[#1E2846] text-[10px] font-bold text-[#8A94B3] uppercase tracking-wider flex items-center justify-between">
                 <span>Mention Account</span>
-                <span className="text-[#1D9BF0] font-mono">@{mentionQuery}</span>
+                <span className="text-[#4C8DFF] font-mono">@{mentionQuery}</span>
               </div>
               <div className="max-h-48 overflow-y-auto p-1 space-y-0.5">
                 {filteredMentions.map((acc) => (
@@ -209,25 +216,25 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                     type="button"
                     key={acc.username}
                     onClick={() => insertMention(acc.username)}
-                    className="w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-between gap-2 group cursor-pointer"
+                    className="w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1E2846]/60 transition-colors flex items-center justify-between gap-2 group cursor-pointer"
                   >
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold flex items-center justify-center shrink-0 text-[10px]">
+                      <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-[#1E2846] text-[#0F1419] dark:text-[#F2F5FF] font-bold flex items-center justify-center shrink-0 text-[10px]">
                         {acc.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-1">
-                          <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
+                          <span className="text-xs font-semibold text-[#0F1419] dark:text-[#F2F5FF] truncate">
                             {acc.name}
                           </span>
                           <VerifiedBadge type={acc.tier} size="small" showPopover={false} />
                         </div>
-                        <div className="text-[10px] text-slate-400 font-mono">
+                        <div className="text-[10px] text-[#8A94B3] font-mono">
                           @{acc.username}
                         </div>
                       </div>
                     </div>
-                    <span className="text-[10px] text-slate-400 group-hover:text-[#1D9BF0] font-medium shrink-0">
+                    <span className="text-[10px] text-[#8A94B3] group-hover:text-[#4C8DFF] font-medium shrink-0">
                       Insert
                     </span>
                   </button>
@@ -238,9 +245,9 @@ export const PostComposer: React.FC<PostComposerProps> = ({
 
           {/* Quoted Post Preview */}
           {quotePost && (
-            <div className="my-2 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#16181C] text-xs">
-              <div className="flex items-center gap-1 font-medium text-slate-800 dark:text-slate-200 mb-0.5">
-                <CornerDownRight className="w-3.5 h-3.5 text-slate-400" />
+            <div className="my-2 p-2.5 rounded-xl border border-slate-200 dark:border-[#1E2846] bg-slate-50 dark:bg-[#0A0F1E]/60 text-xs">
+              <div className="flex items-center gap-1 font-medium text-slate-800 dark:text-[#F2F5FF] mb-0.5">
+                <CornerDownRight className="w-3.5 h-3.5 text-[#8A94B3]" />
                 <span>Quoting @{quotePost.author?.username || quotePost.username}</span>
                 <VerifiedBadge
                   type={
@@ -252,7 +259,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                   size="small"
                 />
               </div>
-              <p className="text-slate-600 dark:text-slate-400 line-clamp-2">
+              <p className="text-[#536471] dark:text-[#8A94B3] line-clamp-2">
                 {quotePost.content}
               </p>
             </div>
@@ -260,10 +267,10 @@ export const PostComposer: React.FC<PostComposerProps> = ({
 
           {/* Interactive Poll Builder */}
           {showPoll && (
-            <div className="my-2.5 p-3 rounded-2xl border border-[#1D9BF0]/40 bg-[#1D9BF0]/5 space-y-2.5 animate-in fade-in">
+            <div className="my-2.5 p-3 rounded-2xl border border-[#4C8DFF]/40 bg-[#4C8DFF]/5 space-y-2.5 animate-in fade-in">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-[#1D9BF0] flex items-center gap-1.5">
-                  <BarChart2 className="w-3.5 h-3.5" />
+                <span className="font-bold text-[#4C8DFF] flex items-center gap-1.5">
+                  <BarChart2 className="w-3.5 h-3.5" strokeWidth={1.8} />
                   <span>Campus Poll</span>
                 </span>
                 <button
@@ -272,7 +279,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                     setShowPoll(false);
                     setPollOptions(['', '']);
                   }}
-                  className="text-slate-400 hover:text-red-500 transition-colors p-1 cursor-pointer"
+                  className="text-[#8A94B3] hover:text-red-400 transition-colors p-1 cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"
                   title="Remove poll"
                 >
                   <X className="w-4 h-4" />
@@ -292,13 +299,13 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                         next[idx] = e.target.value;
                         setPollOptions(next);
                       }}
-                      className="flex-1 text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#16181C] text-[#0F1419] dark:text-[#E7E9EA] focus:outline-none focus:border-[#1D9BF0]"
+                      className="flex-1 text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E2846] bg-white dark:bg-[#0A0F1E] text-[#0F1419] dark:text-[#F2F5FF] focus:outline-none focus:border-[#4C8DFF]"
                     />
                     {pollOptions.length > 2 && (
                       <button
                         type="button"
                         onClick={() => setPollOptions(pollOptions.filter((_, i) => i !== idx))}
-                        className="text-slate-400 hover:text-red-500 p-1 cursor-pointer"
+                        className="text-[#8A94B3] hover:text-red-400 p-1 cursor-pointer"
                         title="Remove option"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -313,19 +320,19 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                   <button
                     type="button"
                     onClick={() => setPollOptions([...pollOptions, ''])}
-                    className="text-[11px] font-bold text-[#1D9BF0] hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-[11px] font-bold text-[#4C8DFF] hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add option ({pollOptions.length}/4)</span>
                   </button>
                 ) : <div />}
 
-                <div className="flex items-center gap-1.5 text-xs text-[#536471] dark:text-[#71767B]">
-                  <span>Poll duration:</span>
+                <div className="flex items-center gap-1.5 text-xs text-[#536471] dark:text-[#8A94B3]">
+                  <span>Duration:</span>
                   <select
                     value={pollDuration}
                     onChange={(e) => setPollDuration(e.target.value as any)}
-                    className="text-xs bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[#0F1419] dark:text-[#E7E9EA] focus:outline-none cursor-pointer"
+                    className="text-xs bg-white dark:bg-[#0A0F1E] border border-slate-200 dark:border-[#1E2846] rounded-lg px-2 py-1 text-[#0F1419] dark:text-[#F2F5FF] focus:outline-none cursor-pointer"
                   >
                     <option value="1h">1 hour</option>
                     <option value="1d">1 day</option>
@@ -337,100 +344,114 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             </div>
           )}
 
-          {/* Quick Hashtag, Poll & Mention suggestions */}
-          <div className="flex items-center gap-1.5 flex-wrap my-2">
+          {/* Requirement 4: Small hashtag chips (@ Mention Scholar, #CampusLife, #Exams, #Tech) */}
+          <div className="flex items-center gap-1.5 flex-wrap my-2.5">
             <button
               type="button"
               onClick={() => {
                 setShowMentionMenu(true);
                 setMentionQuery('');
+                if (textareaRef.current) textareaRef.current.focus();
               }}
-              className="text-[11px] font-medium text-[#1D9BF0] hover:text-[#0284C7] bg-[#1D9BF0]/10 hover:bg-[#1D9BF0]/20 transition-colors py-0.5 px-2 rounded-lg flex items-center gap-1 cursor-pointer"
+              className="text-xs font-medium text-[#4C8DFF] hover:text-[#7B5CFF] border border-[#1E2846] bg-[#0A0F1E]/50 hover:bg-[#4C8DFF]/10 py-1.5 px-3 rounded-full flex items-center gap-1 cursor-pointer transition-all duration-150 active:scale-95"
             >
-              <AtSign className="w-3 h-3" />
-              <span>Mention Scholar</span>
+              <AtSign className="w-3 h-3 text-[#4C8DFF]" strokeWidth={1.8} />
+              <span>@ Mention Scholar</span>
             </button>
 
-            {/* Poll Button */}
+            <button
+              type="button"
+              onClick={() => handleAddHashtag('#CampusLife')}
+              className="text-xs font-medium text-[#8A94B3] hover:text-[#4C8DFF] border border-[#1E2846] hover:border-[#4C8DFF]/40 bg-[#0A0F1E]/50 py-1.5 px-3 rounded-full transition-all duration-150 active:scale-95 cursor-pointer"
+            >
+              #CampusLife
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleAddHashtag('#Exams')}
+              className="text-xs font-medium text-[#8A94B3] hover:text-[#4C8DFF] border border-[#1E2846] hover:border-[#4C8DFF]/40 bg-[#0A0F1E]/50 py-1.5 px-3 rounded-full transition-all duration-150 active:scale-95 cursor-pointer"
+            >
+              #Exams
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleAddHashtag('#Tech')}
+              className="text-xs font-medium text-[#8A94B3] hover:text-[#4C8DFF] border border-[#1E2846] hover:border-[#4C8DFF]/40 bg-[#0A0F1E]/50 py-1.5 px-3 rounded-full transition-all duration-150 active:scale-95 cursor-pointer"
+            >
+              #Tech
+            </button>
+
+            {/* Poll trigger button */}
             <button
               type="button"
               onClick={() => setShowPoll(!showPoll)}
-              className={`text-[11px] font-medium py-0.5 px-2.5 rounded-lg flex items-center gap-1 cursor-pointer transition-colors ${
+              className={`text-xs font-medium py-1.5 px-3 rounded-full flex items-center gap-1 cursor-pointer border transition-all duration-150 active:scale-95 ${
                 showPoll
-                  ? 'bg-[#1D9BF0] text-white shadow-xs'
-                  : 'text-[#1D9BF0] bg-[#1D9BF0]/10 hover:bg-[#1D9BF0]/20'
+                  ? 'bg-[#4C8DFF] text-white border-[#4C8DFF]'
+                  : 'text-[#8A94B3] hover:text-[#4C8DFF] border-[#1E2846] bg-[#0A0F1E]/50'
               }`}
             >
-              <BarChart2 className="w-3 h-3" />
+              <BarChart2 className="w-3 h-3" strokeWidth={1.8} />
               <span>Poll</span>
             </button>
-
-            <span className="text-[11px] text-slate-400 flex items-center gap-1">
-              <Tag className="w-3 h-3" />
-            </span>
-            {quickTags.map((tag) => (
-              <button
-                type="button"
-                key={tag}
-                onClick={() => handleAddHashtag(tag)}
-                className="text-[11px] text-slate-600 dark:text-slate-400 hover:text-[#1D9BF0] transition-colors py-0.5 px-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-              >
-                {tag}
-              </button>
-            ))}
           </div>
 
-          {/* Controls Bar: Category, University, Character Counter, Submit */}
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2 flex-wrap">
-            <div className="flex items-center gap-2 flex-wrap text-xs">
-              {/* Category selector */}
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as PostCategory)}
-                className="bg-slate-100 dark:bg-[#16181C] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg px-2 py-1 focus:outline-none text-xs cursor-pointer"
-              >
-                <option value="general">General</option>
-                <option value="entertainment">Entertainment</option>
-                <option value="academics">Academics</option>
-                <option value="career">Career / Jobs</option>
-                <option value="gaming">Gaming & Arena</option>
-                <option value="campus_news">Campus News</option>
-                <option value="events">Events</option>
-                <option value="marketplace">Marketplace</option>
-              </select>
+          {/* Requirement 4: Divider */}
+          <div className="border-t border-slate-100 dark:border-[#1E2846] my-3" />
 
-              {/* University Selector */}
-              <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#16181C] border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-700 dark:text-slate-300">
-                <Building2 className="w-3 h-3 text-[#1D9BF0]" />
+          {/* Requirement 4: "General" and audience dropdowns + 280 character counter on left and gradient Post button on right */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Left: General & Audience Dropdowns */}
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              {/* Category Dropdown (default "General") */}
+              <div className="relative">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as PostCategory)}
+                  aria-label="Post category"
+                  className="bg-slate-100 dark:bg-[#0A0F1E] border border-slate-200 dark:border-[#1E2846] text-[#0F1419] dark:text-[#F2F5FF] rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#4C8DFF] text-xs cursor-pointer font-medium"
+                >
+                  <option value="general" className="dark:bg-[#121A30]">General</option>
+                  <option value="academics" className="dark:bg-[#121A30]">Academics</option>
+                  <option value="career" className="dark:bg-[#121A30]">Career</option>
+                  <option value="gaming" className="dark:bg-[#121A30]">Gaming</option>
+                  <option value="campus_news" className="dark:bg-[#121A30]">Campus Life</option>
+                  <option value="events" className="dark:bg-[#121A30]">Events</option>
+                  <option value="marketplace" className="dark:bg-[#121A30]">Marketplace</option>
+                </select>
+              </div>
+
+              {/* Audience Dropdown */}
+              <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-[#0A0F1E] border border-slate-200 dark:border-[#1E2846] rounded-xl px-3 py-1.5 text-[#0F1419] dark:text-[#F2F5FF]">
+                <Globe className="w-3.5 h-3.5 text-[#4C8DFF] shrink-0" strokeWidth={1.8} />
                 <select
                   value={universityId}
                   onChange={(e) => setUniversityId(e.target.value)}
-                  className="bg-transparent border-none text-xs focus:outline-none cursor-pointer text-slate-700 dark:text-slate-300"
+                  aria-label="Target audience"
+                  className="bg-transparent border-none text-xs focus:outline-none cursor-pointer text-[#0F1419] dark:text-[#F2F5FF] font-medium max-w-[140px] truncate"
                 >
-                  <option value="" className="dark:bg-[#16181C]">Network-wide</option>
+                  <option value="" className="dark:bg-[#121A30]">Network-wide</option>
                   {universities.map((u) => (
-                    <option key={u.id} value={u.id} className="dark:bg-[#16181C]">
+                    <option key={u.id} value={u.id} className="dark:bg-[#121A30]">
                       {u.shortName || u.short_name}
                     </option>
                   ))}
                 </select>
               </div>
-
-              {/* Text-only policy badge */}
-              <span className="hidden sm:inline text-[11px] text-slate-400">
-                Text-first platform
-              </span>
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* Character Counter */}
+            {/* Bottom Row: 280 Character Counter on Left & Gradient Post Button on Right */}
+            <div className="flex items-center justify-between sm:justify-end gap-3 pt-1 sm:pt-0">
+              {/* Requirement 4: 280 character counter on the left */}
               <span
                 className={`text-xs tabular-nums font-medium ${
                   isOverLimit
-                    ? 'text-red-500 font-bold'
+                    ? 'text-red-400 font-bold'
                     : charsRemaining <= 20
-                    ? 'text-amber-500'
-                    : 'text-slate-400'
+                    ? 'text-amber-400 font-semibold'
+                    : 'text-[#8A94B3]'
                 }`}
               >
                 {charsRemaining}
@@ -440,18 +461,19 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-3.5 py-1.5 text-[15px] font-bold text-[#536471] hover:text-[#0F1419] dark:hover:text-[#E7E9EA] rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-semibold text-[#8A94B3] hover:text-[#F2F5FF] rounded-full transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
               )}
 
-              {/* Submit Button: 15px, weight 700, pill-shaped */}
+              {/* Requirement 4: Gradient Post button on the right */}
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="btn-pill flex items-center gap-1.5 px-5 py-2 bg-[#1D9BF0] text-white text-[15px] font-bold hover:bg-[#1A8CD8] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 shadow-xs cursor-pointer"
+                className="flex items-center justify-center gap-1.5 px-6 py-2 rounded-full bg-gradient-to-r from-[#4C8DFF] to-[#7B5CFF] text-white text-xs font-semibold shadow-md shadow-[#4C8DFF]/25 hover:opacity-95 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 cursor-pointer min-h-[38px]"
               >
+                <Send className="w-3.5 h-3.5" strokeWidth={1.8} />
                 <span>Post</span>
               </button>
             </div>

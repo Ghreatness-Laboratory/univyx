@@ -3,10 +3,8 @@ import { useApp } from '../context/AppContext';
 import {
   Menu,
   Bell,
-  Mail,
   Sun,
   Moon,
-  PenSquare,
   Search,
   Building2
 } from 'lucide-react';
@@ -17,37 +15,35 @@ export const Header: React.FC = () => {
     activeTab,
     setActiveTab,
     setIsDrawerOpen,
-    setIsComposerOpen,
     theme,
     setTheme,
     unreadNotificationsCount,
-    unreadMessagesCount,
     universities,
     selectedUniversityId,
     setSelectedUniversityId
   } = useApp();
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#000000]/95 backdrop-blur-md border-b border-[#EFF3F4] dark:border-[#2F3336] transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
-        {/* Zone 1: Brand Wordmark & Hamburger */}
-        <div className="flex items-center gap-3 shrink-0">
+    <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#0A0F1E]/95 backdrop-blur-md border-b border-[#EFF3F4] dark:border-[#1E2846] transition-colors duration-150">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
+        {/* Left: Hamburger Drawer + Gradient Logo Tile + "Univyx" Wordmark */}
+        <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={() => setIsDrawerOpen(true)}
-            className="p-2 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-[#536471] dark:text-[#8A94B3] hover:text-[#4C8DFF] dark:hover:text-[#F2F5FF] hover:bg-slate-100 dark:hover:bg-[#121A30] rounded-xl transition-all duration-150 active:scale-95 cursor-pointer"
             aria-label="Open navigation menu"
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="w-5 h-5" strokeWidth={1.8} />
           </button>
 
           <button
             onClick={() => setActiveTab('home')}
-            className="flex items-center gap-2.5 text-left focus:outline-none group"
+            className="flex items-center gap-2.5 text-left focus:outline-none group cursor-pointer"
             aria-label="Univyx Home"
           >
-            {/* Professional Univyx Emblem */}
-            <div className="w-8 h-8 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center p-1.5 shadow-xs group-hover:scale-105 transition-transform">
-              <svg viewBox="0 0 512 512" className="w-full h-full fill-white dark:fill-black stroke-white dark:stroke-black stroke-[30] stroke-linecap-round stroke-linejoin-round">
+            {/* Gradient Logo Tile */}
+            <div className="w-8 h-8 rounded-[10px] bg-gradient-to-br from-[#4C8DFF] to-[#7B5CFF] text-white flex items-center justify-center p-1.5 shadow-md shadow-[#4C8DFF]/25 group-hover:scale-105 active:scale-95 transition-all duration-150">
+              <svg viewBox="0 0 512 512" className="w-full h-full fill-white stroke-white stroke-[28] stroke-linecap-round stroke-linejoin-round">
                 <rect x="186" y="112" width="34" height="52" rx="17" transform="rotate(-22 203 138)" stroke="none"/>
                 <rect x="178" y="348" width="52" height="34" rx="17" transform="rotate(-30 204 365)" stroke="none"/>
                 <path d="M 235,260 L 98,228" strokeWidth="50"/>
@@ -57,23 +53,23 @@ export const Header: React.FC = () => {
                 <circle cx="235" cy="260" r="30" stroke="none"/>
               </svg>
             </div>
-            <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white select-none">
+            <span className="text-xl font-bold tracking-tight text-[#0F1419] dark:text-[#F2F5FF] select-none font-sans">
               Univyx
             </span>
           </button>
 
-          {/* Searchable University Selector */}
-          <div className="hidden sm:flex items-center gap-1.5 ml-2 pl-3 border-l border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
-            <Building2 className="w-3.5 h-3.5 text-[#1D9BF0] shrink-0" />
+          {/* Searchable University Selector (Tablet & Desktop) */}
+          <div className="hidden md:flex items-center gap-1.5 ml-2 pl-3 border-l border-slate-200 dark:border-[#1E2846] text-xs text-[#536471] dark:text-[#8A94B3]">
+            <Building2 className="w-3.5 h-3.5 text-[#4C8DFF] shrink-0" strokeWidth={1.8} />
             <select
               value={selectedUniversityId}
               onChange={(e) => setSelectedUniversityId(e.target.value)}
               aria-label="Filter campus feed"
-              className="bg-transparent border-none text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-pointer py-1 max-w-[170px] truncate"
+              className="bg-transparent border-none text-xs font-semibold text-slate-700 dark:text-[#8A94B3] focus:outline-none cursor-pointer py-1 max-w-[170px] truncate"
             >
-              <option value="all" className="dark:bg-[#16181C]">All Private Campuses</option>
+              <option value="all" className="dark:bg-[#121A30]">All Private Campuses</option>
               {universities.map((u) => (
-                <option key={u.id} value={u.id} className="dark:bg-[#16181C]">
+                <option key={u.id} value={u.id} className="dark:bg-[#121A30]">
                   {u.shortName || u.short_name}
                 </option>
               ))}
@@ -81,61 +77,63 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Zone 2: Five Main Navigation Destinations (Desktop) */}
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-600 dark:text-slate-400">
+        {/* Desktop Nav Links */}
+        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-[#536471] dark:text-[#8A94B3]">
           <button
             onClick={() => setActiveTab('home')}
-            className={`transition-colors whitespace-nowrap hover:text-slate-900 dark:hover:text-white ${
-              activeTab === 'home' ? 'text-[#1D9BF0]' : ''
+            className={`transition-colors duration-150 whitespace-nowrap hover:text-[#0F1419] dark:hover:text-[#F2F5FF] cursor-pointer ${
+              activeTab === 'home' ? 'text-[#4C8DFF] font-semibold' : ''
             }`}
           >
             Home
           </button>
           <button
             onClick={() => setActiveTab('entertainment')}
-            className={`transition-colors whitespace-nowrap hover:text-slate-900 dark:hover:text-white ${
-              activeTab === 'entertainment' ? 'text-[#1D9BF0]' : ''
+            className={`transition-colors duration-150 whitespace-nowrap hover:text-[#0F1419] dark:hover:text-[#F2F5FF] cursor-pointer ${
+              activeTab === 'entertainment' ? 'text-[#4C8DFF] font-semibold' : ''
             }`}
           >
             Entertainment
           </button>
           <button
             onClick={() => setActiveTab('academics')}
-            className={`transition-colors whitespace-nowrap hover:text-slate-900 dark:hover:text-white ${
-              activeTab === 'academics' ? 'text-[#1D9BF0]' : ''
+            className={`transition-colors duration-150 whitespace-nowrap hover:text-[#0F1419] dark:hover:text-[#F2F5FF] cursor-pointer ${
+              activeTab === 'academics' ? 'text-[#4C8DFF] font-semibold' : ''
             }`}
           >
             Academics
           </button>
           <button
             onClick={() => setActiveTab('arena')}
-            className={`transition-colors whitespace-nowrap hover:text-slate-900 dark:hover:text-white ${
-              activeTab === 'arena' ? 'text-[#1D9BF0]' : ''
+            className={`transition-colors duration-150 whitespace-nowrap hover:text-[#0F1419] dark:hover:text-[#F2F5FF] cursor-pointer ${
+              activeTab === 'arena' ? 'text-[#4C8DFF] font-semibold' : ''
             }`}
           >
             Univyx Arena
           </button>
           <button
             onClick={() => setActiveTab('store')}
-            className={`transition-colors whitespace-nowrap hover:text-slate-900 dark:hover:text-white ${
-              activeTab === 'store' ? 'text-[#1D9BF0]' : ''
+            className={`transition-colors duration-150 whitespace-nowrap hover:text-[#0F1419] dark:hover:text-[#F2F5FF] cursor-pointer ${
+              activeTab === 'store' ? 'text-[#4C8DFF] font-semibold' : ''
             }`}
           >
             Store
           </button>
         </nav>
 
-        {/* Zone 3: Global Actions (Search, Theme, Notifs, Post) */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Right: Search, Install, Theme toggle, Notification bell with red unread dot */}
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+          {/* Search Button */}
           <button
             onClick={() => setActiveTab('search')}
             title="Search Univyx"
             aria-label="Search"
-            className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-[#536471] dark:text-[#8A94B3] hover:text-[#4C8DFF] dark:hover:text-[#F2F5FF] hover:bg-slate-100 dark:hover:bg-[#121A30] rounded-xl transition-all duration-150 active:scale-95 cursor-pointer"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-5 h-5" strokeWidth={1.8} />
           </button>
 
+          {/* Install PWA Button */}
           <PWAInstallButton />
 
           {/* Theme Toggle Button */}
@@ -144,48 +142,29 @@ export const Header: React.FC = () => {
             title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             aria-label="Toggle color theme"
             aria-pressed={theme === 'dark'}
-            className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-[#536471] dark:text-[#8A94B3] hover:text-[#4C8DFF] dark:hover:text-[#F2F5FF] hover:bg-slate-100 dark:hover:bg-[#121A30] rounded-xl transition-all duration-150 active:scale-95 cursor-pointer"
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
-
-          {/* Direct Messages */}
-          <button
-            onClick={() => setActiveTab('messages')}
-            title="Messages"
-            aria-label="Direct Messages"
-            className={`relative p-2 rounded-xl transition-colors cursor-pointer ${
-              activeTab === 'messages'
-                ? 'text-[#1D9BF0] bg-blue-50 dark:bg-blue-950/40'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            <Mail className="w-4 h-4" />
-            {unreadMessagesCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#1D9BF0]" />
+            {theme === 'dark' ? (
+              <Sun className="w-5 h-5 text-[#8A94B3] hover:text-amber-400" strokeWidth={1.8} />
+            ) : (
+              <Moon className="w-5 h-5 text-[#536471] hover:text-[#4C8DFF]" strokeWidth={1.8} />
             )}
           </button>
 
-          {/* Notifications Bell */}
+          {/* Notification Bell with small red unread dot */}
           <button
             onClick={() => setActiveTab('notifications')}
             title="Notifications"
             aria-label="Notifications"
-            className="relative p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+            className="relative min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-[#536471] dark:text-[#8A94B3] hover:text-[#4C8DFF] dark:hover:text-[#F2F5FF] hover:bg-slate-100 dark:hover:bg-[#121A30] rounded-xl transition-all duration-150 active:scale-95 cursor-pointer"
           >
-            <Bell className="w-4 h-4" />
-            {unreadNotificationsCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#1D9BF0]" />
-            )}
-          </button>
-
-          {/* Primary Action: Post Button */}
-          <button
-            onClick={() => setIsComposerOpen(true)}
-            className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1D9BF0] text-white text-xs font-semibold hover:bg-[#1A8CD8] active:scale-95 transition-all shadow-sm"
-          >
-            <PenSquare className="w-3.5 h-3.5" />
-            <span>Post</span>
+            <Bell className="w-5 h-5" strokeWidth={1.8} />
+            {/* Small red unread dot */}
+            <span
+              className={`absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-[#EF4444] ring-2 ring-white dark:ring-[#0A0F1E] ${
+                unreadNotificationsCount > 0 ? 'opacity-100' : 'opacity-100'
+              }`}
+            />
           </button>
         </div>
       </div>

@@ -74,11 +74,11 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
     <>
       <button
         onClick={handleInstallClick}
-        title="Install univyX App"
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#1D9BF0] border border-[#1D9BF0]/30 hover:bg-[#1D9BF0]/10 rounded-full transition-colors ${className}`}
+        title="Install Univyx App"
+        aria-label="Install Univyx App"
+        className={`min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-[#536471] dark:text-[#8A94B3] hover:text-[#4C8DFF] dark:hover:text-[#F2F5FF] hover:bg-slate-100 dark:hover:bg-[#121A30] rounded-xl transition-all duration-150 active:scale-95 cursor-pointer ${className}`}
       >
-        <Download className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Install App</span>
+        <Download className="w-5 h-5" strokeWidth={1.8} />
       </button>
 
       {showIOSGuide && (

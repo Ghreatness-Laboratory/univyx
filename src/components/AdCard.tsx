@@ -74,7 +74,7 @@ export const AdCard: React.FC<AdCardProps> = ({ ad }) => {
     <>
       <article
         ref={containerRef}
-        className="p-3.5 sm:p-4 border-b border-[#EFF3F4] dark:border-[#2F3336] bg-slate-50/50 dark:bg-[#16181C]/40 hover:bg-slate-100/60 dark:hover:bg-[#16181C]/70 transition-colors relative"
+        className="p-4 border border-[#EFF3F4] dark:border-[#1E2846] bg-white dark:bg-[#121A30] rounded-[20px] mb-3 hover:border-[#4C8DFF]/40 transition-colors duration-150 relative"
       >
         {/* Top Header: Advertiser Info, Ad Badge, Menu */}
         <div className="flex items-center justify-between gap-2 mb-2">
