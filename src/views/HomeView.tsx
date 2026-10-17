@@ -145,11 +145,11 @@ export const HomeView: React.FC = () => {
                 onClick={() => handleTabChange(tab.id as any)}
                 className={`relative flex-1 min-h-[44px] py-3 px-3 text-center transition-colors duration-150 cursor-pointer whitespace-nowrap flex items-center justify-center focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
                   isActive
-                    ? 'text-text font-bold'
-                    : 'text-text-muted font-medium hover:text-text'
+                    ? 'tab-item-active'
+                    : 'tab-item hover:text-text'
                 }`}
               >
-                <span className="relative inline-block px-1 text-[14px]">
+                <span className="relative inline-block px-1">
                   {tab.label}
                   {/* Underline on Active Tab with --accent */}
                   {isActive && (
@@ -161,7 +161,7 @@ export const HomeView: React.FC = () => {
           })}
         </div>
 
-        {/* Requirement 3: Category chips: Academics (active), Career, Gaming, Campus Life, Marketplace. Horizontally scrollable. Inactive chips are outlined and muted */}
+        {/* Category chips: 15px, weight 600 (active 700). Horizontally scrollable. */}
         <div className="flex items-center gap-2 px-3 py-2.5 overflow-x-auto no-scrollbar">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
@@ -169,10 +169,10 @@ export const HomeView: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => handleCategoryChange(cat.id)}
-                className={`min-h-[44px] px-4 py-2 text-xs rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer flex items-center justify-center active:scale-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+                className={`min-h-[44px] px-4 py-2 text-[15px] rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer flex items-center justify-center active:scale-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
                   isSelected
-                    ? 'chip-active shadow-sm'
-                    : 'chip-inactive'
+                    ? 'chip-active font-bold shadow-sm'
+                    : 'chip-inactive font-semibold'
                 }`}
               >
                 {cat.label}
@@ -183,10 +183,10 @@ export const HomeView: React.FC = () => {
           {/* Location Filter Chip */}
           <button
             onClick={() => setIsLocationSheetOpen(true)}
-            className={`min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer border active:scale-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+            className={`min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 text-[15px] rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer border active:scale-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
               activeLocationFilter
-                ? 'bg-accent text-white border-accent font-semibold shadow-xs'
-                : 'chip-inactive'
+                ? 'bg-accent text-white border-accent font-bold shadow-xs'
+                : 'chip-inactive font-semibold'
             }`}
           >
             <MapPin className="w-3.5 h-3.5 text-text-muted" strokeWidth={1.8} />

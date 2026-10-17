@@ -200,7 +200,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             placeholder="What's happening on your campus?"
             value={content}
             onChange={handleTextChange}
-            className="w-full bg-transparent border-none text-[16px] leading-[1.5] text-text placeholder:text-text-muted focus:outline-none resize-none font-sans"
+            className="w-full bg-transparent border-none composer-input text-text placeholder:text-text-muted focus:outline-none resize-none font-sans"
           />
 
           {/* Autocomplete mention popover */}
@@ -467,13 +467,13 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                 </button>
               )}
 
-              {/* Requirement 4: Gradient Post button on the right */}
+              {/* Requirement 4 & Specs: 15px weight 700 pill-shaped Gradient Post button */}
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="btn-primary-gradient flex items-center justify-center gap-1.5 px-6 py-2 rounded-full text-xs font-semibold shadow-md disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 cursor-pointer min-h-[38px] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                className="btn-primary-gradient btn-pill flex items-center justify-center gap-1.5 px-6 py-2 shadow-md disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 cursor-pointer min-h-[40px] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
               >
-                <Send className="w-3.5 h-3.5 text-white" strokeWidth={1.8} />
+                <Send className="w-4 h-4 text-white" strokeWidth={1.8} />
                 <span>Post</span>
               </button>
             </div>

@@ -566,16 +566,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Typography set to ${f.charAt(0).toUpperCase() + f.slice(1)}`);
   };
 
-  // Text Size synchronization
+  // Text Size synchronization (Small 12px, Default 15px, Large 17px, Extra large 19px)
   useEffect(() => {
     let pxVal = typeof textSize === 'number' ? textSize : parseInt(textSize as string, 10);
     if (isNaN(pxVal)) {
-      if (textSize === 'small') pxVal = 13;
+      if (textSize === 'small') pxVal = 12;
       else if (textSize === 'large') pxVal = 17;
       else if (textSize === 'extra-large') pxVal = 19;
       else pxVal = 15;
     }
-    pxVal = Math.min(19, Math.max(13, pxVal));
+    pxVal = Math.min(19, Math.max(12, pxVal));
     localStorage.setItem('univyx_text_size', pxVal.toString());
     document.documentElement.style.setProperty('--app-font-size', `${pxVal}px`);
     document.documentElement.style.setProperty('--text-scale', `${pxVal / 15}`);
@@ -585,12 +585,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const setTextSize = (size: TextSizePreference) => {
     let pxVal = typeof size === 'number' ? size : parseInt(size as string, 10);
     if (isNaN(pxVal)) {
-      if (size === 'small') pxVal = 13;
+      if (size === 'small') pxVal = 12;
       else if (size === 'large') pxVal = 17;
       else if (size === 'extra-large') pxVal = 19;
       else pxVal = 15;
     }
-    pxVal = Math.min(19, Math.max(13, pxVal));
+    pxVal = Math.min(19, Math.max(12, pxVal));
     setTextSizeState(pxVal);
     localStorage.setItem('univyx_text_size', pxVal.toString());
     document.documentElement.style.setProperty('--app-font-size', `${pxVal}px`);

@@ -10,18 +10,18 @@
   --color-accent-soft: var(--accent-soft);
   --color-accent-2: var(--accent-2);
   --color-nav: var(--nav);
-  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: 'Figtree', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 @layer base {
   :root {
-    --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-sans: 'Figtree', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     /* Light Theme Tokens */
     --bg: #F4F7FC;
     --surface: #FFFFFF;
     --border: #E2E8F3;
-    --text: #0E1630;
-    --text-muted: #66708D;
+    --text: #0F1419;
+    --text-muted: #536471;
     --accent: #2F6BFF;
     --accent-soft: #E4ECFF;
     --accent-2: #7B5CFF;
@@ -34,13 +34,13 @@
   }
 
   .dark {
-    --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-sans: 'Figtree', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     /* Dark Theme Tokens */
     --bg: #0A0F1E;
     --surface: #121A30;
     --border: #1E2846;
-    --text: #F2F5FF;
-    --text-muted: #8A94B3;
+    --text: #E7E9EA;
+    --text-muted: #71767B;
     --accent: #4C8DFF;
     --accent-soft: #16284F;
     --accent-2: #7B5CFF;
@@ -50,39 +50,24 @@
     color-scheme: dark;
   }
 
-  /* Text Size Scaling Preferences (13px to 19px) */
-  html[data-text-size="13"], html[data-text-size="small"] {
-    --text-scale: 0.86667;
-    --app-font-size: 13px;
-    font-size: 13px;
-  }
-  html[data-text-size="14"] {
-    --text-scale: 0.93333;
-    --app-font-size: 14px;
-    font-size: 14px;
+  /* Text Size Scaling Preferences (Small 12px, Default 15px, Large 17px, Extra large 19px) */
+  html[data-text-size="12"], html[data-text-size="small"] {
+    --text-scale: 0.8; /* 12px / 15px */
+    --app-font-size: 12px;
+    font-size: 12px;
   }
   html[data-text-size="15"], html[data-text-size="default"] {
-    --text-scale: 1;
+    --text-scale: 1; /* 15px / 15px */
     --app-font-size: 15px;
     font-size: 15px;
   }
-  html[data-text-size="16"] {
-    --text-scale: 1.06667;
-    --app-font-size: 16px;
-    font-size: 16px;
-  }
   html[data-text-size="17"], html[data-text-size="large"] {
-    --text-scale: 1.13333;
+    --text-scale: 1.13333; /* 17px / 15px */
     --app-font-size: 17px;
     font-size: 17px;
   }
-  html[data-text-size="18"] {
-    --text-scale: 1.2;
-    --app-font-size: 18px;
-    font-size: 18px;
-  }
   html[data-text-size="19"], html[data-text-size="extra-large"] {
-    --text-scale: 1.26667;
+    --text-scale: 1.26667; /* 19px / 15px */
     --app-font-size: 19px;
     font-size: 19px;
   }
@@ -160,7 +145,7 @@
   border-color: var(--accent);
 }
 
-/* Post and Typography helper classes */
+/* X (Twitter) Feed Typography tokens and helper classes */
 .post-text, .comment-text {
   font-size: calc(15px * var(--text-scale, 1));
   line-height: calc(20px * var(--text-scale, 1));
@@ -203,7 +188,7 @@
 
 .tab-item {
   font-size: calc(15px * var(--text-scale, 1));
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0;
   color: var(--text-muted);
 }
@@ -217,7 +202,14 @@
 
 .btn-pill {
   font-size: calc(15px * var(--text-scale, 1));
-  font-weight: 600;
+  font-weight: 700;
   border-radius: 9999px;
+  letter-spacing: 0;
+}
+
+.composer-input {
+  font-size: calc(20px * var(--text-scale, 1));
+  line-height: calc(26px * var(--text-scale, 1));
+  font-weight: 400;
   letter-spacing: 0;
 }

@@ -63,26 +63,26 @@ export const SettingsView: React.FC = () => {
   return (
     <div className="w-full min-w-0 p-4 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="pb-4 border-b border-slate-200 dark:border-slate-800">
-        <div className="flex items-center gap-2 text-xs font-semibold text-[#1D9BF0] mb-1">
-          <Settings className="w-4 h-4" />
+      <div className="pb-4 border-b border-border">
+        <div className="flex items-center gap-2 text-xs font-semibold text-accent mb-1">
+          <Settings className="w-4 h-4 text-accent" />
           <span>Preferences & Account Controls</span>
         </div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+        <h2 className="page-title text-text">
           Settings & Customization
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+        <p className="text-xs text-text-muted mt-0.5">
           Personalize appearance, typography, campus affiliation, and application preferences.
         </p>
       </div>
 
       {/* 1. Appearance / Theme */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
-        <div className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white">
-          <Palette className="w-4 h-4 text-[#1D9BF0]" />
+      <div className="card-theme p-5 space-y-3">
+        <div className="flex items-center gap-2 text-sm font-bold text-text">
+          <Palette className="w-4 h-4 text-accent" />
           <span>Interface Appearance</span>
         </div>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-text-muted">
           Select your color scheme. The preference is automatically saved.
         </p>
 
@@ -91,10 +91,10 @@ export const SettingsView: React.FC = () => {
             <button
               key={t}
               onClick={() => setTheme(t)}
-              className={`p-3 rounded-xl border text-center font-medium capitalize transition-all ${
+              className={`p-3 rounded-xl border text-center font-medium capitalize transition-all cursor-pointer ${
                 theme === t
-                  ? 'border-[#1D9BF0] bg-[#1D9BF0]/10 text-[#1D9BF0] font-semibold'
-                  : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'border-accent bg-accent/10 text-accent font-semibold ring-1 ring-accent'
+                  : 'border-border bg-surface text-text-muted hover:text-text hover:bg-accent-soft/30'
               }`}
             >
               {t} Mode
@@ -104,44 +104,44 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* 2. Text Size & Scaling (X Feed Typography) */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-[#16181C] border border-[#EFF3F4] dark:border-[#2F3336] shadow-xs space-y-4">
+      <div className="card-theme p-5 space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm font-bold text-[#0F1419] dark:text-[#E7E9EA]">
-            <Type className="w-4 h-4 text-[#1D9BF0]" />
+          <div className="flex items-center gap-2 text-sm font-bold text-text">
+            <Type className="w-4 h-4 text-accent" />
             <span>Text Size & Typography</span>
           </div>
-          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[#536471] dark:text-[#71767B]">
-            Figtree (Default Font)
+          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-accent-soft text-accent">
+            Figtree (400-800)
           </span>
         </div>
-        <p className="text-xs text-[#536471] dark:text-[#71767B]">
+        <p className="text-xs text-text-muted">
           Adjust the font size of the Univyx feed. This scales post text, comments, headers, and UI elements across the entire app.
         </p>
 
         {/* Live Preview Card */}
-        <div className="p-3.5 rounded-2xl border border-[#EFF3F4] dark:border-[#2F3336] bg-slate-50/50 dark:bg-[#000000] space-y-2">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#536471] dark:text-[#71767B]">
+        <div className="p-3.5 rounded-2xl border border-border bg-bg/70 space-y-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
             Live Feed Preview
           </span>
           <div className="flex items-start gap-3 pt-1">
-            <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[15px]">
+            <div className="w-10 h-10 rounded-full avatar-gradient font-bold text-white flex items-center justify-center shrink-0 text-[15px] select-none">
               U
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1 min-w-0 overflow-hidden leading-tight">
-                <span className="font-bold text-[15px] text-[#0F1419] dark:text-[#E7E9EA] truncate">
+              <div className="flex items-center gap-1.5 min-w-0 overflow-hidden leading-tight">
+                <span className="display-name truncate">
                   Univyx Official
                 </span>
-                <span className="font-normal text-[15px] text-[#536471] dark:text-[#71767B] truncate">
+                <span className="handle-text truncate">
                   @univyx_official
                 </span>
-                <span className="text-[#536471] dark:text-[#71767B]">·</span>
-                <span className="font-normal text-[15px] text-[#536471] dark:text-[#71767B]">now</span>
+                <span className="timestamp-text">·</span>
+                <span className="timestamp-text">now</span>
               </div>
-              <p className="mt-1 post-text text-[#0F1419] dark:text-[#E7E9EA] break-words">
+              <p className="mt-1 post-text break-words">
                 At the heart of Univyx is a student experience designed for focus, speed, and real collegiate community.
               </p>
-              <div className="mt-2.5 flex items-center gap-6 text-[#536471] dark:text-[#71767B]">
+              <div className="mt-2.5 flex items-center gap-6 text-text-muted">
                 <span className="action-count">💬 42</span>
                 <span className="action-count">🔁 18</span>
                 <span className="action-count">❤️ 156</span>
@@ -151,21 +151,21 @@ export const SettingsView: React.FC = () => {
           </div>
         </div>
 
-        {/* 4-Step Text Size Selector (Small 13px, Default 15px, Large 17px, Extra large 19px) */}
+        {/* 4-Step Text Size Selector (Small 12px, Default 15px, Large 17px, Extra large 19px) */}
         <div className="space-y-3 pt-1">
-          <div className="flex items-center justify-between px-2 text-[#536471] dark:text-[#71767B]">
-            <span className="text-xs font-bold">Aa (13px)</span>
+          <div className="flex items-center justify-between px-2 text-text-muted">
+            <span className="text-xs font-bold">Aa (12px)</span>
             <span className="text-lg font-bold">Aa (19px)</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             {[
-              { id: 'small' as TextSizePreference, label: 'Small', size: '13px', desc: 'Compact' },
+              { id: 'small' as TextSizePreference, label: 'Small', size: '12px', desc: 'Compact' },
               { id: 'default' as TextSizePreference, label: 'Default', size: '15px', desc: 'Standard X' },
               { id: 'large' as TextSizePreference, label: 'Large', size: '17px', desc: 'Expanded' },
               { id: 'extra-large' as TextSizePreference, label: 'Extra large', size: '19px', desc: 'Maximum' }
             ].map((item) => {
-              const isSelected = textSize === item.id;
+              const isSelected = textSize === item.id || (typeof textSize === 'number' && `${textSize}px` === item.size);
               return (
                 <button
                   type="button"
@@ -173,19 +173,19 @@ export const SettingsView: React.FC = () => {
                   onClick={() => setTextSize(item.id)}
                   className={`p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
                     isSelected
-                      ? 'border-[#1D9BF0] bg-[#1D9BF0]/10 text-[#1D9BF0] ring-1 ring-[#1D9BF0]'
-                      : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0A0A0A] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                      ? 'border-accent bg-accent/10 text-accent ring-1 ring-accent font-semibold'
+                      : 'border-border bg-surface hover:bg-accent-soft/30 text-text-muted hover:text-text'
                   }`}
                 >
                   <div className="flex items-center justify-center gap-1">
                     <span className="font-bold text-sm">{item.label}</span>
                     <span className="text-xs opacity-75">({item.size})</span>
                   </div>
-                  <span className="text-[11px] text-[#536471] dark:text-[#71767B] block mt-0.5">
+                  <span className="text-[11px] text-text-muted block mt-0.5">
                     {item.desc}
                   </span>
                   {isSelected && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1D9BF0] mx-auto mt-1.5" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent mx-auto mt-1.5" />
                   )}
                 </button>
               );

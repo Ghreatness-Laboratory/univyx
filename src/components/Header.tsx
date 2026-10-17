@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
                 <circle cx="235" cy="260" r="30" stroke="none"/>
               </svg>
             </div>
-            <span className="text-xl font-bold tracking-tight text-text select-none font-sans">
+            <span className="page-title text-text select-none">
               Univyx
             </span>
           </button>

@@ -10,13 +10,11 @@ interface CommentsModalProps {
 }
 
 export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) => {
-  const { getCommentsForPost, addComment, currentUser } = useApp();
+  const { comments: allComments, addComment, currentUser } = useApp();
   const [commentText, setCommentText] = useState('');
 
-  const comments = getCommentsForPost(post.id);
-  const commentsCount = post.commentsCount ?? post.comments_count ?? comments.length;
-  const authorName = post.authorName || post.author?.fullName || post.author?.full_name || 'Scholar';
-  const postTier = post.verificationTier || post.verification_tier || post.author?.verificationTier || post.author?.verification_tier || 'none';
+  const comments = allComments[post.id] || [];
+  const commentsCount = comments.length;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,12 +23,15 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
     setCommentText('');
   };
 
+  const authorName = post.authorName || post.author?.fullName || post.author?.full_name || 'Scholar';
+  const postTier = post.verificationTier || post.verification_tier || post.author?.verificationTier || (post.isVerified ? 'blue' : 'none');
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
       <div className="w-full max-w-lg card-theme shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
-        {/* Header */}
+        {/* Header with 20px, weight 800 title */}
         <div className="p-4 border-b border-border flex items-center justify-between">
-          <span className="text-base font-bold text-text">
+          <span className="page-title text-text">
             Campus Discussion ({commentsCount})
           </span>
           <button
@@ -45,27 +46,27 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
         {/* Original Post Summary */}
         <div className="p-4 border-b border-border bg-bg/50">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full avatar-gradient font-bold text-sm flex items-center justify-center shrink-0 shadow-sm select-none">
+            <div className="w-10 h-10 rounded-full avatar-gradient font-bold text-[15px] text-white flex items-center justify-center shrink-0 shadow-xs select-none">
               {authorName.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 min-w-0 overflow-hidden leading-tight">
-                <span className="font-bold text-[15px] text-text truncate">
+                <span className="display-name truncate">
                   {authorName}
                 </span>
                 <VerifiedBadge type={postTier} size="small" />
-                <span className="font-normal text-xs text-text-muted truncate">
+                <span className="handle-text truncate">
                   @{post.username || post.author?.username}
                 </span>
               </div>
-              <p className="mt-1 text-[15px] leading-[1.5] text-text break-words">
+              <p className="mt-1 post-text break-words">
                 {post.content}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Comments List */}
+        {/* Comments List: 1px divider between comments */}
         <div className="flex-1 overflow-y-auto divide-y divide-border">
           {comments.length === 0 ? (
             <div className="text-center py-12 text-sm text-text-muted">
@@ -79,24 +80,27 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
               const cTier = comment.verificationTier || comment.verification_tier || comment.author?.verificationTier || comment.author?.verification_tier || 'none';
               return (
                 <div key={comment.id} className="p-4 flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full avatar-gradient font-bold flex items-center justify-center shrink-0 text-sm select-none">
+                  {/* 40px round avatar */}
+                  <div className="w-10 h-10 rounded-full avatar-gradient font-bold text-[15px] text-white flex items-center justify-center shrink-0 select-none shadow-xs">
                     {cInitial}
                   </div>
                   <div className="flex-1 min-w-0">
+                    {/* Name and handle on one line with ellipsis */}
                     <div className="flex items-center gap-1.5 min-w-0 overflow-hidden leading-tight">
-                      <span className="font-bold text-[14px] text-text truncate shrink-0 max-w-[140px] sm:max-w-[200px]">
+                      <span className="display-name truncate shrink-0 max-w-[140px] sm:max-w-[200px]">
                         {cName}
                       </span>
                       <VerifiedBadge type={cTier} size="small" />
-                      <span className="font-normal text-xs text-text-muted truncate shrink min-w-0">
+                      <span className="handle-text truncate shrink min-w-0">
                         @{comment.username}
                       </span>
-                      <span className="text-text-muted shrink-0" aria-hidden="true">·</span>
-                      <span className="font-normal text-xs text-text-muted shrink-0 whitespace-nowrap">
+                      <span className="timestamp-text shrink-0" aria-hidden="true">·</span>
+                      <span className="timestamp-text shrink-0 whitespace-nowrap">
                         {new Date(cDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm leading-[1.5] text-text break-words whitespace-pre-wrap">
+                    {/* Comment text: 15px / 20px line-height, weight 400 */}
+                    <p className="mt-1 comment-text break-words whitespace-pre-wrap">
                       {comment.content}
                     </p>
                   </div>
@@ -106,19 +110,19 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post, onClose }) =
           )}
         </div>
 
-        {/* Comment Composer Input */}
+        {/* Comment Composer Input & 15px weight 700 pill Reply button */}
         <form onSubmit={handleSubmit} className="p-3 border-t border-border flex items-center gap-2.5">
           <input
             type="text"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Post your reply..."
-            className="flex-1 text-sm px-4 py-2.5 rounded-full bg-bg border border-border focus:border-accent text-text placeholder:text-text-muted focus:outline-none"
+            className="flex-1 text-[15px] px-4 py-2.5 rounded-full bg-bg border border-border focus:border-accent text-text placeholder:text-text-muted focus:outline-none"
           />
           <button
             type="submit"
             disabled={!commentText.trim()}
-            className="btn-primary-gradient px-5 py-2.5 rounded-full text-xs font-semibold hover:opacity-95 disabled:opacity-40 transition-all cursor-pointer shadow-sm active:scale-95"
+            className="btn-primary-gradient btn-pill px-5 py-2 hover:opacity-95 disabled:opacity-40 transition-all cursor-pointer shadow-sm active:scale-95"
           >
             Reply
           </button>

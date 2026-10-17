@@ -21,10 +21,10 @@
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
 
-    <!-- Google Fonts: Poppins & Figtree -->
+    <!-- Google Fonts: Figtree (Weights 400-800 exclusively) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet" />
 
     <!-- Instant Pre-paint Theme & Typography Script (Eliminates Flash of Unstyled Content) -->
     <script>
@@ -56,7 +56,7 @@
           var savedTextSize = localStorage.getItem('univyx_text_size') || '15';
           var pxVal = parseInt(savedTextSize, 10);
           if (isNaN(pxVal)) {
-            if (savedTextSize === 'small') pxVal = 13;
+            if (savedTextSize === 'small') pxVal = 12;
             else if (savedTextSize === 'large') pxVal = 17;
             else if (savedTextSize === 'extra-large') pxVal = 19;
             else pxVal = 15;
