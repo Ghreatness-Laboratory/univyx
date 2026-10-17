@@ -22,10 +22,10 @@ export const HomeView: React.FC = () => {
     hiddenAdIds
   } = useApp();
 
-  // Requirement 2: Tabs: For You, Following, My University, Latest
+  // Tabs: For You, Following, My University, Latest
   const [feedMode, setFeedMode] = useState<'for_you' | 'following' | 'my_university' | 'latest'>('for_you');
 
-  // Requirement 3: Category chips: Academics (active by default), Career, Gaming, Campus Life, Marketplace
+  // Category chips: Academics (active by default), Career, Gaming, Campus Life, Marketplace
   const [selectedCategory, setSelectedCategory] = useState<string>('academics');
   const [isLoadingFeed, setIsLoadingFeed] = useState(false);
 
@@ -39,8 +39,7 @@ export const HomeView: React.FC = () => {
     { id: 'career', label: 'Career' },
     { id: 'gaming', label: 'Gaming' },
     { id: 'campus_life', label: 'Campus Life' },
-    { id: 'marketplace', label: 'Marketplace' },
-    { id: 'all', label: 'All' }
+    { id: 'marketplace', label: 'Marketplace' }
   ];
 
   // Brief skeleton loader simulation on tab or category switch
@@ -50,7 +49,7 @@ export const HomeView: React.FC = () => {
     setFeedMode(newMode);
     setTimeout(() => {
       setIsLoadingFeed(false);
-    }, 200);
+    }, 150);
   };
 
   const handleCategoryChange = (catId: string) => {
@@ -58,7 +57,7 @@ export const HomeView: React.FC = () => {
     setSelectedCategory(catId);
     setTimeout(() => {
       setIsLoadingFeed(false);
-    }, 180);
+    }, 150);
   };
 
   // Active sponsored ads to naturally interleave in feed
@@ -122,16 +121,16 @@ export const HomeView: React.FC = () => {
 
   return (
     <div className="w-full min-w-0 pb-28 sm:pb-20">
-      {/* Optional Voice Rooms Live Strip */}
+      {/* 2. Live gist rooms: a section row with red live dot, "Live gist rooms", "3 active", "See all" */}
       <LiveNowStrip
         rooms={rooms}
         onJoinRoom={joinRoom}
         onViewAllRooms={() => setActiveTab('rooms')}
       />
 
-      {/* Requirement 2: Tabs: For You, Following, My University, Latest (Single line, no wrap, --accent underline) */}
+      {/* 3. Tabs: For You, Following, My University, Latest. One line, no wrapping, 2px accent underline on active tab */}
       <div className="sticky top-14 z-20 bg-surface/95 backdrop-blur-md border-b border-border transition-colors duration-150">
-        <div className="flex items-center overflow-x-auto no-scrollbar whitespace-nowrap px-2">
+        <div className="flex items-center overflow-x-auto no-scrollbar whitespace-nowrap px-1">
           {[
             { id: 'for_you', label: 'For You' },
             { id: 'following', label: 'Following' },
@@ -143,17 +142,17 @@ export const HomeView: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id as any)}
-                className={`relative flex-1 min-h-[44px] py-3 px-3 text-center transition-colors duration-150 cursor-pointer whitespace-nowrap flex items-center justify-center focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+                className={`relative flex-1 min-h-[44px] py-2.5 px-3 text-center transition-colors duration-150 cursor-pointer whitespace-nowrap flex items-center justify-center touch-target-44 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
                   isActive
                     ? 'tab-item-active'
                     : 'tab-item hover:text-text'
                 }`}
               >
-                <span className="relative inline-block px-1">
+                <span className="relative inline-block text-[12px]">
                   {tab.label}
-                  {/* Underline on Active Tab with --accent */}
+                  {/* 2px accent underline on active tab */}
                   {isActive && (
-                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-accent rounded-full shadow-sm" />
+                    <span className="absolute -bottom-3 left-0 right-0 h-[2px] bg-accent rounded-full" />
                   )}
                 </span>
               </button>
@@ -161,18 +160,18 @@ export const HomeView: React.FC = () => {
           })}
         </div>
 
-        {/* Category chips: 15px, weight 600 (active 700). Horizontally scrollable. */}
-        <div className="flex items-center gap-2 px-3 py-2.5 overflow-x-auto no-scrollbar">
+        {/* 4. Category chips: Academics (active), Career, Gaming, Campus Life, Marketplace. Horizontally scrollable. */}
+        <div className="flex items-center gap-1.5 px-3 py-2 overflow-x-auto no-scrollbar border-t border-border/50">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => handleCategoryChange(cat.id)}
-                className={`min-h-[44px] px-4 py-2 text-[15px] rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer flex items-center justify-center active:scale-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+                className={`h-6 px-3 rounded-full text-[11px] whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer flex items-center justify-center active:scale-95 touch-target-44 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
                   isSelected
-                    ? 'chip-active font-bold shadow-sm'
-                    : 'chip-inactive font-semibold'
+                    ? 'chip-active shadow-xs'
+                    : 'chip-inactive'
                 }`}
               >
                 {cat.label}
@@ -180,16 +179,16 @@ export const HomeView: React.FC = () => {
             );
           })}
 
-          {/* Location Filter Chip */}
+          {/* Location Filter Chip (24px tall) */}
           <button
             onClick={() => setIsLocationSheetOpen(true)}
-            className={`min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 text-[15px] rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer border active:scale-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+            className={`h-6 flex items-center gap-1 px-3 text-[11px] rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer border active:scale-95 touch-target-44 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
               activeLocationFilter
                 ? 'bg-accent text-white border-accent font-bold shadow-xs'
-                : 'chip-inactive font-semibold'
+                : 'chip-inactive'
             }`}
           >
-            <MapPin className="w-3.5 h-3.5 text-text-muted" strokeWidth={1.8} />
+            <MapPin className="w-3 h-3 text-text-muted" strokeWidth={1.5} />
             <span>{activeLocationFilter || 'Campus Location'}</span>
             {activeLocationFilter && (
               <span
@@ -199,23 +198,23 @@ export const HomeView: React.FC = () => {
                 }}
                 className="hover:opacity-80 p-0.5"
               >
-                <X className="w-3.5 h-3.5 ml-0.5" />
+                <X className="w-3 h-3 ml-0.5" />
               </span>
             )}
           </button>
         </div>
       </div>
 
-      {/* Feed Content Container with 8px Spacing Grid */}
-      <div className="px-3 sm:px-4 pt-3.5">
-        {/* Requirement 4: Composer card */}
+      {/* Main Feed Content Container (8px Spacing Grid) */}
+      <div className="px-3 sm:px-4 pt-3">
+        {/* 5. Composer Card */}
         <PostComposer
           quotePost={activeQuotePost}
           onClose={activeQuotePost ? () => setActiveQuotePost(null) : undefined}
         />
 
-        {/* Feed Posts Stream or Skeleton Loaders */}
-        <div className="space-y-3">
+        {/* 6. Feed Posts Stream or Skeleton Loaders */}
+        <div className="space-y-2.5">
           {isLoadingFeed ? (
             <>
               <PostCardSkeleton />
@@ -223,21 +222,21 @@ export const HomeView: React.FC = () => {
               <PostCardSkeleton />
             </>
           ) : filteredPosts.length === 0 ? (
-            <div className="card-theme py-16 px-4 text-center">
-              <div className="w-12 h-12 rounded-full bg-accent-soft text-accent flex items-center justify-center mx-auto mb-3">
-                <MessageSquare className="w-6 h-6" strokeWidth={1.8} />
+            <div className="card-theme py-14 px-4 text-center">
+              <div className="w-10 h-10 rounded-full bg-accent-soft text-accent flex items-center justify-center mx-auto mb-2.5">
+                <MessageSquare className="w-5 h-5" strokeWidth={1.5} />
               </div>
-              <h4 className="text-sm font-bold text-text">
+              <h4 className="text-[13px] font-bold text-text">
                 No conversations in this feed yet
               </h4>
-              <p className="text-xs text-text-muted max-w-xs mx-auto mt-1 leading-relaxed">
+              <p className="text-[11px] text-text-muted max-w-xs mx-auto mt-1 leading-normal">
                 Be the first to share an academic question, study guide, or campus gist!
               </p>
             </div>
           ) : (
             filteredPosts.map((post, idx) => (
               <React.Fragment key={post.id}>
-                {/* Requirement 5: Post Card */}
+                {/* 6. Post Card */}
                 <PostCard
                   post={post}
                   onOpenComments={(p) => setActiveCommentsPost(p)}

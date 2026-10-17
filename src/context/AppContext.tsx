@@ -228,9 +228,9 @@ const DEFAULT_USER: UserProfile = {
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Theme state (White / Light mode is the default)
+  // Theme state (Default to system setting)
   const [theme, setThemeState] = useState<ThemePreference>(() => {
-    return (localStorage.getItem('univyx_theme') as ThemePreference) || 'light';
+    return (localStorage.getItem('univyx_theme') as ThemePreference) || 'system';
   });
 
   // Font state
@@ -553,7 +553,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         root.classList.add('dark');
         root.classList.remove('light');
         root.style.colorScheme = 'dark';
-        if (metaTheme) metaTheme.setAttribute('content', '#0A0F1E');
+        if (metaTheme) metaTheme.setAttribute('content', '#000000');
       } else {
         root.classList.remove('dark');
         root.classList.add('light');

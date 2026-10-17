@@ -148,7 +148,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
               <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5">
                 <path
                   d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.67-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91C2.63 9.33 1.75 10.57 1.75 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.27 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.34-2.19c1.39.46 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34z"
-                  fill={isGold ? '#D4A017' : '#1D9BF0'}
+                  fill={isGold ? '#D4A017' : 'var(--accent)'}
                 />
                 <path
                   d="M9.9 15.7l-3.3-3.3 1.45-1.45 1.85 1.85 5.75-5.75 1.45 1.45-7.2 7.2z"
@@ -158,23 +158,23 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold leading-tight text-slate-900 dark:text-white">
+                <h4 className="text-xs font-bold leading-tight text-text">
                   {popoverTitle}
                 </h4>
                 <span
                   className={`text-[9px] font-mono px-1.5 py-0.5 rounded uppercase tracking-wider font-semibold ${
                     isGold
                       ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300'
-                      : 'bg-sky-100 text-sky-800 dark:bg-sky-900/60 dark:text-sky-300'
+                      : 'bg-accent-soft text-accent'
                   }`}
                 >
                   {isGold ? 'Gold' : 'Blue'}
                 </span>
               </div>
-              <p className="text-[11px] font-semibold text-slate-800 dark:text-slate-200 mt-1">
+              <p className="text-[11px] font-semibold text-text mt-1">
                 {popoverBody}
               </p>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+              <p className="text-[10px] text-text-muted mt-1 leading-snug">
                 {popoverDescription}
               </p>
             </div>

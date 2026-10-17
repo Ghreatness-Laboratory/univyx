@@ -73,7 +73,7 @@ export const LocationPickerSheet: React.FC<LocationPickerSheetProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in duration-200">
       <div
-        className="w-full max-w-lg bg-white dark:bg-[#16181C] rounded-t-3xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
+        className="w-full max-w-lg bg-surface rounded-t-[20px] sm:rounded-[14px] border border-border shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
         role="dialog"
         aria-modal="true"
       >

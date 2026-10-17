@@ -21,30 +21,31 @@
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
 
-    <!-- Google Fonts: Figtree (Weights 400-800 exclusively) -->
+    <!-- Google Fonts: Poppins (Weights 400, 500, 600, 700, 800) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet" />
 
-    <!-- Instant Pre-paint Theme & Typography Script (Eliminates Flash of Unstyled Content) -->
+    <!-- Instant Pre-paint Theme Script (Defaults to system, pure black dark mode, eliminates FOUC) -->
     <script>
       (function() {
         try {
-          var savedTheme = localStorage.getItem('univyx_theme') || 'light';
+          var savedTheme = localStorage.getItem('univyx_theme') || 'system';
           var isDark = false;
           if (savedTheme === 'dark') {
             isDark = true;
-          } else if (savedTheme === 'system') {
-            isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          } else if (savedTheme === 'light') {
+            isDark = false;
           } else {
-            isDark = false; // 'light' is default
+            // 'system' is default
+            isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           }
           if (isDark) {
             document.documentElement.classList.add('dark');
             document.documentElement.classList.remove('light');
             document.documentElement.style.colorScheme = 'dark';
             var meta = document.getElementById('meta-theme-color');
-            if (meta) meta.setAttribute('content', '#0A0F1E');
+            if (meta) meta.setAttribute('content', '#000000');
           } else {
             document.documentElement.classList.remove('dark');
             document.documentElement.classList.add('light');
@@ -52,18 +53,6 @@
             var meta = document.getElementById('meta-theme-color');
             if (meta) meta.setAttribute('content', '#F4F7FC');
           }
-
-          var savedTextSize = localStorage.getItem('univyx_text_size') || '15';
-          var pxVal = parseInt(savedTextSize, 10);
-          if (isNaN(pxVal)) {
-            if (savedTextSize === 'small') pxVal = 12;
-            else if (savedTextSize === 'large') pxVal = 17;
-            else if (savedTextSize === 'extra-large') pxVal = 19;
-            else pxVal = 15;
-          }
-          document.documentElement.style.setProperty('--app-font-size', pxVal + 'px');
-          document.documentElement.style.setProperty('--text-scale', (pxVal / 15).toString());
-          document.documentElement.setAttribute('data-text-size', pxVal.toString());
         } catch (e) {}
       })();
     </script>
