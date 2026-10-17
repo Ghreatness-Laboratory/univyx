@@ -1,46 +1,52 @@
 @import "tailwindcss";
 
 @theme {
-  --color-canvas: var(--bg-canvas);
-  --color-surface: var(--bg-surface);
-  --color-card: var(--bg-card);
-  --color-border-theme: var(--border-color);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-2: var(--accent-2);
+  --color-nav: var(--nav);
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 @layer base {
   :root {
-    --font-sans: 'Poppins', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --bg-canvas: #FFFFFF;
-    --bg-surface: #F7F9FA;
-    --bg-card: #FFFFFF;
-    --border-color: #EFF3F4;
-    --border-subtle: #F7F9FA;
-    --text-primary: #0F1419;
-    --text-secondary: #536471;
-    --text-muted: #8B98A5;
-    --brand-blue: #4C8DFF;
-    --brand-violet: #7B5CFF;
-    --brand-hover: #3A7CEE;
+    --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* Light Theme Tokens */
+    --bg: #F4F7FC;
+    --surface: #FFFFFF;
+    --border: #E2E8F3;
+    --text: #0E1630;
+    --text-muted: #66708D;
+    --accent: #2F6BFF;
+    --accent-soft: #E4ECFF;
+    --accent-2: #7B5CFF;
+    --nav: #FFFFFF;
+    --card-shadow: 0 1px 2px rgba(14, 22, 48, 0.06);
+    --avatar-grad: linear-gradient(135deg, #709CFF 0%, #A78BFA 100%);
     --app-font-size: 15px;
     --text-scale: 1;
     color-scheme: light;
   }
 
   .dark {
-    --font-sans: 'Poppins', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --bg-canvas: #0A0F1E;
-    --bg-surface: #121A30;
-    --bg-card: #121A30;
-    --border-color: #1E2846;
-    --border-subtle: #1E2846;
-    --text-primary: #F2F5FF;
-    --text-secondary: #8A94B3;
+    --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* Dark Theme Tokens */
+    --bg: #0A0F1E;
+    --surface: #121A30;
+    --border: #1E2846;
+    --text: #F2F5FF;
     --text-muted: #8A94B3;
-    --brand-blue: #4C8DFF;
-    --brand-violet: #7B5CFF;
-    --brand-hover: #3A7CEE;
+    --accent: #4C8DFF;
+    --accent-soft: #16284F;
+    --accent-2: #7B5CFF;
+    --nav: #0D1426;
+    --card-shadow: none;
+    --avatar-grad: linear-gradient(135deg, #4C8DFF 0%, #7B5CFF 100%);
     color-scheme: dark;
   }
 
@@ -86,8 +92,8 @@
   }
 
   body {
-    background-color: var(--bg-canvas);
-    color: var(--text-primary);
+    background-color: var(--bg);
+    color: var(--text);
     font-family: var(--font-sans);
     font-size: calc(15px * var(--text-scale, 1));
     line-height: calc(20px * var(--text-scale, 1));
@@ -108,19 +114,65 @@
   }
 }
 
-/* X (Twitter) Typography Classes */
+/* Card Container helper for light mode subtle shadow and dark border */
+.card-theme {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+/* Primary Action Gradient */
+.btn-primary-gradient {
+  background: linear-gradient(to right, var(--accent), var(--accent-2));
+  color: #FFFFFF;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+.btn-primary-gradient:hover {
+  opacity: 0.96;
+}
+.btn-primary-gradient:active {
+  transform: scale(0.96);
+}
+
+/* Gradient Avatar helper */
+.avatar-gradient {
+  background: var(--avatar-grad);
+  color: #FFFFFF;
+}
+
+/* Active Category Chip: --text fill with --bg text */
+.chip-active {
+  background-color: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+/* Inactive Category Chip */
+.chip-inactive {
+  background-color: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.chip-inactive:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+/* Post and Typography helper classes */
 .post-text, .comment-text {
   font-size: calc(15px * var(--text-scale, 1));
   line-height: calc(20px * var(--text-scale, 1));
   font-weight: 400;
-  color: var(--text-primary);
+  color: var(--text);
   letter-spacing: 0;
 }
 
 .display-name {
   font-size: calc(15px * var(--text-scale, 1));
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text);
   line-height: 1.3;
   letter-spacing: 0;
 }
@@ -128,7 +180,7 @@
 .handle-text, .timestamp-text {
   font-size: calc(15px * var(--text-scale, 1));
   font-weight: 400;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   line-height: 1.3;
   letter-spacing: 0;
 }
@@ -136,7 +188,7 @@
 .action-count {
   font-size: calc(13px * var(--text-scale, 1));
   font-weight: 400;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   line-height: 1;
   letter-spacing: 0;
 }
@@ -145,75 +197,27 @@
   font-size: calc(20px * var(--text-scale, 1));
   font-weight: 800;
   line-height: 1.25;
-  color: var(--text-primary);
+  color: var(--text);
   letter-spacing: 0;
 }
 
 .tab-item {
   font-size: calc(15px * var(--text-scale, 1));
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .tab-item.active, .tab-item-active {
   font-size: calc(15px * var(--text-scale, 1));
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text);
   letter-spacing: 0;
 }
 
 .btn-pill {
   font-size: calc(15px * var(--text-scale, 1));
-  font-weight: 700;
+  font-weight: 600;
   border-radius: 9999px;
   letter-spacing: 0;
-}
-
-.composer-input {
-  font-size: calc(20px * var(--text-scale, 1));
-  line-height: 1.35;
-  letter-spacing: 0;
-  font-weight: 400;
-}
-
-/* Color utility bindings for X theme */
-.bg-canvas {
-  background-color: var(--bg-canvas);
-}
-.bg-surface {
-  background-color: var(--bg-surface);
-}
-.bg-card {
-  background-color: var(--bg-card);
-}
-.border-theme, .border-border-color {
-  border-color: var(--border-color);
-}
-.text-x-primary, .text-primary {
-  color: var(--text-primary);
-}
-.text-x-secondary, .text-secondary {
-  color: var(--text-secondary);
-}
-.border-x-divider {
-  border-color: var(--border-color);
-}
-
-/* Safe area padding utilities for mobile */
-.pb-safe {
-  padding-bottom: max(1rem, env(safe-area-inset-bottom, 16px));
-}
-
-.pt-safe {
-  padding-top: env(safe-area-inset-top, 0px);
-}
-
-/* Hide scrollbar utility */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }

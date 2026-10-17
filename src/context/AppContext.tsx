@@ -524,12 +524,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const applyDark = (dark: boolean) => {
       if (dark) {
         root.classList.add('dark');
+        root.classList.remove('light');
         root.style.colorScheme = 'dark';
-        if (metaTheme) metaTheme.setAttribute('content', '#000000');
+        if (metaTheme) metaTheme.setAttribute('content', '#0A0F1E');
       } else {
         root.classList.remove('dark');
+        root.classList.add('light');
         root.style.colorScheme = 'light';
-        if (metaTheme) metaTheme.setAttribute('content', '#FFFFFF');
+        if (metaTheme) metaTheme.setAttribute('content', '#F4F7FC');
       }
     };
 

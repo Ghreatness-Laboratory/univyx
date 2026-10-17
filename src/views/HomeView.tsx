@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { PostComposer } from '../components/PostComposer';
 import { PostCard } from '../components/PostCard';
@@ -6,7 +6,7 @@ import { PostCardSkeleton } from '../components/PostCardSkeleton';
 import { AdCard } from '../components/AdCard';
 import { LiveNowStrip } from '../components/LiveNowStrip';
 import { LocationPickerSheet } from '../components/LocationPickerSheet';
-import { Post, PostCategory } from '../types';
+import { Post } from '../types';
 import { CommentsModal } from '../components/CommentsModal';
 import { MessageSquare, MapPin, X } from 'lucide-react';
 
@@ -43,14 +43,14 @@ export const HomeView: React.FC = () => {
     { id: 'all', label: 'All' }
   ];
 
-  // Brief skeleton loader simulation on tab or category switch for polish
+  // Brief skeleton loader simulation on tab or category switch
   const handleTabChange = (newMode: 'for_you' | 'following' | 'my_university' | 'latest') => {
     if (newMode === feedMode) return;
     setIsLoadingFeed(true);
     setFeedMode(newMode);
     setTimeout(() => {
       setIsLoadingFeed(false);
-    }, 250);
+    }, 200);
   };
 
   const handleCategoryChange = (catId: string) => {
@@ -58,7 +58,7 @@ export const HomeView: React.FC = () => {
     setSelectedCategory(catId);
     setTimeout(() => {
       setIsLoadingFeed(false);
-    }, 200);
+    }, 180);
   };
 
   // Active sponsored ads to naturally interleave in feed
@@ -129,8 +129,8 @@ export const HomeView: React.FC = () => {
         onViewAllRooms={() => setActiveTab('rooms')}
       />
 
-      {/* Requirement 2: Tabs: For You, Following, My University, Latest (Single line, no wrap, blue underline) */}
-      <div className="sticky top-14 z-20 bg-white/95 dark:bg-[#0A0F1E]/95 backdrop-blur-md border-b border-[#EFF3F4] dark:border-[#1E2846] transition-colors duration-150">
+      {/* Requirement 2: Tabs: For You, Following, My University, Latest (Single line, no wrap, --accent underline) */}
+      <div className="sticky top-14 z-20 bg-surface/95 backdrop-blur-md border-b border-border transition-colors duration-150">
         <div className="flex items-center overflow-x-auto no-scrollbar whitespace-nowrap px-2">
           {[
             { id: 'for_you', label: 'For You' },
@@ -143,17 +143,17 @@ export const HomeView: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id as any)}
-                className={`relative flex-1 min-h-[44px] py-3 px-3 text-center transition-colors duration-150 cursor-pointer whitespace-nowrap flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#4C8DFF] focus-visible:outline-none ${
+                className={`relative flex-1 min-h-[44px] py-3 px-3 text-center transition-colors duration-150 cursor-pointer whitespace-nowrap flex items-center justify-center focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
                   isActive
-                    ? 'text-[#0F1419] dark:text-[#F2F5FF] font-bold'
-                    : 'text-[#536471] dark:text-[#8A94B3] font-medium hover:text-[#0F1419] dark:hover:text-[#F2F5FF]'
+                    ? 'text-text font-bold'
+                    : 'text-text-muted font-medium hover:text-text'
                 }`}
               >
                 <span className="relative inline-block px-1 text-[14px]">
                   {tab.label}
-                  {/* Blue Underline on Active Tab */}
+                  {/* Underline on Active Tab with --accent */}
                   {isActive && (
-                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-[#4C8DFF] rounded-full shadow-sm shadow-[#4C8DFF]/40" />
+                    <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-accent rounded-full shadow-sm" />
                   )}
                 </span>
               </button>
@@ -161,7 +161,7 @@ export const HomeView: React.FC = () => {
           })}
         </div>
 
-        {/* Requirement 3: Category chips: Academics (active, white pill with dark text), Career, Gaming, Campus Life, Marketplace. Horizontally scrollable, with muted outlined inactive chips */}
+        {/* Requirement 3: Category chips: Academics (active), Career, Gaming, Campus Life, Marketplace. Horizontally scrollable. Inactive chips are outlined and muted */}
         <div className="flex items-center gap-2 px-3 py-2.5 overflow-x-auto no-scrollbar">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
@@ -169,10 +169,10 @@ export const HomeView: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => handleCategoryChange(cat.id)}
-                className={`min-h-[44px] px-4 py-2 text-xs rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer flex items-center justify-center active:scale-95 focus-visible:ring-2 focus-visible:ring-[#4C8DFF] focus-visible:outline-none ${
+                className={`min-h-[44px] px-4 py-2 text-xs rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer flex items-center justify-center active:scale-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
                   isSelected
-                    ? 'bg-white text-[#0A0F1E] font-semibold shadow-sm ring-1 ring-white/20'
-                    : 'border border-[#1E2846] text-[#8A94B3] hover:text-[#F2F5FF] hover:border-[#4C8DFF]/40 bg-[#121A30]/50 font-medium'
+                    ? 'chip-active shadow-sm'
+                    : 'chip-inactive'
                 }`}
               >
                 {cat.label}
@@ -183,13 +183,13 @@ export const HomeView: React.FC = () => {
           {/* Location Filter Chip */}
           <button
             onClick={() => setIsLocationSheetOpen(true)}
-            className={`min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer border active:scale-95 ${
+            className={`min-h-[44px] flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-full whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer border active:scale-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
               activeLocationFilter
-                ? 'bg-[#4C8DFF] text-white border-[#4C8DFF] font-semibold shadow-xs'
-                : 'border border-[#1E2846] text-[#8A94B3] hover:text-[#F2F5FF] hover:border-[#4C8DFF]/40 bg-[#121A30]/50 font-medium'
+                ? 'bg-accent text-white border-accent font-semibold shadow-xs'
+                : 'chip-inactive'
             }`}
           >
-            <MapPin className="w-3.5 h-3.5" strokeWidth={1.8} />
+            <MapPin className="w-3.5 h-3.5 text-text-muted" strokeWidth={1.8} />
             <span>{activeLocationFilter || 'Campus Location'}</span>
             {activeLocationFilter && (
               <span
@@ -223,14 +223,14 @@ export const HomeView: React.FC = () => {
               <PostCardSkeleton />
             </>
           ) : filteredPosts.length === 0 ? (
-            <div className="py-16 px-4 text-center rounded-[20px] bg-white dark:bg-[#121A30] border border-slate-200 dark:border-[#1E2846]">
-              <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-[#1E2846] text-[#4C8DFF] flex items-center justify-center mx-auto mb-3">
+            <div className="card-theme py-16 px-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-accent-soft text-accent flex items-center justify-center mx-auto mb-3">
                 <MessageSquare className="w-6 h-6" strokeWidth={1.8} />
               </div>
-              <h4 className="text-sm font-bold text-[#0F1419] dark:text-[#F2F5FF]">
+              <h4 className="text-sm font-bold text-text">
                 No conversations in this feed yet
               </h4>
-              <p className="text-xs text-[#536471] dark:text-[#8A94B3] max-w-xs mx-auto mt-1 leading-relaxed">
+              <p className="text-xs text-text-muted max-w-xs mx-auto mt-1 leading-relaxed">
                 Be the first to share an academic question, study guide, or campus gist!
               </p>
             </div>
@@ -247,7 +247,7 @@ export const HomeView: React.FC = () => {
                   }}
                 />
 
-                {/* Natural Sponsored Ads Placement (Interleaved cleanly) */}
+                {/* Natural Sponsored Ads Placement */}
                 {idx === 1 && activeAds[0] && (
                   <AdCard key={activeAds[0].id} ad={activeAds[0]} />
                 )}

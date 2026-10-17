@@ -41,14 +41,16 @@
           }
           if (isDark) {
             document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
             document.documentElement.style.colorScheme = 'dark';
             var meta = document.getElementById('meta-theme-color');
             if (meta) meta.setAttribute('content', '#0A0F1E');
           } else {
             document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
             document.documentElement.style.colorScheme = 'light';
             var meta = document.getElementById('meta-theme-color');
-            if (meta) meta.setAttribute('content', '#FFFFFF');
+            if (meta) meta.setAttribute('content', '#F4F7FC');
           }
 
           var savedTextSize = localStorage.getItem('univyx_text_size') || '15';

@@ -78,44 +78,45 @@ export const LocationPickerSheet: React.FC<LocationPickerSheetProps> = ({
         aria-modal="true"
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-[#EFF3F4] dark:border-[#2F3336] flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#1D9BF0]/10 flex items-center justify-center text-[#1D9BF0]">
-              <MapPin className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-full bg-accent-soft flex items-center justify-center text-accent">
+              <MapPin className="w-4 h-4 text-accent" strokeWidth={1.8} />
             </div>
             <div>
-              <h2 className="text-[17px] font-bold text-[#0F1419] dark:text-[#E7E9EA]">
+              <h2 className="text-[17px] font-bold text-text">
                 {title}
               </h2>
-              <p className="text-[12px] text-[#536471] dark:text-[#71767B]">
+              <p className="text-[12px] text-text-muted">
                 Private university campuses & verified student areas only
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+            aria-label="Close"
+            className="p-2 rounded-full hover:bg-accent-soft/40 text-text-muted hover:text-text transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-text-muted" strokeWidth={1.8} />
           </button>
         </div>
 
         {/* Search & "Use Current Area" */}
-        <div className="p-4 space-y-3 border-b border-[#EFF3F4] dark:border-[#2F3336] bg-slate-50/50 dark:bg-black/20">
+        <div className="p-4 space-y-3 border-b border-border bg-bg/50">
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-3 text-[#536471] dark:text-[#71767B]" />
+            <Search className="w-4 h-4 absolute left-3 top-3 text-text-muted" strokeWidth={1.8} />
             <input
               type="text"
               placeholder="Search private campus or student area..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-[14px] rounded-xl bg-white dark:bg-[#000000] border border-slate-200 dark:border-slate-800 text-[#0F1419] dark:text-[#E7E9EA] placeholder-[#536471] focus:outline-none focus:border-[#1D9BF0]"
+              className="w-full pl-9 pr-4 py-2 text-[14px] rounded-xl bg-surface border border-border text-text placeholder:text-text-muted focus:outline-none focus:border-accent"
               autoFocus
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-2.5 text-xs text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-2.5 text-xs text-text-muted hover:text-text"
               >
                 Clear
               </button>
@@ -126,9 +127,9 @@ export const LocationPickerSheet: React.FC<LocationPickerSheetProps> = ({
             <button
               onClick={handleUseCurrentArea}
               disabled={isLocating}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#1D9BF0]/10 hover:bg-[#1D9BF0]/15 text-[#1D9BF0] font-semibold text-[13px] border border-[#1D9BF0]/20 transition-colors cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-accent-soft hover:opacity-90 text-accent font-semibold text-[13px] border border-border transition-colors cursor-pointer"
             >
-              <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
+              <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} strokeWidth={1.8} />
               <span>{isLocating ? 'Detecting area...' : 'Use my current area'}</span>
             </button>
 
@@ -138,9 +139,9 @@ export const LocationPickerSheet: React.FC<LocationPickerSheetProps> = ({
                   onSelectLocation(undefined);
                   onClose();
                 }}
-                className="py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40 text-[13px] font-medium text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+                className="py-2 px-3 rounded-xl border border-border text-xs text-text-muted hover:text-text cursor-pointer"
               >
-                Clear Location
+                Clear filter
               </button>
             )}
           </div>

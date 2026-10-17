@@ -107,10 +107,10 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
               <stop offset="100%" stopColor="#D4A017" />
             </linearGradient>
 
-            {/* Primary Blue #4C8DFF */}
+            {/* Primary Blue Accent Gradient */}
             <linearGradient id={`blue-grad-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#4C8DFF" />
-              <stop offset="100%" stopColor="#7B5CFF" />
+              <stop offset="0%" stopColor="var(--accent)" />
+              <stop offset="100%" stopColor="var(--accent-2)" />
             </linearGradient>
           </defs>
 
@@ -118,7 +118,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
           <path
             d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.67-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91C2.63 9.33 1.75 10.57 1.75 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.27 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.34-2.19c1.39.46 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34z"
             fill={isGold ? `url(#gold-grad-${uniqueId})` : `url(#blue-grad-${uniqueId})`}
-            stroke={isGold ? '#CA8A04' : '#4C8DFF'}
+            stroke={isGold ? '#CA8A04' : 'var(--accent)'}
             strokeWidth="0.65"
           />
 
@@ -135,14 +135,14 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
         <div
           role="tooltip"
           onClick={(e) => e.stopPropagation()}
-          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 max-w-[85vw] p-3 rounded-xl bg-white dark:bg-[#121A30] text-slate-900 dark:text-[#F2F5FF] border border-slate-200 dark:border-[#1E2846] shadow-xl text-left pointer-events-auto animate-in fade-in zoom-in-95 duration-150"
+          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 max-w-[85vw] p-3 rounded-2xl bg-surface text-text border border-border shadow-xl text-left pointer-events-auto animate-in fade-in zoom-in-95 duration-150"
         >
           <div className="flex items-start gap-2">
             <div
               className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                 isGold
                   ? 'bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-700'
-                  : 'bg-blue-100 dark:bg-[#4C8DFF]/20 text-[#4C8DFF] border border-blue-300 dark:border-[#4C8DFF]/40'
+                  : 'bg-accent-soft text-accent border border-accent/30'
               }`}
             >
               <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5">
@@ -181,7 +181,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
           </div>
 
           {/* Downward Caret Arrow */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-white dark:bg-[#16181C] border-r border-b border-slate-200 dark:border-slate-700 rotate-45 -mt-1.5" />
+          <div className="absolute top-full left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-surface border-r border-b border-border rotate-45 -mt-1.5" />
         </div>
       )}
     </span>
