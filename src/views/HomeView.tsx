@@ -57,78 +57,49 @@ export const HomeView: React.FC = () => {
 
   return (
     <div className="w-full min-w-0">
-      {/* Feed Tabs: For You, Following, My University, Latest */}
-      <div className="sticky top-14 z-20 bg-white/95 dark:bg-[#0A0A0A]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-        <div className="flex items-center justify-around text-xs font-semibold border-b border-slate-100 dark:border-slate-800/60">
-          <button
-            onClick={() => setFeedMode('for_you')}
-            className={`flex-1 py-3 text-center transition-colors relative ${
-              feedMode === 'for_you'
-                ? 'text-slate-900 dark:text-white'
-                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-            }`}
-          >
-            <span>For You</span>
-            {feedMode === 'for_you' && (
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-[#1D9BF0] rounded-full" />
-            )}
-          </button>
-
-          <button
-            onClick={() => setFeedMode('following')}
-            className={`flex-1 py-3 text-center transition-colors relative ${
-              feedMode === 'following'
-                ? 'text-slate-900 dark:text-white'
-                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-            }`}
-          >
-            <span>Following</span>
-            {feedMode === 'following' && (
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-[#1D9BF0] rounded-full" />
-            )}
-          </button>
-
-          <button
-            onClick={() => setFeedMode('my_university')}
-            className={`flex-1 py-3 text-center transition-colors relative ${
-              feedMode === 'my_university'
-                ? 'text-slate-900 dark:text-white'
-                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-            }`}
-          >
-            <span>My University</span>
-            {feedMode === 'my_university' && (
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-[#1D9BF0] rounded-full" />
-            )}
-          </button>
-
-          <button
-            onClick={() => setFeedMode('latest')}
-            className={`flex-1 py-3 text-center transition-colors relative ${
-              feedMode === 'latest'
-                ? 'text-slate-900 dark:text-white'
-                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-            }`}
-          >
-            <span>Latest</span>
-            {feedMode === 'latest' && (
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-[#1D9BF0] rounded-full" />
-            )}
-          </button>
+      {/* Feed Tabs: For You, Following, My University, Latest (15px, weight 600, active 700) */}
+      <div className="sticky top-14 z-20 bg-white/95 dark:bg-[#000000]/95 backdrop-blur-md border-b border-[#EFF3F4] dark:border-[#2F3336]">
+        <div className="flex items-center justify-around border-b border-[#EFF3F4] dark:border-[#2F3336]">
+          {[
+            { id: 'for_you', label: 'For You' },
+            { id: 'following', label: 'Following' },
+            { id: 'my_university', label: 'My University' },
+            { id: 'latest', label: 'Latest' }
+          ].map((tab) => {
+            const isActive = feedMode === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setFeedMode(tab.id as any)}
+                className={`tab-item flex-1 py-3.5 text-center transition-colors relative cursor-pointer ${
+                  isActive
+                    ? 'tab-item-active text-[#0F1419] dark:text-[#E7E9EA] font-bold'
+                    : 'text-[#536471] dark:text-[#71767B] font-semibold hover:bg-black/[0.02] dark:hover:bg-white/[0.02]'
+                }`}
+              >
+                <span className="relative inline-block px-1">
+                  {tab.label}
+                  {isActive && (
+                    <span className="absolute -bottom-3.5 left-0 right-0 h-1 bg-[#1D9BF0] rounded-full" />
+                  )}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Category Horizontal Filter Buttons */}
-        <div className="flex items-center gap-1.5 px-3 py-2 overflow-x-auto no-scrollbar">
+        {/* Category Horizontal Filter Buttons (15px, weight 600) */}
+        <div className="flex items-center gap-2 px-3 py-2.5 overflow-x-auto no-scrollbar">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap transition-colors shrink-0 ${
+                className={`px-3.5 py-1.5 text-[15px] rounded-full whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
                   isSelected
-                    ? 'bg-[#1D9BF0] text-white'
-                    : 'bg-slate-100 dark:bg-[#16181C] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+                    ? 'bg-[#0F1419] text-white dark:bg-[#E7E9EA] dark:text-[#0F1419] font-bold'
+                    : 'bg-slate-100 dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] font-semibold hover:bg-slate-200 dark:hover:bg-slate-800'
                 }`}
               >
                 {cat.label}

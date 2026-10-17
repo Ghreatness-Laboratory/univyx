@@ -162,36 +162,36 @@ export const StoreView: React.FC = () => {
               <ShoppingBag className="w-4 h-4" />
               <span>Campus Commerce & Student Vendors</span>
             </div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="page-title text-[20px] font-extrabold text-[#0F1419] dark:text-[#E7E9EA] tracking-tight">
               univyX Store
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-[13px] text-[#536471] dark:text-[#71767B] mt-0.5">
               Discover student-friendly essentials, textbooks, tech accessories, and thrift fashion with direct campus pickup.
             </p>
           </div>
 
           <button
             onClick={() => setShowListModal(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1D9BF0] text-white text-xs font-semibold hover:bg-[#1A8CD8] active:scale-95 transition-all shadow-xs shrink-0"
+            className="btn-pill flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1D9BF0] text-white text-[15px] font-bold hover:bg-[#1A8CD8] active:scale-95 transition-all shadow-xs shrink-0 cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">List an Item</span>
           </button>
         </div>
       </div>
 
       {/* Categories Horizontal Carousel */}
-      <div className="flex items-center gap-1.5 px-3 py-2 bg-slate-50 dark:bg-[#111316] border-b border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 dark:bg-[#000000] border-b border-[#EFF3F4] dark:border-[#2F3336] overflow-x-auto no-scrollbar">
         {productCategories.map((cat) => {
           const isSelected = categoryFilter === cat.id;
           return (
             <button
               key={cat.id}
               onClick={() => setCategoryFilter(cat.id)}
-              className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap transition-colors shrink-0 ${
+              className={`btn-pill px-4 py-1.5 text-[15px] rounded-full whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
                 isSelected
-                  ? 'bg-[#1D9BF0] text-white'
-                  : 'bg-white dark:bg-[#16181C] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+                  : 'bg-white dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold'
               }`}
             >
               {cat.label}

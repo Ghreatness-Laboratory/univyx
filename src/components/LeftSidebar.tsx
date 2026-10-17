@@ -59,7 +59,7 @@ export const LeftSidebar: React.FC = () => {
             </svg>
           </div>
           <div>
-            <div className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white font-['Outfit'] leading-none">
+            <div className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
               Univyx
             </div>
             <div className="text-[10px] text-slate-400 font-medium tracking-tight mt-1">

@@ -224,24 +224,24 @@ export const AcademicsView: React.FC = () => {
               <GraduationCap className="w-4 h-4" />
               <span>Academic Knowledge & Opportunity Engine</span>
             </div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="page-title text-[20px] font-extrabold text-[#0F1419] dark:text-[#E7E9EA] tracking-tight">
               Academics & CIVYN
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-[13px] text-[#536471] dark:text-[#71767B] mt-0.5">
               Course discussions, study resources, AI mentoring, and verified student internships.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Section Sub-Navigation Tabs */}
-      <div className="flex items-center gap-1 px-3 py-2 bg-slate-50/70 dark:bg-[#111316] border-b border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar text-xs">
+      {/* Section Sub-Navigation Tabs (15px, weight 600, active 700) */}
+      <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 dark:bg-[#000000] border-b border-[#EFF3F4] dark:border-[#2F3336] overflow-x-auto no-scrollbar">
         <button
           onClick={() => setAcademicTab('feed')}
-          className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
+          className={`btn-pill px-4 py-1.5 text-[15px] rounded-full whitespace-nowrap transition-colors cursor-pointer ${
             academicTab === 'feed'
-              ? 'bg-white dark:bg-[#16181C] text-[#1D9BF0] shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-white dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold'
           }`}
         >
           Academic Feed
@@ -249,10 +249,10 @@ export const AcademicsView: React.FC = () => {
 
         <button
           onClick={() => setAcademicTab('civyn')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
+          className={`btn-pill flex items-center gap-1.5 px-4 py-1.5 text-[15px] rounded-full whitespace-nowrap transition-colors cursor-pointer ${
             academicTab === 'civyn'
-              ? 'bg-[#1D9BF0] text-white shadow-xs'
-              : 'text-slate-700 dark:text-slate-300 hover:text-[#1D9BF0]'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-white dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold'
           }`}
         >
           <Briefcase className="w-3.5 h-3.5" />
@@ -261,10 +261,10 @@ export const AcademicsView: React.FC = () => {
 
         <button
           onClick={() => setAcademicTab('ai_assistant')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
+          className={`btn-pill flex items-center gap-1.5 px-4 py-1.5 text-[15px] rounded-full whitespace-nowrap transition-colors cursor-pointer ${
             academicTab === 'ai_assistant'
-              ? 'bg-white dark:bg-[#16181C] text-[#1D9BF0] shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-white dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold'
           }`}
         >
           <Bot className="w-3.5 h-3.5 text-[#1D9BF0]" />
@@ -273,10 +273,10 @@ export const AcademicsView: React.FC = () => {
 
         <button
           onClick={() => setAcademicTab('knowledge')}
-          className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
+          className={`btn-pill px-4 py-1.5 text-[15px] rounded-full whitespace-nowrap transition-colors cursor-pointer ${
             academicTab === 'knowledge'
-              ? 'bg-white dark:bg-[#16181C] text-[#1D9BF0] shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-white dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold'
           }`}
         >
           Knowledge Directory

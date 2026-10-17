@@ -12,7 +12,8 @@ import {
   Trash2,
   Edit2,
   Flag,
-  CornerDownRight
+  CornerDownRight,
+  BarChart2
 } from 'lucide-react';
 import { VerifiedBadge } from './VerifiedBadge';
 
@@ -131,18 +132,18 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
   };
 
   return (
-    <article className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0A0A0A] hover:bg-slate-50/50 dark:hover:bg-[#111316] transition-colors relative">
+    <article className="p-3.5 sm:p-4 border-b border-[#EFF3F4] dark:border-[#2F3336] bg-white dark:bg-[#000000] hover:bg-black/[0.015] dark:hover:bg-white/[0.02] transition-colors relative">
       {/* Pinned note if pinned */}
       {isPinned && (
-        <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-2 pl-12 font-medium">
+        <div className="flex items-center gap-1.5 text-[13px] font-bold text-[#536471] dark:text-[#71767B] mb-1.5 pl-13">
           <span>Pinned Announcement</span>
         </div>
       )}
 
       {/* Repost indicator with VerifiedBadge */}
       {isReposted && (
-        <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-2 pl-12 font-medium">
-          <Repeat2 className="w-3.5 h-3.5 text-emerald-500" />
+        <div className="flex items-center gap-1.5 text-[13px] font-bold text-[#536471] dark:text-[#71767B] mb-1.5 pl-13">
+          <Repeat2 className="w-4 h-4 text-emerald-500" />
           <span>You reposted</span>
           <VerifiedBadge
             type={currentUser?.verificationTier || currentUser?.verification_tier || 'none'}
@@ -151,20 +152,24 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
         </div>
       )}
 
+      {/* 40px round avatar + 12px gap (gap-3 = 12px) */}
       <div className="flex items-start gap-3">
-        {/* Author Avatar Initial */}
-        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700 text-sm">
+        {/* Author Avatar: exactly 40px round (w-10 h-10 = 40px) */}
+        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[15px] select-none">
           {authorInitial}
         </div>
 
         {/* Content Body */}
         <div className="flex-1 min-w-0">
-          {/* Header Metadata */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 flex-wrap text-xs">
-              <span className="font-semibold text-slate-900 dark:text-white text-sm hover:underline cursor-pointer">
+          {/* Header Metadata: Name and handle on ONE line with ellipsis */}
+          <div className="flex items-center justify-between gap-1 min-w-0 leading-tight">
+            <div className="flex items-center gap-1 min-w-0 flex-1 overflow-hidden">
+              {/* Display name: 15px, weight 700 */}
+              <span className="display-name font-bold text-[15px] text-[#0F1419] dark:text-[#E7E9EA] truncate shrink-0 max-w-[140px] sm:max-w-[200px] hover:underline cursor-pointer">
                 {authorName}
               </span>
+
+              {/* Verified Badge */}
               <VerifiedBadge
                 type={
                   post.verificationTier ||
@@ -173,26 +178,19 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
                   post.author?.verification_tier ||
                   (isVerified ? 'blue' : 'none')
                 }
-                size="medium"
+                size="small"
               />
-              <span className="text-slate-500 dark:text-slate-400">
+
+              {/* @handle: 15px, weight 400, secondary color */}
+              <span className="handle-text font-normal text-[15px] text-[#536471] dark:text-[#71767B] truncate shrink min-w-0">
                 @{authorUsername}
               </span>
-              <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">·</span>
-              {universityName && (
-                <>
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">
-                    {universityName}
-                  </span>
-                  <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">·</span>
-                </>
-              )}
-              <span className="text-slate-400 dark:text-slate-500">
+
+              <span className="text-[#536471] dark:text-[#71767B] shrink-0" aria-hidden="true">·</span>
+
+              {/* Timestamp: 15px, weight 400, secondary color */}
+              <span className="timestamp-text font-normal text-[15px] text-[#536471] dark:text-[#71767B] shrink-0 whitespace-nowrap">
                 {formatTime(createdAtTime)}
-              </span>
-              <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">·</span>
-              <span className="text-slate-500 dark:text-slate-400 capitalize">
-                {post.category.replace('_', ' ')}
               </span>
             </div>
 
@@ -279,7 +277,8 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
               </div>
             </div>
           ) : (
-            <p className="mt-1.5 post-text text-slate-800 dark:text-slate-200 leading-relaxed break-words whitespace-pre-wrap">
+            /* Post text underneath: 15px / 20px line-height, weight 400 */
+            <p className="mt-1 post-text text-[#0F1419] dark:text-[#E7E9EA] break-words whitespace-pre-wrap">
               {renderFormattedText(post.content)}
             </p>
           )}
@@ -302,17 +301,17 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
             </div>
           )}
 
-          {/* Action Row: Comments, Repost/Quote, Like, Bookmark, Share */}
-          <div className="mt-3.5 flex items-center justify-between max-w-md text-slate-500 dark:text-slate-400 text-xs">
-            {/* Comment */}
+          {/* Action Row: Evenly spaced row, action counts in 13px secondary color */}
+          <div className="mt-3 flex items-center justify-between w-full max-w-md text-[#536471] dark:text-[#71767B]">
+            {/* Reply / Comment */}
             <button
               onClick={() => onOpenComments && onOpenComments(post)}
-              className="flex items-center gap-1.5 hover:text-[#1D9BF0] transition-colors group"
+              className="flex items-center gap-1 hover:text-[#1D9BF0] transition-colors group cursor-pointer"
             >
-              <div className="p-1.5 rounded-full group-hover:bg-[#1D9BF0]/10 transition-colors">
-                <MessageCircle className="w-4 h-4" />
+              <div className="p-2 -m-2 rounded-full group-hover:bg-[#1D9BF0]/10 transition-colors">
+                <MessageCircle className="w-4.5 h-4.5" />
               </div>
-              <span className="tabular-nums font-medium">{commentsCount}</span>
+              <span className="action-count tabular-nums ml-1.5">{commentsCount}</span>
             </button>
 
             {/* Repost / Quote */}
@@ -320,64 +319,69 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
               <button
                 onClick={() => repostPost(post.id)}
                 title="Repost"
-                className={`flex items-center gap-1.5 transition-colors group ${
+                className={`flex items-center gap-1 transition-colors group cursor-pointer ${
                   isReposted ? 'text-green-500 font-semibold' : 'hover:text-green-500'
                 }`}
               >
-                <div className="p-1.5 rounded-full group-hover:bg-green-500/10 transition-colors">
-                  <Repeat2 className="w-4 h-4" />
+                <div className="p-2 -m-2 rounded-full group-hover:bg-green-500/10 transition-colors">
+                  <Repeat2 className="w-4.5 h-4.5" />
                 </div>
-                <span className="tabular-nums font-medium">{repostsCount}</span>
+                <span className={`action-count tabular-nums ml-1.5 ${isReposted ? '!text-green-500 font-semibold' : ''}`}>
+                  {repostsCount}
+                </span>
               </button>
-              {onQuote && (
-                <button
-                  onClick={() => onQuote(post)}
-                  title="Quote post"
-                  className="text-[11px] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 pl-0.5"
-                >
-                  Quote
-                </button>
-              )}
             </div>
 
             {/* Like */}
             <button
               onClick={() => toggleLikePost(post.id)}
-              className={`flex items-center gap-1.5 transition-colors group ${
+              className={`flex items-center gap-1 transition-colors group cursor-pointer ${
                 isLiked ? 'text-rose-500 font-semibold' : 'hover:text-rose-500'
               }`}
             >
-              <div className="p-1.5 rounded-full group-hover:bg-rose-500/10 transition-colors">
+              <div className="p-2 -m-2 rounded-full group-hover:bg-rose-500/10 transition-colors">
                 <Heart
-                  className={`w-4 h-4 transition-transform ${
-                    isLiked ? 'fill-rose-500 scale-110' : ''
+                  className={`w-4.5 h-4.5 transition-transform ${
+                    isLiked ? 'fill-rose-500 scale-110 text-rose-500' : ''
                   }`}
                 />
               </div>
-              <span className="tabular-nums font-medium">{likesCount}</span>
+              <span className={`action-count tabular-nums ml-1.5 ${isLiked ? '!text-rose-500 font-semibold' : ''}`}>
+                {likesCount}
+              </span>
             </button>
 
-            {/* Bookmark */}
-            <button
-              onClick={() => toggleBookmarkPost(post.id)}
-              title={isBookmarked ? 'Remove Bookmark' : 'Bookmark Post'}
-              className={`p-1.5 rounded-full transition-colors ${
-                isBookmarked
-                  ? 'text-[#1D9BF0] bg-[#1D9BF0]/10'
-                  : 'hover:text-[#1D9BF0] hover:bg-[#1D9BF0]/10'
-              }`}
-            >
-              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-[#1D9BF0]' : ''}`} />
-            </button>
+            {/* Views Count: 13px, secondary color */}
+            <div className="flex items-center gap-1 hover:text-[#1D9BF0] transition-colors group cursor-default select-none">
+              <div className="p-2 -m-2 rounded-full group-hover:bg-[#1D9BF0]/10 transition-colors">
+                <BarChart2 className="w-4.5 h-4.5" />
+              </div>
+              <span className="action-count tabular-nums ml-1.5">
+                {(likesCount * 8 + commentsCount * 12 + 14).toLocaleString()}
+              </span>
+            </div>
 
-            {/* Share */}
-            <button
-              onClick={handleShare}
-              title="Share post"
-              className="p-1.5 rounded-full hover:text-[#1D9BF0] hover:bg-[#1D9BF0]/10 transition-colors"
-            >
-              <Share2 className="w-4 h-4" />
-            </button>
+            {/* Bookmark & Share */}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => toggleBookmarkPost(post.id)}
+                title={isBookmarked ? 'Remove Bookmark' : 'Bookmark Post'}
+                className={`p-2 -m-2 rounded-full transition-colors cursor-pointer ${
+                  isBookmarked
+                    ? 'text-[#1D9BF0] bg-[#1D9BF0]/10'
+                    : 'hover:text-[#1D9BF0] hover:bg-[#1D9BF0]/10'
+                }`}
+              >
+                <Bookmark className={`w-4.5 h-4.5 ${isBookmarked ? 'fill-[#1D9BF0]' : ''}`} />
+              </button>
+              <button
+                onClick={handleShare}
+                title="Share post"
+                className="p-2 -m-2 ml-1 rounded-full hover:text-[#1D9BF0] hover:bg-[#1D9BF0]/10 transition-colors cursor-pointer"
+              >
+                <Share2 className="w-4.5 h-4.5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

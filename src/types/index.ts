@@ -182,5 +182,6 @@ export interface NotificationItem {
 }
 
 // Typography & Appearance Preferences
-export type FontPreference = 'jakarta' | 'inter' | 'roboto' | 'georgia' | 'dyslexic' | 'system';
+export type FontPreference = 'figtree' | 'jakarta' | 'inter' | 'roboto' | 'georgia' | 'dyslexic' | 'system';
 export type ThemePreference = 'light' | 'dark' | 'system';
+export type TextSizePreference = 'small' | 'default' | 'large' | 'extra-large';

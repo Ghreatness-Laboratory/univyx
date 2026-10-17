@@ -40,12 +40,12 @@ export const NotificationsView: React.FC = () => {
   return (
     <div className="w-full min-w-0 p-4 sm:p-6 space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex items-center justify-between pb-3 border-b border-[#EFF3F4] dark:border-[#2F3336]">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="page-title text-[20px] font-extrabold text-[#0F1419] dark:text-[#E7E9EA] tracking-tight">
             Notifications
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-[13px] text-[#536471] dark:text-[#71767B] mt-0.5">
             Real-time interactions, mentions, and official campus announcements.
           </p>
         </div>
@@ -53,9 +53,9 @@ export const NotificationsView: React.FC = () => {
         {notifications.length > 0 && (
           <button
             onClick={markAllNotificationsRead}
-            className="flex items-center gap-1 text-xs text-[#1D9BF0] hover:underline font-medium"
+            className="flex items-center gap-1 text-[13px] text-[#1D9BF0] hover:underline font-semibold cursor-pointer"
           >
-            <CheckCheck className="w-3.5 h-3.5" />
+            <CheckCheck className="w-4 h-4" />
             <span>Mark all as read</span>
           </button>
         )}
@@ -64,7 +64,7 @@ export const NotificationsView: React.FC = () => {
       {/* Notifications list */}
       <div className="space-y-2.5">
         {notifications.length === 0 ? (
-          <div className="py-16 text-center text-xs text-slate-400">
+          <div className="py-16 text-center text-[15px] text-[#536471] dark:text-[#71767B]">
             You are all caught up! No new notifications.
           </div>
         ) : (
@@ -72,30 +72,32 @@ export const NotificationsView: React.FC = () => {
             <div
               key={notif.id}
               onClick={() => markNotificationRead(notif.id)}
-              className={`p-3.5 rounded-2xl border transition-colors flex items-start gap-3 cursor-pointer text-xs ${
+              className={`p-3.5 rounded-2xl border transition-colors flex items-start gap-3 cursor-pointer ${
                 notif.is_read
-                  ? 'bg-white dark:bg-[#0A0A0A] border-slate-200 dark:border-slate-800/80 text-slate-600 dark:text-slate-400'
-                  : 'bg-blue-50/50 dark:bg-[#16181C] border-[#1D9BF0]/30 text-slate-800 dark:text-slate-200 font-medium'
+                  ? 'bg-white dark:bg-[#000000] border-[#EFF3F4] dark:border-[#2F3336] text-[#536471] dark:text-[#71767B]'
+                  : 'bg-blue-50/40 dark:bg-[#16181C] border-[#1D9BF0]/30 text-[#0F1419] dark:text-[#E7E9EA]'
               }`}
             >
-              <div className="p-2 rounded-xl bg-slate-100 dark:bg-[#0A0A0A] shrink-0 mt-0.5">
+              <div className="p-2.5 rounded-full bg-slate-100 dark:bg-[#16181C] shrink-0 mt-0.5">
                 {getIcon(notif.type)}
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
-                  <div className="flex items-center gap-1 font-semibold text-slate-900 dark:text-white">
-                    <span>{notif.actor_name || notif.actorName || 'Scholar'}</span>
+                <div className="flex items-center justify-between text-[13px] text-[#536471] dark:text-[#71767B] mb-0.5">
+                  <div className="flex items-center gap-1">
+                    <span className="display-name font-bold text-[15px] text-[#0F1419] dark:text-[#E7E9EA]">
+                      {notif.actor_name || notif.actorName || 'Scholar'}
+                    </span>
                     <VerifiedBadge
                       type={notif.actor_verification_tier || notif.actorVerificationTier || 'none'}
                       size="small"
                     />
                   </div>
-                  <span>
+                  <span className="timestamp-text font-normal text-[13px] text-[#536471] dark:text-[#71767B]">
                     {new Date(notif.created_at || notif.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
-                <p className="text-slate-800 dark:text-slate-200 leading-normal">
+                <p className="post-text text-[15px] leading-[20px] text-[#0F1419] dark:text-[#E7E9EA]">
                   {notif.content}
                 </p>
               </div>

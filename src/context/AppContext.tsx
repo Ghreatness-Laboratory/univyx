@@ -6,6 +6,7 @@ import {
   NotificationItem,
   FontPreference,
   ThemePreference,
+  TextSizePreference,
   UserRole,
   ArenaAnnouncement,
   VerificationTier,
@@ -25,6 +26,8 @@ interface AppContextType {
   setTheme: (theme: ThemePreference) => void;
   font: FontPreference;
   setFont: (font: FontPreference) => void;
+  textSize: TextSizePreference;
+  setTextSize: (size: TextSizePreference) => void;
 
   // User Profile & Onboarding
   currentUser: UserProfile | null;
@@ -161,7 +164,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Font state
   const [font, setFontState] = useState<FontPreference>(() => {
-    return (localStorage.getItem('univyx_font') as FontPreference) || 'jakarta';
+    return (localStorage.getItem('univyx_font') as FontPreference) || 'figtree';
+  });
+
+  // Text Size state (Small 13px, Default 15px, Large 17px, Extra large 19px)
+  const [textSize, setTextSizeState] = useState<TextSizePreference>(() => {
+    return (localStorage.getItem('univyx_text_size') as TextSizePreference) || 'default';
   });
 
   // Current User
@@ -464,6 +472,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const setFont = (f: FontPreference) => {
     setFontState(f);
     showToast(`Typography set to ${f.charAt(0).toUpperCase() + f.slice(1)}`);
+  };
+
+  // Text Size synchronization
+  useEffect(() => {
+    localStorage.setItem('univyx_text_size', textSize);
+    document.documentElement.setAttribute('data-text-size', textSize);
+  }, [textSize]);
+
+  const setTextSize = (size: TextSizePreference) => {
+    setTextSizeState(size);
+    const labelMap: Record<TextSizePreference, string> = {
+      'small': 'Small (13px)',
+      'default': 'Default (15px)',
+      'large': 'Large (17px)',
+      'extra-large': 'Extra large (19px)'
+    };
+    showToast(`Text size set to ${labelMap[size]}`);
   };
 
   // Persist State
@@ -1106,7 +1131,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setVerificationTierForUser,
         gainFollowers,
         toastMessage,
-        showToast
+        showToast,
+        textSize,
+        setTextSize
       }}
     >
       {children}

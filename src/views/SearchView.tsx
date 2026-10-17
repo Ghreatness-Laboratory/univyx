@@ -156,23 +156,23 @@ export const SearchView: React.FC = () => {
       </div>
 
       {/* Filter Tabs & Optional Verified Filter Chip */}
-      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs pb-1">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
         <button
           onClick={() => setFilterType('all')}
-          className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 cursor-pointer ${
+          className={`btn-pill px-4 py-1.5 text-[15px] transition-colors shrink-0 cursor-pointer ${
             filterType === 'all'
-              ? 'bg-[#1D9BF0] text-white'
-              : 'bg-slate-100 dark:bg-[#16181C] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-slate-100 dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] font-semibold hover:bg-slate-200 dark:hover:bg-slate-800'
           }`}
         >
           All Results
         </button>
         <button
           onClick={() => setFilterType('people')}
-          className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 cursor-pointer flex items-center gap-1.5 ${
+          className={`btn-pill px-4 py-1.5 text-[15px] transition-colors shrink-0 cursor-pointer flex items-center gap-1.5 ${
             filterType === 'people'
-              ? 'bg-[#1D9BF0] text-white'
-              : 'bg-slate-100 dark:bg-[#16181C] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-slate-100 dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] font-semibold hover:bg-slate-200 dark:hover:bg-slate-800'
           }`}
         >
           <Users className="w-3.5 h-3.5" />
@@ -180,49 +180,49 @@ export const SearchView: React.FC = () => {
         </button>
         <button
           onClick={() => setFilterType('posts')}
-          className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 cursor-pointer ${
+          className={`btn-pill px-4 py-1.5 text-[15px] transition-colors shrink-0 cursor-pointer ${
             filterType === 'posts'
-              ? 'bg-[#1D9BF0] text-white'
-              : 'bg-slate-100 dark:bg-[#16181C] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-slate-100 dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] font-semibold hover:bg-slate-200 dark:hover:bg-slate-800'
           }`}
         >
           Posts ({matchingPosts.length})
         </button>
         <button
           onClick={() => setFilterType('opportunities')}
-          className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 cursor-pointer ${
+          className={`btn-pill px-4 py-1.5 text-[15px] transition-colors shrink-0 cursor-pointer ${
             filterType === 'opportunities'
-              ? 'bg-[#1D9BF0] text-white'
-              : 'bg-slate-100 dark:bg-[#16181C] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-slate-100 dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] font-semibold hover:bg-slate-200 dark:hover:bg-slate-800'
           }`}
         >
           CIVYN Careers ({matchingOpps.length})
         </button>
         <button
           onClick={() => setFilterType('products')}
-          className={`px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 cursor-pointer ${
+          className={`btn-pill px-4 py-1.5 text-[15px] transition-colors shrink-0 cursor-pointer ${
             filterType === 'products'
-              ? 'bg-[#1D9BF0] text-white'
-              : 'bg-slate-100 dark:bg-[#16181C] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-slate-100 dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] font-semibold hover:bg-slate-200 dark:hover:bg-slate-800'
           }`}
         >
           Marketplace ({matchingProducts.length})
         </button>
 
         {/* Optional Verified Filter Chip */}
-        <div className="h-4 w-px bg-slate-200 dark:bg-slate-700 mx-1 shrink-0" />
+        <div className="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1 shrink-0" />
         <button
           type="button"
           onClick={() => setOnlyVerified((prev) => !prev)}
-          className={`px-3 py-1.5 rounded-full font-medium transition-all shrink-0 flex items-center gap-1.5 cursor-pointer border ${
+          className={`btn-pill px-4 py-1.5 text-[15px] transition-all shrink-0 flex items-center gap-1.5 cursor-pointer border ${
             onlyVerified
-              ? 'bg-sky-50 dark:bg-sky-950/60 border-[#1D9BF0] text-[#1D9BF0] ring-1 ring-[#1D9BF0]/30'
-              : 'bg-white dark:bg-[#16181C] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300'
+              ? 'bg-[#1D9BF0]/10 border-[#1D9BF0] text-[#1D9BF0] font-bold'
+              : 'bg-white dark:bg-[#16181C] border-slate-200 dark:border-slate-800 text-[#536471] dark:text-[#71767B] font-semibold hover:border-slate-300'
           }`}
         >
           <VerifiedBadge type="blue" size="small" showPopover={false} />
           <span>Verified Accounts Only</span>
-          {onlyVerified && <Check className="w-3 h-3 text-[#1D9BF0]" />}
+          {onlyVerified && <Check className="w-3.5 h-3.5 text-[#1D9BF0]" />}
         </button>
       </div>
 
@@ -255,19 +255,19 @@ export const SearchView: React.FC = () => {
                       {account.name.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                      <div className="flex items-center gap-1 min-w-0 overflow-hidden leading-tight">
+                        <span className="display-name font-bold text-[15px] text-[#0F1419] dark:text-[#E7E9EA] truncate shrink-0 max-w-[140px] sm:max-w-[180px]">
                           {account.name}
                         </span>
                         <VerifiedBadge type={account.tier} size="small" />
+                        <span className="handle-text font-normal text-[15px] text-[#536471] dark:text-[#71767B] truncate shrink min-w-0">
+                          @{account.username}
+                        </span>
                       </div>
-                      <div className="text-[11px] text-slate-400 font-mono">
-                        @{account.username}
-                      </div>
-                      <div className="text-[11px] text-slate-500 mt-0.5 truncate">
+                      <div className="text-[13px] text-[#536471] dark:text-[#71767B] mt-0.5 truncate">
                         {account.university} · {account.followersCount.toLocaleString()} followers
                       </div>
-                      <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                      <p className="post-text text-[15px] leading-[20px] text-[#0F1419] dark:text-[#E7E9EA] mt-1 line-clamp-2">
                         {account.bio}
                       </p>
                     </div>

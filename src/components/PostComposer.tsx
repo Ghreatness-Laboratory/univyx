@@ -152,22 +152,22 @@ export const PostComposer: React.FC<PostComposerProps> = ({
   const quickTags = ['#CampusLife', '#Exams', '#Tech', '#Gist', '#Marketplace'];
 
   return (
-    <div className="p-4 bg-white dark:bg-[#0A0A0A] border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div className="p-4 bg-white dark:bg-[#000000] border-b border-[#EFF3F4] dark:border-[#2F3336] transition-colors">
       <div className="flex items-start gap-3">
-        {/* User Initial Avatar */}
-        <div className="w-10 h-10 rounded-full bg-[#1D9BF0]/15 text-[#1D9BF0] font-bold flex items-center justify-center shrink-0 border border-[#1D9BF0]/30">
+        {/* User Initial Avatar: exactly 40px round */}
+        <div className="w-10 h-10 rounded-full bg-[#1D9BF0]/15 text-[#1D9BF0] font-bold flex items-center justify-center shrink-0 border border-[#1D9BF0]/30 text-[15px] select-none">
           {(currentUser?.fullName || currentUser?.full_name || 'U').charAt(0).toUpperCase()}
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 min-w-0 relative">
-          {/* Post Textarea */}
+          {/* Post Textarea: 20px size, zero letter spacing, antialiased */}
           <textarea
             ref={textareaRef}
             value={content}
             onChange={handleTextChange}
-            placeholder="What's happening on your campus? Type @ to mention scholars or accounts..."
+            placeholder="What's happening on your campus?"
             rows={3}
-            className="w-full bg-transparent text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none resize-none leading-relaxed"
+            className="composer-input w-full bg-transparent text-[20px] leading-[26px] text-[#0F1419] dark:text-[#E7E9EA] placeholder-[#536471] dark:placeholder-[#71767B] focus:outline-none resize-none"
           />
 
           {/* Interactive Mention Suggestions Dropdown */}
@@ -321,18 +321,18 @@ export const PostComposer: React.FC<PostComposerProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                  className="px-3.5 py-1.5 text-[15px] font-bold text-[#536471] hover:text-[#0F1419] dark:hover:text-[#E7E9EA] rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
               )}
 
+              {/* Submit Button: 15px, weight 700, pill-shaped */}
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1D9BF0] text-white text-xs font-semibold hover:bg-[#1A8CD8] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 shadow-xs"
+                className="btn-pill flex items-center gap-1.5 px-5 py-2 bg-[#1D9BF0] text-white text-[15px] font-bold hover:bg-[#1A8CD8] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 shadow-xs cursor-pointer"
               >
-                <Send className="w-3 h-3" />
                 <span>Post</span>
               </button>
             </div>

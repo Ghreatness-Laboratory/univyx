@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
                 <circle cx="235" cy="260" r="30" stroke="none"/>
               </svg>
             </div>
-            <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white font-['Outfit'] select-none">
+            <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white select-none">
               Univyx
             </span>
           </button>

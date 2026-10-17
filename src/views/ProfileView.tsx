@@ -112,16 +112,16 @@ export const ProfileView: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                <h2 className="page-title text-[20px] font-extrabold text-[#0F1419] dark:text-[#E7E9EA]">
                   {currentUser.fullName || currentUser.full_name}
                 </h2>
                 <VerifiedBadge type={currentTier} size="large" />
-                <span className="text-xs text-slate-400 font-mono">
+                <span className="handle-text font-normal text-[15px] text-[#536471] dark:text-[#71767B]">
                   @{currentUser.username}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-slate-500 mt-1 flex-wrap">
+              <div className="flex items-center gap-2 text-[13px] text-[#536471] dark:text-[#71767B] mt-1 flex-wrap">
                 <span className="flex items-center gap-1">
                   <Building2 className="w-3.5 h-3.5 text-[#1D9BF0]" />
                   <span>{currentUser.universityName || currentUser.university_name || 'Campus Scholar'}</span>
@@ -141,7 +141,7 @@ export const ProfileView: React.FC = () => {
               </div>
 
               {currentUser.bio && (
-                <p className="text-xs text-slate-700 dark:text-slate-300 mt-2.5 max-w-lg leading-relaxed">
+                <p className="post-text text-[15px] leading-[20px] text-[#0F1419] dark:text-[#E7E9EA] mt-2.5 max-w-lg">
                   {currentUser.bio}
                 </p>
               )}
@@ -150,9 +150,9 @@ export const ProfileView: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('settings')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0 text-slate-700 dark:text-slate-300 transition-colors"
+            className="btn-pill flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 text-[15px] font-bold hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0 text-[#0F1419] dark:text-[#E7E9EA] transition-colors cursor-pointer"
           >
-            <Settings className="w-3.5 h-3.5" />
+            <Settings className="w-4 h-4 text-[#536471] dark:text-[#71767B]" />
             <span className="hidden sm:inline">Edit Profile</span>
           </button>
         </div>
@@ -264,30 +264,38 @@ export const ProfileView: React.FC = () => {
         )}
       </div>
 
-      {/* Profile Navigation Tabs: My Posts vs Saved Items */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 text-xs font-semibold bg-white dark:bg-[#0A0A0A]">
+      {/* Profile Navigation Tabs: My Posts vs Saved Items (15px, weight 600, active 700) */}
+      <div className="flex border-b border-[#EFF3F4] dark:border-[#2F3336] bg-white dark:bg-[#000000]">
         <button
           onClick={() => setProfileTab('posts')}
-          className={`flex-1 py-3 text-center transition-colors relative cursor-pointer ${
-            profileTab === 'posts' ? 'text-slate-900 dark:text-white' : 'text-slate-400'
+          className={`tab-item flex-1 py-3.5 text-center transition-colors relative cursor-pointer ${
+            profileTab === 'posts'
+              ? 'tab-item-active text-[#0F1419] dark:text-[#E7E9EA] font-bold'
+              : 'text-[#536471] dark:text-[#71767B] font-semibold hover:bg-black/[0.02] dark:hover:bg-white/[0.02]'
           }`}
         >
-          <span>My Posts ({userPosts.length})</span>
-          {profileTab === 'posts' && (
-            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-[#1D9BF0] rounded-full" />
-          )}
+          <span className="relative inline-block px-1">
+            My Posts ({userPosts.length})
+            {profileTab === 'posts' && (
+              <span className="absolute -bottom-3.5 left-0 right-0 h-1 bg-[#1D9BF0] rounded-full" />
+            )}
+          </span>
         </button>
 
         <button
           onClick={() => setProfileTab('bookmarks')}
-          className={`flex-1 py-3 text-center transition-colors relative cursor-pointer ${
-            profileTab === 'bookmarks' ? 'text-slate-900 dark:text-white' : 'text-slate-400'
+          className={`tab-item flex-1 py-3.5 text-center transition-colors relative cursor-pointer ${
+            profileTab === 'bookmarks'
+              ? 'tab-item-active text-[#0F1419] dark:text-[#E7E9EA] font-bold'
+              : 'text-[#536471] dark:text-[#71767B] font-semibold hover:bg-black/[0.02] dark:hover:bg-white/[0.02]'
           }`}
         >
-          <span>Saved Posts ({bookmarkedPosts.length})</span>
-          {profileTab === 'bookmarks' && (
-            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-[#1D9BF0] rounded-full" />
-          )}
+          <span className="relative inline-block px-1">
+            Saved Posts ({bookmarkedPosts.length})
+            {profileTab === 'bookmarks' && (
+              <span className="absolute -bottom-3.5 left-0 right-0 h-1 bg-[#1D9BF0] rounded-full" />
+            )}
+          </span>
         </button>
       </div>
 
@@ -343,24 +351,24 @@ export const ProfileView: React.FC = () => {
                   key={account.id}
                   className="p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-[#1f2329] transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700/60 flex items-start justify-between gap-3"
                 >
-                  <div className="flex items-start gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700 text-xs">
+                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[15px]">
                       {account.name.charAt(0)}
                     </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-semibold text-xs text-slate-900 dark:text-white truncate">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1 min-w-0 overflow-hidden leading-tight">
+                        <span className="display-name font-bold text-[15px] text-[#0F1419] dark:text-[#E7E9EA] truncate shrink-0 max-w-[130px] sm:max-w-[160px]">
                           {account.name}
                         </span>
                         <VerifiedBadge type={account.tier} size="small" />
+                        <span className="handle-text font-normal text-[15px] text-[#536471] dark:text-[#71767B] truncate shrink min-w-0">
+                          @{account.username}
+                        </span>
                       </div>
-                      <div className="text-[11px] text-slate-400 font-mono">
-                        @{account.username}
-                      </div>
-                      <div className="text-[11px] text-slate-500 mt-0.5 truncate">
+                      <div className="text-[13px] text-[#536471] dark:text-[#71767B] mt-0.5 truncate">
                         {account.university}
                       </div>
-                      <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-1">
+                      <p className="post-text text-[15px] leading-[20px] text-[#0F1419] dark:text-[#E7E9EA] mt-1 line-clamp-1">
                         {account.bio}
                       </p>
                     </div>
@@ -368,7 +376,7 @@ export const ProfileView: React.FC = () => {
 
                   <button
                     onClick={() => showToast(`Updated following state for @${account.username}`)}
-                    className="shrink-0 text-xs font-semibold px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors"
+                    className="btn-pill shrink-0 text-[15px] font-bold px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] transition-colors cursor-pointer"
                   >
                     {showFollowModal === 'followers' ? 'Follow Back' : 'Following'}
                   </button>

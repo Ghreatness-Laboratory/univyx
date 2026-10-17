@@ -134,18 +134,20 @@ export const RightSidebar: React.FC = () => {
           ].map((acc) => (
             <div
               key={acc.id}
-              className="flex items-center justify-between gap-2 text-xs group"
+              className="flex items-center justify-between gap-3 text-xs group"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700 text-[11px]">
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[15px]">
                   {acc.name.charAt(0)}
                 </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1 truncate font-semibold text-slate-900 dark:text-white">
-                    <span className="truncate group-hover:text-[#1D9BF0] transition-colors">{acc.name}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1 min-w-0 overflow-hidden leading-tight">
+                    <span className="display-name font-bold text-[15px] text-[#0F1419] dark:text-[#E7E9EA] truncate shrink-0 max-w-[100px] sm:max-w-[120px] group-hover:underline">
+                      {acc.name}
+                    </span>
                     <VerifiedBadge type={acc.tier} size="small" />
                   </div>
-                  <div className="text-[10px] text-slate-400 font-mono truncate">
+                  <div className="handle-text font-normal text-[15px] text-[#536471] dark:text-[#71767B] truncate">
                     @{acc.username}
                   </div>
                 </div>
@@ -159,10 +161,10 @@ export const RightSidebar: React.FC = () => {
                     [acc.id]: !prev[acc.id]
                   }));
                 }}
-                className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all shrink-0 cursor-pointer ${
+                className={`btn-pill text-[15px] font-bold px-4 py-1.5 rounded-full transition-all shrink-0 cursor-pointer ${
                   followedMap[acc.id]
-                    ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-                    : 'bg-[#1D9BF0] hover:bg-[#1A8CD8] text-white shadow-2xs active:scale-95'
+                    ? 'border border-slate-300 dark:border-slate-700 bg-transparent text-[#0F1419] dark:text-[#E7E9EA] hover:border-red-500 hover:text-red-500 hover:bg-red-500/10'
+                    : 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] hover:opacity-90 active:scale-95'
                 }`}
               >
                 {followedMap[acc.id] ? 'Following' : 'Follow'}

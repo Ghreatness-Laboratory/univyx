@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { FontPreference, ThemePreference, UserRole } from '../types';
+import { ThemePreference, TextSizePreference, UserRole } from '../types';
 import {
   Settings,
   Palette,
@@ -19,8 +19,8 @@ export const SettingsView: React.FC = () => {
   const {
     theme,
     setTheme,
-    font,
-    setFont,
+    textSize,
+    setTextSize,
     currentUser,
     setCurrentUser,
     universities,
@@ -36,14 +36,6 @@ export const SettingsView: React.FC = () => {
   const [academicLevel, setAcademicLevel] = useState(currentUser?.academic_level || '400L');
   const [userRole, setUserRole] = useState<UserRole>(currentUser?.role || 'user');
   const [uniId, setUniId] = useState(currentUser?.university_id || 'uni-1');
-
-  const fonts: { id: FontPreference; label: string; sample: string }[] = [
-    { id: 'inter', label: 'Inter (Modern Sans)', sample: 'Clean, neutral digital typography' },
-    { id: 'roboto', label: 'Roboto (Geometric)', sample: 'Structured neo-grotesque campus body' },
-    { id: 'georgia', label: 'Georgia (Academic Serif)', sample: 'Classic editorial and publication style' },
-    { id: 'dyslexic', label: 'Atkinson / Dyslexia Friendly', sample: 'High distinction letterforms for enhanced legibility' },
-    { id: 'system', label: 'System Native UI', sample: 'Default operating system sans' }
-  ];
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,40 +103,94 @@ export const SettingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Typography & Font Customization */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
-        <div className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white">
-          <Type className="w-4 h-4 text-[#1D9BF0]" />
-          <span>Typography & Font Family</span>
+      {/* 2. Text Size & Scaling (X Feed Typography) */}
+      <div className="p-5 rounded-2xl bg-white dark:bg-[#16181C] border border-[#EFF3F4] dark:border-[#2F3336] shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm font-bold text-[#0F1419] dark:text-[#E7E9EA]">
+            <Type className="w-4 h-4 text-[#1D9BF0]" />
+            <span>Text Size & Typography</span>
+          </div>
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[#536471] dark:text-[#71767B]">
+            Figtree (Default Font)
+          </span>
         </div>
-        <p className="text-xs text-slate-500">
-          Choose a typeface that maximizes your reading comfort during campus study sessions.
+        <p className="text-xs text-[#536471] dark:text-[#71767B]">
+          Adjust the font size of the Univyx feed. This scales post text, comments, headers, and UI elements across the entire app.
         </p>
 
-        <div className="space-y-2.5 pt-1">
-          {fonts.map((f) => (
-            <div
-              key={f.id}
-              onClick={() => setFont(f.id)}
-              className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                font === f.id
-                  ? 'border-[#1D9BF0] bg-[#1D9BF0]/10'
-                  : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0A0A0A] hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-xs text-slate-900 dark:text-white">
-                  {f.label}
-                </span>
-                {font === f.id && (
-                  <CheckCircle2 className="w-4 h-4 text-[#1D9BF0]" />
-                )}
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                {f.sample}
-              </p>
+        {/* Live Preview Card */}
+        <div className="p-3.5 rounded-2xl border border-[#EFF3F4] dark:border-[#2F3336] bg-slate-50/50 dark:bg-[#000000] space-y-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#536471] dark:text-[#71767B]">
+            Live Feed Preview
+          </span>
+          <div className="flex items-start gap-3 pt-1">
+            <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] font-bold flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[15px]">
+              U
             </div>
-          ))}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1 min-w-0 overflow-hidden leading-tight">
+                <span className="font-bold text-[15px] text-[#0F1419] dark:text-[#E7E9EA] truncate">
+                  Univyx Official
+                </span>
+                <span className="font-normal text-[15px] text-[#536471] dark:text-[#71767B] truncate">
+                  @univyx_official
+                </span>
+                <span className="text-[#536471] dark:text-[#71767B]">·</span>
+                <span className="font-normal text-[15px] text-[#536471] dark:text-[#71767B]">now</span>
+              </div>
+              <p className="mt-1 post-text text-[#0F1419] dark:text-[#E7E9EA] break-words">
+                At the heart of Univyx is a student experience designed for focus, speed, and real collegiate community.
+              </p>
+              <div className="mt-2.5 flex items-center gap-6 text-[#536471] dark:text-[#71767B]">
+                <span className="action-count">💬 42</span>
+                <span className="action-count">🔁 18</span>
+                <span className="action-count">❤️ 156</span>
+                <span className="action-count">📊 1.4K</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 4-Step Text Size Selector (Small 13px, Default 15px, Large 17px, Extra large 19px) */}
+        <div className="space-y-3 pt-1">
+          <div className="flex items-center justify-between px-2 text-[#536471] dark:text-[#71767B]">
+            <span className="text-xs font-bold">Aa (13px)</span>
+            <span className="text-lg font-bold">Aa (19px)</span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            {[
+              { id: 'small' as TextSizePreference, label: 'Small', size: '13px', desc: 'Compact' },
+              { id: 'default' as TextSizePreference, label: 'Default', size: '15px', desc: 'Standard X' },
+              { id: 'large' as TextSizePreference, label: 'Large', size: '17px', desc: 'Expanded' },
+              { id: 'extra-large' as TextSizePreference, label: 'Extra large', size: '19px', desc: 'Maximum' }
+            ].map((item) => {
+              const isSelected = textSize === item.id;
+              return (
+                <button
+                  type="button"
+                  key={item.id}
+                  onClick={() => setTextSize(item.id)}
+                  className={`p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
+                    isSelected
+                      ? 'border-[#1D9BF0] bg-[#1D9BF0]/10 text-[#1D9BF0] ring-1 ring-[#1D9BF0]'
+                      : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0A0A0A] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-center gap-1">
+                    <span className="font-bold text-sm">{item.label}</span>
+                    <span className="text-xs opacity-75">({item.size})</span>
+                  </div>
+                  <span className="text-[11px] text-[#536471] dark:text-[#71767B] block mt-0.5">
+                    {item.desc}
+                  </span>
+                  {isSelected && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#1D9BF0] mx-auto mt-1.5" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
