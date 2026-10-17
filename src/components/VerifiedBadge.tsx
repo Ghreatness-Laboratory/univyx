@@ -5,7 +5,7 @@ export type VerificationTier = 'none' | 'blue' | 'gold';
 export interface VerifiedBadgeProps {
   type?: VerificationTier;
   tier?: VerificationTier; // alias
-  size?: 'small' | 'medium' | 'large';
+  size?: 'xs' | 'small' | 'medium' | 'large';
   className?: string;
   showPopover?: boolean;
   inline?: boolean;
@@ -60,6 +60,7 @@ export const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({
 
   // Dimension classes
   const sizeClasses = {
+    xs: 'w-3 h-3 shrink-0',
     small: 'w-3.5 h-3.5 shrink-0',
     medium: 'w-4.5 h-4.5 shrink-0',
     large: 'w-6 h-6 shrink-0'

@@ -1,5 +1,5 @@
 import { PrivateUniversity } from '../data/universities';
-import { MockPost, PostCategory } from '../data/posts';
+import { MockPost, PostCategory, PostPoll, PollOption } from '../data/posts';
 import { CivynOpportunity, CivynType } from '../data/civyn';
 import { StoreProduct, StoreCategory } from '../data/store';
 import { AcademicTutorial, UniversityKnowledgeEntry } from '../data/academics';
