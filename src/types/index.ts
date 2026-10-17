@@ -52,7 +52,13 @@ export interface UserProfile {
   followingCount?: number;
   following_count?: number;
   store_name?: string;
+  location?: string;
+  showLocationOnProfile?: boolean;
+  allowLocationTags?: boolean;
 }
+
+export type { GistRoom, RoomParticipant, RoomTopic, RoomScope, RoomStatus } from '../data/rooms';
+export type { CampusLocation } from '../data/locations';
 
 // Re-exported Domain Models & Aliases
 export type Post = MockPost;

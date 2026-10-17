@@ -32,6 +32,7 @@ export interface StoreProduct {
   contact_url?: string;
   vendorVerificationTier?: 'none' | 'blue' | 'gold';
   vendor_verification_tier?: 'none' | 'blue' | 'gold';
+  location?: string;
   isAvailable?: boolean;
   is_available?: boolean;
   createdAt: string;
@@ -48,6 +49,7 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     category: 'perfumes',
     condition: 'new',
     pickupLocation: 'Hebron Cafeteria Quadrangle / CST Building',
+    location: 'Covenant University, Ota (Canaanland)',
     storeName: 'Covenant Scent Studio',
     vendorUniversityId: 'covenant',
     vendorUniversityName: 'Covenant University',
@@ -67,6 +69,7 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     category: 'gadgets',
     condition: 'new',
     pickupLocation: 'Babcock Student Union Building / Platinum Hostel Gate',
+    location: 'Babcock University, Ilishan-Remo (Main Campus)',
     storeName: 'Ilishan Tech Vault',
     vendorUniversityId: 'babcock',
     vendorUniversityName: 'Babcock University',
@@ -86,6 +89,7 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     category: 'books_stationery',
     condition: 'pre-owned',
     pickupLocation: 'ABUAD Law Faculty Complex, Ado-Ekiti',
+    location: 'Afe Babalola University (ABUAD), Ado-Ekiti',
     storeName: 'ABUAD Jurist Books',
     vendorUniversityId: 'abuad',
     vendorUniversityName: 'Afe Babalola University (ABUAD)',
@@ -105,6 +109,7 @@ export const INITIAL_PRODUCTS: StoreProduct[] = [
     category: 'essentials',
     condition: 'new',
     pickupLocation: 'Pan-Atlantic University Student Center, Ibeju-Lekki',
+    location: 'Pan-Atlantic University (PAU), Ibeju-Lekki',
     storeName: 'PAU Campus Essentials',
     vendorUniversityId: 'pau',
     vendorUniversityName: 'Pan-Atlantic University',

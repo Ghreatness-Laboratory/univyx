@@ -26,10 +26,10 @@ export const AboutView: React.FC = () => {
         </div>
 
         <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
-          One Platform. Every Campus. Every Opportunity.
+          Revolutionalizing the student experience.
         </h1>
         <p className="text-sm text-slate-500 mt-2 max-w-xl leading-relaxed">
-          univyX is a text-first university social network and digital ecosystem created specifically for undergraduate students, postgraduates, campus entrepreneurs, and collegiate communities.
+          Univyx is the social and collegiate audio ecosystem created exclusively for verified students and scholars across private universities.
         </p>
       </div>
 

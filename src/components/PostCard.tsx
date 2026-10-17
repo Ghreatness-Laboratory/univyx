@@ -13,7 +13,8 @@ import {
   Edit2,
   Flag,
   CornerDownRight,
-  BarChart2
+  BarChart2,
+  MapPin
 } from 'lucide-react';
 import { VerifiedBadge } from './VerifiedBadge';
 
@@ -281,6 +282,16 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
             <p className="mt-1 post-text text-[#0F1419] dark:text-[#E7E9EA] break-words whitespace-pre-wrap">
               {renderFormattedText(post.content)}
             </p>
+          )}
+
+          {/* Optional Location Tag Pin Chip */}
+          {post.location && (
+            <div className="mt-2 flex items-center">
+              <span className="inline-flex items-center gap-1 text-[12px] font-medium text-[#536471] dark:text-[#71767B] bg-slate-100 dark:bg-slate-800/80 px-2.5 py-0.5 rounded-full border border-slate-200/60 dark:border-slate-700/60">
+                <MapPin className="w-3 h-3 text-[#1D9BF0]" />
+                <span>{post.location}</span>
+              </span>
+            </div>
           )}
 
           {/* Quoted Post Card (if quote-post) */}

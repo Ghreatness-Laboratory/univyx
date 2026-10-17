@@ -56,6 +56,7 @@ export interface MockPost {
   is_reposted?: boolean;
   isPinned?: boolean;
   is_pinned?: boolean;
+  location?: string;
   createdAt: string;
   created_at?: string;
   quotedPost?: {
@@ -115,6 +116,7 @@ export const INITIAL_POSTS: MockPost[] = [
     is_reposted: false,
     isPinned: true,
     is_pinned: true,
+    location: 'Covenant University, Ota (Canaanland)',
     createdAt: '2026-10-16T12:00:00Z',
     created_at: '2026-10-16T12:00:00Z'
   },
@@ -158,8 +160,7 @@ export const INITIAL_POSTS: MockPost[] = [
     is_liked: true,
     isBookmarked: false,
     is_bookmarked: false,
-    isReposted: false,
-    is_reposted: false,
+    location: 'Covenant University, Ota (Canaanland)',
     createdAt: '2026-10-16T11:40:00Z',
     created_at: '2026-10-16T11:40:00Z'
   },
@@ -205,6 +206,7 @@ export const INITIAL_POSTS: MockPost[] = [
     is_bookmarked: false,
     isReposted: false,
     is_reposted: false,
+    location: 'Hebron Tech Quarter, Ota',
     createdAt: '2026-10-16T11:15:00Z',
     created_at: '2026-10-16T11:15:00Z'
   },
@@ -414,7 +416,7 @@ export const INITIAL_POSTS: MockPost[] = [
     university_name: 'Inter-Collegiate Network',
     verificationTier: 'gold',
     verification_tier: 'gold',
-    content: 'Welcome to Univyx — Revolutionizing the student experience. Strictly connecting verified scholars across Nigeria\'s premier private universities: Covenant, Babcock, ABUAD, Pan-Atlantic, Redeemer\'s, Nile, Baze, Bowen and 20+ member campuses.',
+    content: 'Welcome to Univyx — Revolutionalizing the student experience. Strictly connecting verified scholars across Nigeria\'s premier private universities: Covenant, Babcock, ABUAD, Pan-Atlantic, Redeemer\'s, Nile, Baze, Bowen and 20+ member campuses.',
     category: 'campus_news',
     likesCount: 520,
     likes_count: 520,

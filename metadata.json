@@ -1,6 +1,6 @@
 {
   "name": "Univyx",
-  "description": "Revolutionizing the student experience. The social platform exclusively for private university students.",
+  "description": "Revolutionalizing the student experience. The social platform exclusively for private university students.",
   "permissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

@@ -305,7 +305,7 @@ export const RightSidebar: React.FC = () => {
           <span aria-hidden="true">·</span>
           <button onClick={() => setActiveTab('settings')} className="hover:underline">Settings</button>
         </div>
-        <p>© 2026 Univyx. Revolutionizing the student experience.</p>
+        <p>© 2026 Univyx. Revolutionalizing the student experience.</p>
       </footer>
     </aside>
   );
