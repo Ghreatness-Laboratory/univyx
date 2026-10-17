@@ -23,6 +23,23 @@ export interface PostAuthor {
   university_name?: string;
 }
 
+export interface PollOption {
+  id: string;
+  text: string;
+  votes: number;
+}
+
+export interface PostPoll {
+  id: string;
+  question?: string;
+  options: PollOption[];
+  totalVotes: number;
+  duration: '1h' | '1d' | '3d' | '7d';
+  expiresAt: string;
+  isClosed?: boolean;
+  userVotedOptionId?: string;
+}
+
 export interface MockPost {
   id: string;
   authorId: string;
@@ -57,6 +74,7 @@ export interface MockPost {
   isPinned?: boolean;
   is_pinned?: boolean;
   location?: string;
+  poll?: PostPoll;
   createdAt: string;
   created_at?: string;
   quotedPost?: {
@@ -72,6 +90,119 @@ export interface MockPost {
 }
 
 export const INITIAL_POSTS: MockPost[] = [
+  {
+    id: 'post-poll-academics',
+    authorId: 'usr-chidi',
+    author_id: 'usr-chidi',
+    authorName: 'Chidi Okafor',
+    author: {
+      id: 'usr-chidi',
+      fullName: 'Chidi Okafor',
+      full_name: 'Chidi Okafor',
+      username: 'chidi_cu',
+      isVerified: true,
+      is_verified: true,
+      verificationTier: 'blue',
+      verification_tier: 'blue',
+      followersCount: 742,
+      followers_count: 742,
+      universityName: 'Covenant University',
+      university_name: 'Covenant University'
+    },
+    username: 'chidi_cu',
+    universityId: 'covenant',
+    university_id: 'covenant',
+    universityName: 'Covenant University',
+    university_name: 'Covenant University',
+    verificationTier: 'blue',
+    verification_tier: 'blue',
+    content: 'Quick poll for 300L/400L Software Engineering & Computer Science scholars across CU, Babcock, PAU & ABUAD: Which backend architectural pattern is your capstone project utilizing this session?',
+    category: 'academics',
+    likesCount: 184,
+    likes_count: 184,
+    commentsCount: 36,
+    comments_count: 36,
+    repostsCount: 28,
+    reposts_count: 28,
+    quotesCount: 7,
+    quotes_count: 7,
+    isLiked: false,
+    isBookmarked: false,
+    isReposted: false,
+    location: 'Covenant University, Ota (Canaanland)',
+    poll: {
+      id: 'poll-1',
+      question: 'Which backend architecture for final capstone projects?',
+      options: [
+        { id: 'opt-1', text: 'Distributed Microservices (Go / Rust)', votes: 142 },
+        { id: 'opt-2', text: 'Modular Monolith (Node.js / TypeScript)', votes: 98 },
+        { id: 'opt-3', text: 'Serverless Edge / Cloud Run (GCP)', votes: 64 },
+        { id: 'opt-4', text: 'Event-Driven (Kafka / RabbitMQ)', votes: 34 }
+      ],
+      totalVotes: 338,
+      duration: '3d',
+      expiresAt: '2026-10-19T18:00:00Z',
+      isClosed: false
+    },
+    createdAt: '2026-10-16T15:30:00Z',
+    created_at: '2026-10-16T15:30:00Z'
+  },
+  {
+    id: 'post-poll-campus-news',
+    authorId: 'usr-korede',
+    author_id: 'usr-korede',
+    authorName: 'Korede Balogun',
+    author: {
+      id: 'usr-korede',
+      fullName: 'Korede Balogun',
+      full_name: 'Korede Balogun',
+      username: 'korede_babcock',
+      isVerified: true,
+      is_verified: true,
+      verificationTier: 'blue',
+      verification_tier: 'blue',
+      followersCount: 1040,
+      followers_count: 1040,
+      universityName: 'Babcock University',
+      university_name: 'Babcock University'
+    },
+    username: 'korede_babcock',
+    universityId: 'babcock',
+    university_id: 'babcock',
+    universityName: 'Babcock University',
+    university_name: 'Babcock University',
+    verificationTier: 'blue',
+    verification_tier: 'blue',
+    content: 'Inter-Collegiate Debate: Should private university student councils partner with Univyx Arena to host an official cross-campus collegiate FIFA/FC26 tournament with cash prizes?',
+    category: 'campus_news',
+    likesCount: 245,
+    likes_count: 245,
+    commentsCount: 52,
+    comments_count: 52,
+    repostsCount: 41,
+    reposts_count: 41,
+    quotesCount: 12,
+    quotes_count: 12,
+    isLiked: false,
+    isBookmarked: false,
+    isReposted: false,
+    location: 'Babcock University, Ilishan-Remo (Main Campus)',
+    poll: {
+      id: 'poll-2',
+      question: 'Cross-campus collegiate gaming tournament?',
+      options: [
+        { id: 'opt-2-1', text: 'Yes, full varsity league with trophy', votes: 486 },
+        { id: 'opt-2-2', text: 'Yes, but casual weekend cups only', votes: 124 },
+        { id: 'opt-2-3', text: 'Prioritize tech hackathons first', votes: 68 }
+      ],
+      totalVotes: 678,
+      duration: '7d',
+      expiresAt: '2026-10-23T18:00:00Z',
+      isClosed: false
+    },
+    createdAt: '2026-10-16T14:15:00Z',
+    created_at: '2026-10-16T14:15:00Z'
+  },
   {
     id: 'post-official-cu',
     authorId: 'usr-covenant-admin',

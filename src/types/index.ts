@@ -59,10 +59,13 @@ export interface UserProfile {
 
 export type { GistRoom, RoomParticipant, RoomTopic, RoomScope, RoomStatus } from '../data/rooms';
 export type { CampusLocation } from '../data/locations';
+export type { DirectMessage, Conversation, ConversationParticipant } from '../data/messages';
+export type { SponsoredAd } from '../data/ads';
+export type { AcademicLibraryResource, LibraryResourceType } from '../data/academicLibrary';
 
 // Re-exported Domain Models & Aliases
 export type Post = MockPost;
-export type { MockPost, PostCategory };
+export type { MockPost, PostCategory, PostPoll, PollOption };
 
 export type University = PrivateUniversity;
 export type { PrivateUniversity };
@@ -190,4 +193,4 @@ export interface NotificationItem {
 // Typography & Appearance Preferences
 export type FontPreference = 'figtree' | 'jakarta' | 'inter' | 'roboto' | 'georgia' | 'dyslexic' | 'system';
 export type ThemePreference = 'light' | 'dark' | 'system';
-export type TextSizePreference = 'small' | 'default' | 'large' | 'extra-large';
+export type TextSizePreference = 'small' | 'default' | 'large' | 'extra-large' | number | string;

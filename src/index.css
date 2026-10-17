@@ -1,18 +1,28 @@
 @import "tailwindcss";
 
+@theme {
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface);
+  --color-card: var(--bg-card);
+  --color-border-theme: var(--border-color);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+}
+
 @layer base {
   :root {
     --font-sans: 'Figtree', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --bg-canvas: #FFFFFF;
-    --bg-surface: #F7F9F9;
+    --bg-surface: #F7F9FA;
     --bg-card: #FFFFFF;
     --border-color: #EFF3F4;
-    --border-subtle: #F7F9F9;
+    --border-subtle: #F7F9FA;
     --text-primary: #0F1419;
     --text-secondary: #536471;
     --text-muted: #8B98A5;
     --brand-blue: #1D9BF0;
     --brand-hover: #1A8CD8;
+    --app-font-size: 15px;
     --text-scale: 1;
     color-scheme: light;
   }
@@ -20,7 +30,7 @@
   .dark {
     --font-sans: 'Figtree', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --bg-canvas: #000000;
-    --bg-surface: #0A0A0A;
+    --bg-surface: #16181C;
     --bg-card: #16181C;
     --border-color: #2F3336;
     --border-subtle: #16181C;
@@ -32,24 +42,40 @@
     color-scheme: dark;
   }
 
-  /* Text Size Scaling Preferences (Small 13px, Default 15px, Large 17px, Extra large 19px) */
-  html[data-text-size="small"] {
+  /* Text Size Scaling Preferences (13px to 19px) */
+  html[data-text-size="13"], html[data-text-size="small"] {
     --text-scale: 0.86667;
+    --app-font-size: 13px;
     font-size: 13px;
   }
-
-  html[data-text-size="default"] {
+  html[data-text-size="14"] {
+    --text-scale: 0.93333;
+    --app-font-size: 14px;
+    font-size: 14px;
+  }
+  html[data-text-size="15"], html[data-text-size="default"] {
     --text-scale: 1;
+    --app-font-size: 15px;
     font-size: 15px;
   }
-
-  html[data-text-size="large"] {
+  html[data-text-size="16"] {
+    --text-scale: 1.06667;
+    --app-font-size: 16px;
+    font-size: 16px;
+  }
+  html[data-text-size="17"], html[data-text-size="large"] {
     --text-scale: 1.13333;
+    --app-font-size: 17px;
     font-size: 17px;
   }
-
-  html[data-text-size="extra-large"] {
+  html[data-text-size="18"] {
+    --text-scale: 1.2;
+    --app-font-size: 18px;
+    font-size: 18px;
+  }
+  html[data-text-size="19"], html[data-text-size="extra-large"] {
     --text-scale: 1.26667;
+    --app-font-size: 19px;
     font-size: 19px;
   }
 
@@ -150,14 +176,24 @@
 }
 
 /* Color utility bindings for X theme */
-.text-x-primary {
+.bg-canvas {
+  background-color: var(--bg-canvas);
+}
+.bg-surface {
+  background-color: var(--bg-surface);
+}
+.bg-card {
+  background-color: var(--bg-card);
+}
+.border-theme, .border-border-color {
+  border-color: var(--border-color);
+}
+.text-x-primary, .text-primary {
   color: var(--text-primary);
 }
-
-.text-x-secondary {
+.text-x-secondary, .text-secondary {
   color: var(--text-secondary);
 }
-
 .border-x-divider {
   border-color: var(--border-color);
 }

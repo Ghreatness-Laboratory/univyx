@@ -41,16 +41,27 @@
           }
           if (isDark) {
             document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
             var meta = document.getElementById('meta-theme-color');
             if (meta) meta.setAttribute('content', '#000000');
           } else {
             document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
             var meta = document.getElementById('meta-theme-color');
             if (meta) meta.setAttribute('content', '#FFFFFF');
           }
 
-          var savedTextSize = localStorage.getItem('univyx_text_size') || 'default';
-          document.documentElement.setAttribute('data-text-size', savedTextSize);
+          var savedTextSize = localStorage.getItem('univyx_text_size') || '15';
+          var pxVal = parseInt(savedTextSize, 10);
+          if (isNaN(pxVal)) {
+            if (savedTextSize === 'small') pxVal = 13;
+            else if (savedTextSize === 'large') pxVal = 17;
+            else if (savedTextSize === 'extra-large') pxVal = 19;
+            else pxVal = 15;
+          }
+          document.documentElement.style.setProperty('--app-font-size', pxVal + 'px');
+          document.documentElement.style.setProperty('--text-scale', (pxVal / 15).toString());
+          document.documentElement.setAttribute('data-text-size', pxVal.toString());
         } catch (e) {}
       })();
     </script>

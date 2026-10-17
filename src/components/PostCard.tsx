@@ -33,7 +33,8 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
     deletePost,
     editPost,
     submitReport,
-    showToast
+    showToast,
+    votePoll
   } = useApp();
 
   const [showMenu, setShowMenu] = useState(false);
@@ -282,6 +283,90 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
             <p className="mt-1 post-text text-[#0F1419] dark:text-[#E7E9EA] break-words whitespace-pre-wrap">
               {renderFormattedText(post.content)}
             </p>
+          )}
+
+          {/* Interactive Poll Card */}
+          {post.poll && (
+            <div className="mt-3 p-3 sm:p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#16181C]/50 space-y-2 text-xs">
+              {post.poll.question && post.poll.question !== post.content && (
+                <div className="font-semibold text-slate-800 dark:text-slate-200 mb-1 text-[13px]">
+                  {post.poll.question}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                {post.poll.options.map((option) => {
+                  const hasVoted = Boolean(post.poll?.userVotedOptionId);
+                  const isClosed = Boolean(post.poll?.isClosed || (post.poll?.expiresAt && new Date(post.poll.expiresAt).getTime() < Date.now()));
+                  const showResults = hasVoted || isClosed;
+                  const isMyVote = post.poll?.userVotedOptionId === option.id;
+                  const total = post.poll?.totalVotes || 0;
+                  const percent = total > 0 ? Math.round((option.votes / total) * 100) : 0;
+
+                  if (showResults) {
+                    return (
+                      <div
+                        key={option.id}
+                        className={`relative overflow-hidden rounded-xl border p-2.5 flex items-center justify-between text-xs transition-all ${
+                          isMyVote
+                            ? 'border-[#1D9BF0] bg-white dark:bg-black/40 font-bold'
+                            : 'border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-black/20'
+                        }`}
+                      >
+                        {/* Fill Progress Bar */}
+                        <div
+                          className={`absolute inset-y-0 left-0 transition-all duration-700 ease-out ${
+                            isMyVote
+                              ? 'bg-[#1D9BF0]/20 dark:bg-[#1D9BF0]/30'
+                              : 'bg-slate-200/60 dark:bg-slate-700/40'
+                          }`}
+                          style={{ width: `${percent}%` }}
+                        />
+
+                        <div className="relative z-10 flex items-center gap-1.5 min-w-0 pr-2">
+                          <span className="text-[#0F1419] dark:text-[#E7E9EA] truncate">
+                            {option.text}
+                          </span>
+                          {isMyVote && (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#1D9BF0] shrink-0" />
+                          )}
+                        </div>
+
+                        <span className="relative z-10 font-mono text-[11px] font-bold text-[#536471] dark:text-[#71767B] shrink-0 tabular-nums">
+                          {percent}% ({option.votes})
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <button
+                      type="button"
+                      key={option.id}
+                      onClick={() => votePoll(post.id, option.id)}
+                      className="w-full py-2.5 px-3.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-[#1D9BF0] bg-white dark:bg-black/30 hover:bg-[#1D9BF0]/5 text-[#0F1419] dark:text-[#E7E9EA] font-semibold text-xs text-left transition-colors cursor-pointer flex items-center justify-between group"
+                    >
+                      <span className="group-hover:text-[#1D9BF0] transition-colors">{option.text}</span>
+                      <span className="text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold">
+                        Vote
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Poll footer metadata */}
+              <div className="flex items-center gap-2 pt-1 text-[11px] text-[#536471] dark:text-[#71767B]">
+                <BarChart2 className="w-3 h-3 text-[#1D9BF0]" />
+                <span className="font-semibold">{post.poll.totalVotes} votes</span>
+                <span>·</span>
+                <span>
+                  {post.poll.isClosed || (post.poll.expiresAt && new Date(post.poll.expiresAt).getTime() < Date.now())
+                    ? 'Final results'
+                    : `${post.poll.duration || '24h'} left`}
+                </span>
+              </div>
+            </div>
           )}
 
           {/* Optional Location Tag Pin Chip */}

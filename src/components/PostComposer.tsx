@@ -10,7 +10,11 @@ import {
   CornerDownRight,
   Sparkles,
   AtSign,
-  Users
+  Users,
+  BarChart2,
+  Plus,
+  Trash2,
+  MapPin
 } from 'lucide-react';
 
 interface PostComposerProps {
@@ -40,6 +44,12 @@ export const PostComposer: React.FC<PostComposerProps> = ({
   const [showMentionMenu, setShowMentionMenu] = useState(false);
   const [mentionQuery, setMentionQuery] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Poll state
+  const [showPoll, setShowPoll] = useState(false);
+  const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
+  const [pollDuration, setPollDuration] = useState<'1h' | '1d' | '3d' | '7d'>('1d');
+  const [locationTag, setLocationTag] = useState(currentUser?.location || '');
 
   const mentionableAccounts = [
     {
@@ -135,8 +145,24 @@ export const PostComposer: React.FC<PostComposerProps> = ({
     e.preventDefault();
     if (!canSubmit) return;
 
-    createPost(content, category, universityId || undefined, quotePost || undefined);
+    let pollData = undefined;
+    if (showPoll) {
+      const validOptions = pollOptions.filter((o) => o.trim().length > 0);
+      if (validOptions.length >= 2) {
+        pollData = {
+          question: content.trim(),
+          options: validOptions.map((t) => ({ id: '', text: t.trim(), votes: 0 })),
+          totalVotes: 0,
+          duration: pollDuration,
+          expiresAt: new Date(Date.now() + (pollDuration === '1h' ? 3600000 : pollDuration === '1d' ? 86400000 : pollDuration === '3d' ? 259200000 : 604800000)).toISOString()
+        };
+      }
+    }
+
+    createPost(content, category, universityId || undefined, quotePost || undefined, pollData, locationTag || undefined);
     setContent('');
+    setShowPoll(false);
+    setPollOptions(['', '']);
     if (onClose) {
       onClose();
     } else {
@@ -232,7 +258,86 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             </div>
           )}
 
-          {/* Quick Hashtag & Mention suggestions */}
+          {/* Interactive Poll Builder */}
+          {showPoll && (
+            <div className="my-2.5 p-3 rounded-2xl border border-[#1D9BF0]/40 bg-[#1D9BF0]/5 space-y-2.5 animate-in fade-in">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-[#1D9BF0] flex items-center gap-1.5">
+                  <BarChart2 className="w-3.5 h-3.5" />
+                  <span>Campus Poll</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPoll(false);
+                    setPollOptions(['', '']);
+                  }}
+                  className="text-slate-400 hover:text-red-500 transition-colors p-1 cursor-pointer"
+                  title="Remove poll"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="space-y-2">
+                {pollOptions.map((opt, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder={`Option ${idx + 1}`}
+                      value={opt}
+                      maxLength={45}
+                      onChange={(e) => {
+                        const next = [...pollOptions];
+                        next[idx] = e.target.value;
+                        setPollOptions(next);
+                      }}
+                      className="flex-1 text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#16181C] text-[#0F1419] dark:text-[#E7E9EA] focus:outline-none focus:border-[#1D9BF0]"
+                    />
+                    {pollOptions.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => setPollOptions(pollOptions.filter((_, i) => i !== idx))}
+                        className="text-slate-400 hover:text-red-500 p-1 cursor-pointer"
+                        title="Remove option"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between pt-1 text-xs">
+                {pollOptions.length < 4 ? (
+                  <button
+                    type="button"
+                    onClick={() => setPollOptions([...pollOptions, ''])}
+                    className="text-[11px] font-bold text-[#1D9BF0] hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add option ({pollOptions.length}/4)</span>
+                  </button>
+                ) : <div />}
+
+                <div className="flex items-center gap-1.5 text-xs text-[#536471] dark:text-[#71767B]">
+                  <span>Poll duration:</span>
+                  <select
+                    value={pollDuration}
+                    onChange={(e) => setPollDuration(e.target.value as any)}
+                    className="text-xs bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[#0F1419] dark:text-[#E7E9EA] focus:outline-none cursor-pointer"
+                  >
+                    <option value="1h">1 hour</option>
+                    <option value="1d">1 day</option>
+                    <option value="3d">3 days</option>
+                    <option value="7d">7 days</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Quick Hashtag, Poll & Mention suggestions */}
           <div className="flex items-center gap-1.5 flex-wrap my-2">
             <button
               type="button"
@@ -244,6 +349,20 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             >
               <AtSign className="w-3 h-3" />
               <span>Mention Scholar</span>
+            </button>
+
+            {/* Poll Button */}
+            <button
+              type="button"
+              onClick={() => setShowPoll(!showPoll)}
+              className={`text-[11px] font-medium py-0.5 px-2.5 rounded-lg flex items-center gap-1 cursor-pointer transition-colors ${
+                showPoll
+                  ? 'bg-[#1D9BF0] text-white shadow-xs'
+                  : 'text-[#1D9BF0] bg-[#1D9BF0]/10 hover:bg-[#1D9BF0]/20'
+              }`}
+            >
+              <BarChart2 className="w-3 h-3" />
+              <span>Poll</span>
             </button>
 
             <span className="text-[11px] text-slate-400 flex items-center gap-1">

@@ -24,6 +24,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { AcademicResource, CareerOpportunity, Post, OpportunityType } from '../types';
+import { AcademicLibrarySection } from '../components/AcademicLibrarySection';
 
 export const AcademicsView: React.FC = () => {
   const {
@@ -284,13 +285,14 @@ export const AcademicsView: React.FC = () => {
 
         <button
           onClick={() => setAcademicTab('resources')}
-          className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
+          className={`btn-pill flex items-center gap-1.5 px-4 py-1.5 text-[15px] rounded-full whitespace-nowrap transition-colors cursor-pointer ${
             academicTab === 'resources'
-              ? 'bg-white dark:bg-[#16181C] text-[#1D9BF0] shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'bg-[#0F1419] dark:bg-[#E7E9EA] text-white dark:text-[#0F1419] font-bold'
+              : 'bg-white dark:bg-[#16181C] text-[#536471] dark:text-[#71767B] border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold'
           }`}
         >
-          Study Notes & Books
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>Past Questions & Notes</span>
         </button>
       </div>
 
@@ -683,47 +685,11 @@ export const AcademicsView: React.FC = () => {
       )}
 
       {/* ========================================================= */}
-      {/* 5. STUDY NOTES & BOOKS TAB */}
+      {/* 5. PAST QUESTIONS & NOTES LIBRARY TAB */}
       {/* ========================================================= */}
       {academicTab === 'resources' && (
-        <div className="p-4 sm:p-5 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-            {academicResources.map((res) => (
-              <div
-                key={res.id}
-                className="p-4 rounded-2xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800 text-xs flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-                    <span className="capitalize font-medium text-[#1D9BF0]">{(res.resource_type || res.resourceType || 'tutorial').replace('_', ' ')}</span>
-                    <span>{(res.is_free ?? true) ? 'Free Educational Resource' : 'Reference'}</span>
-                  </div>
-                  <h4 className="font-bold text-slate-900 dark:text-white text-sm">
-                    {res.title}
-                  </h4>
-                  <p className="text-slate-500 text-xs mt-0.5">Author: {res.author}</p>
-                  <p className="text-slate-600 dark:text-slate-400 text-xs mt-2 leading-relaxed">
-                    {res.description || res.summary}
-                  </p>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-400">{res.subject || res.department}</span>
-                  {(res.external_url || res.downloadOrSourceUrl) && (
-                    <a
-                      href={res.external_url || res.downloadOrSourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#1D9BF0] hover:underline flex items-center gap-1 font-semibold"
-                    >
-                      <span>Access Material</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="p-4 sm:p-5">
+          <AcademicLibrarySection />
         </div>
       )}
 

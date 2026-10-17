@@ -19,7 +19,7 @@ import { VerifiedBadge } from '../components/VerifiedBadge';
 import { CreateRoomModal } from '../components/CreateRoomModal';
 
 interface RoomsViewProps {
-  onJoinRoom: (room: GistRoom) => void;
+  onJoinRoom?: (room: GistRoom) => void;
   activeRoomId?: string;
 }
 
@@ -28,9 +28,18 @@ export const RoomsView: React.FC<RoomsViewProps> = ({ onJoinRoom, activeRoomId }
     currentUser,
     rooms,
     createRoom,
+    joinRoom,
     toggleRoomReminder,
     showToast
   } = useApp() as any;
+
+  const handleJoin = (room: GistRoom) => {
+    if (onJoinRoom) {
+      onJoinRoom(room);
+    } else if (joinRoom) {
+      joinRoom(room);
+    }
+  };
 
   const [activeTab, setActiveTab] = useState<'live' | 'upcoming' | 'my_rooms'>('live');
   const [selectedTopic, setSelectedTopic] = useState<RoomTopic | 'all'>('all');
@@ -166,7 +175,7 @@ export const RoomsView: React.FC<RoomsViewProps> = ({ onJoinRoom, activeRoomId }
             return (
               <div
                 key={room.id}
-                onClick={() => isLive && onJoinRoom(room)}
+                onClick={() => isLive && handleJoin(room)}
                 className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
                   isCurrentActive
                     ? 'border-[#1D9BF0] bg-[#1D9BF0]/5 dark:bg-[#1D9BF0]/10 ring-1 ring-[#1D9BF0]'
@@ -254,7 +263,7 @@ export const RoomsView: React.FC<RoomsViewProps> = ({ onJoinRoom, activeRoomId }
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onJoinRoom(room);
+                          handleJoin(room);
                         }}
                         className={`btn-pill px-4 py-1.5 text-xs font-bold transition-all shadow-xs cursor-pointer ${
                           isCurrentActive

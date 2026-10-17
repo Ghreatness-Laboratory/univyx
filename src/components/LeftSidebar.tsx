@@ -11,7 +11,9 @@ import {
   Bell,
   Settings,
   PenSquare,
-  CheckCircle2
+  CheckCircle2,
+  Radio,
+  Mail
 } from 'lucide-react';
 
 export const LeftSidebar: React.FC = () => {
@@ -20,11 +22,14 @@ export const LeftSidebar: React.FC = () => {
     setActiveTab,
     setIsComposerOpen,
     currentUser,
-    unreadNotificationsCount
+    unreadNotificationsCount,
+    unreadMessagesCount
   } = useApp();
 
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
+    { id: 'rooms', label: 'Gist Rooms', icon: Radio },
+    { id: 'messages', label: 'Messages', icon: Mail, badge: unreadMessagesCount },
     { id: 'entertainment', label: 'Entertainment', icon: Sparkles },
     { id: 'academics', label: 'Academics', icon: GraduationCap },
     { id: 'arena', label: 'Univyx Arena', icon: Trophy },

@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import {
   Menu,
   Bell,
+  Mail,
   Sun,
   Moon,
   PenSquare,
@@ -20,13 +21,14 @@ export const Header: React.FC = () => {
     theme,
     setTheme,
     unreadNotificationsCount,
+    unreadMessagesCount,
     universities,
     selectedUniversityId,
     setSelectedUniversityId
   } = useApp();
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-white/90 dark:bg-[#0A0A0A]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#000000]/95 backdrop-blur-md border-b border-[#EFF3F4] dark:border-[#2F3336] transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
         {/* Zone 1: Brand Wordmark & Hamburger */}
         <div className="flex items-center gap-3 shrink-0">
@@ -147,12 +149,29 @@ export const Header: React.FC = () => {
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
+          {/* Direct Messages */}
+          <button
+            onClick={() => setActiveTab('messages')}
+            title="Messages"
+            aria-label="Direct Messages"
+            className={`relative p-2 rounded-xl transition-colors cursor-pointer ${
+              activeTab === 'messages'
+                ? 'text-[#1D9BF0] bg-blue-50 dark:bg-blue-950/40'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
+          >
+            <Mail className="w-4 h-4" />
+            {unreadMessagesCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#1D9BF0]" />
+            )}
+          </button>
+
           {/* Notifications Bell */}
           <button
             onClick={() => setActiveTab('notifications')}
             title="Notifications"
             aria-label="Notifications"
-            className="relative p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            className="relative p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
           >
             <Bell className="w-4 h-4" />
             {unreadNotificationsCount > 0 && (

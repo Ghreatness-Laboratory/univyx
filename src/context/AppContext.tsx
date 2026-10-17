@@ -13,12 +13,16 @@ import {
   VerificationAuditLog
 } from '../types';
 import { PRIVATE_UNIVERSITIES, PrivateUniversity } from '../data/universities';
-import { INITIAL_POSTS, MockPost, PostCategory } from '../data/posts';
+import { INITIAL_POSTS, MockPost, PostCategory, PostPoll } from '../data/posts';
 import { INITIAL_CIVYN_OPPORTUNITIES, CivynOpportunity } from '../data/civyn';
 import { INITIAL_PRODUCTS, StoreProduct } from '../data/store';
 import { ACADEMIC_TUTORIALS, KNOWLEDGE_DIRECTORY, AcademicTutorial, UniversityKnowledgeEntry } from '../data/academics';
 import { COLLEGIATE_RANKINGS, ARENA_TOURNAMENTS, CollegiateRanking, ArenaTournament } from '../data/arena';
 import { INITIAL_EVENTS, CampusEvent } from '../data/events';
+import { INITIAL_ROOMS, GistRoom } from '../data/rooms';
+import { INITIAL_CONVERSATIONS, INITIAL_MESSAGES, Conversation, DirectMessage, ConversationParticipant } from '../data/messages';
+import { INITIAL_ADS, SponsoredAd } from '../data/ads';
+import { INITIAL_LIBRARY_RESOURCES, AcademicLibraryResource } from '../data/academicLibrary';
 
 interface AppContextType {
   // Theme & Font
@@ -28,6 +32,7 @@ interface AppContextType {
   setFont: (font: FontPreference) => void;
   textSize: TextSizePreference;
   setTextSize: (size: TextSizePreference) => void;
+  resetTextSize: () => void;
 
   // User Profile & Onboarding
   currentUser: UserProfile | null;
@@ -38,6 +43,9 @@ interface AppContextType {
   setShowWelcomeModal: (show: boolean) => void;
   authModalType: 'login' | 'signup' | null;
   setAuthModalType: (type: 'login' | 'signup' | null) => void;
+  updateLocation: (loc: string) => void;
+  toggleShowLocationOnProfile: () => void;
+  toggleAllowLocationTags: () => void;
 
   // Universities
   universities: PrivateUniversity[];
@@ -47,17 +55,59 @@ interface AppContextType {
 
   // Posts & Interactions
   posts: MockPost[];
-  createPost: (content: string, category: PostCategory, universityId?: string, quotedPost?: MockPost) => MockPost;
+  createPost: (content: string, category: PostCategory, universityId?: string, quotedPost?: MockPost, poll?: Omit<PostPoll, 'id'> | null, location?: string) => MockPost;
   editPost: (postId: string, newContent: string) => void;
   deletePost: (postId: string) => void;
   toggleLikePost: (postId: string) => void;
   toggleBookmarkPost: (postId: string) => void;
   repostPost: (postId: string, quoteText?: string) => void;
+  votePoll: (postId: string, optionId: string) => void;
   
   // Comments
   comments: Record<string, PostComment[]>;
   addComment: (postId: string, content: string) => void;
   getCommentsForPost: (postId: string) => PostComment[];
+
+  // Gist Rooms (Live voice rooms)
+  rooms: GistRoom[];
+  activeRoom: GistRoom | null;
+  isRoomModalOpen: boolean;
+  isRoomMiniPlayerOpen: boolean;
+  isCreateRoomModalOpen: boolean;
+  setIsCreateRoomModalOpen: (open: boolean) => void;
+  endedRoomSummary: { roomTitle: string; duration: string; peakListeners: number; hostName: string } | null;
+  joinRoom: (room: GistRoom) => void;
+  leaveRoom: () => void;
+  minimizeRoom: () => void;
+  maximizeRoom: () => void;
+  endRoom: (summary: { duration: string; peakListeners: number }) => void;
+  closeEndedSummary: () => void;
+  createRoom: (roomData: Omit<GistRoom, 'id'>) => void;
+  toggleRoomReminder: (roomId: string) => void;
+
+  // Direct Messages
+  conversations: Conversation[];
+  messages: Record<string, DirectMessage[]>;
+  activeConversationId: string | null;
+  setActiveConversationId: (id: string | null) => void;
+  sendMessage: (conversationId: string, text: string) => void;
+  deleteMessage: (conversationId: string, messageId: string) => void;
+  startConversation: (participant: ConversationParticipant) => string;
+  unreadMessagesCount: number;
+
+  // Sponsored Ads (Ad Center)
+  ads: SponsoredAd[];
+  createAd: (adData: Omit<SponsoredAd, 'id' | 'impressions' | 'clicks' | 'ctr' | 'createdAt'>) => void;
+  updateAd: (id: string, adData: Partial<SponsoredAd>) => void;
+  deleteAd: (id: string) => void;
+  hiddenAdIds: string[];
+  hideAd: (adId: string) => void;
+
+  // Academic Library (Past Questions & Notes)
+  libraryResources: AcademicLibraryResource[];
+  toggleSaveLibraryResource: (id: string) => void;
+  addLibraryResource: (res: Omit<AcademicLibraryResource, 'id' | 'downloadsCount' | 'createdAt'>) => void;
+  incrementDownloadResource: (id: string) => void;
 
   // CIVYN Opportunities
   opportunities: CivynOpportunity[];
@@ -385,6 +435,44 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   ]);
 
+  // Gist Rooms (Live Voice Spaces)
+  const [rooms, setRooms] = useState<GistRoom[]>(() => {
+    const saved = localStorage.getItem('univyx_rooms');
+    return saved ? JSON.parse(saved) : INITIAL_ROOMS;
+  });
+  const [activeRoom, setActiveRoom] = useState<GistRoom | null>(null);
+  const [isRoomModalOpen, setIsRoomModalOpen] = useState(false);
+  const [isRoomMiniPlayerOpen, setIsRoomMiniPlayerOpen] = useState(false);
+  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
+  const [endedRoomSummary, setEndedRoomSummary] = useState<{ roomTitle: string; duration: string; peakListeners: number; hostName: string } | null>(null);
+
+  // Direct Messages
+  const [conversations, setConversations] = useState<Conversation[]>(() => {
+    const saved = localStorage.getItem('univyx_conversations');
+    return saved ? JSON.parse(saved) : INITIAL_CONVERSATIONS;
+  });
+  const [messages, setMessages] = useState<Record<string, DirectMessage[]>>(() => {
+    const saved = localStorage.getItem('univyx_messages');
+    return saved ? JSON.parse(saved) : INITIAL_MESSAGES;
+  });
+  const [activeConversationId, setActiveConversationId] = useState<string | null>('conv-self');
+
+  // Sponsored Ads (Ad Center)
+  const [ads, setAds] = useState<SponsoredAd[]>(() => {
+    const saved = localStorage.getItem('univyx_ads');
+    return saved ? JSON.parse(saved) : INITIAL_ADS;
+  });
+  const [hiddenAdIds, setHiddenAdIds] = useState<string[]>(() => {
+    const saved = sessionStorage.getItem('univyx_hidden_ads');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Academic Library (Past Questions & Notes)
+  const [libraryResources, setLibraryResources] = useState<AcademicLibraryResource[]>(() => {
+    const saved = localStorage.getItem('univyx_academic_library');
+    return saved ? JSON.parse(saved) : INITIAL_LIBRARY_RESOURCES;
+  });
+
   // URL hash/pathname listener for /admin/login routing
   useEffect(() => {
     const handleUrlRoute = () => {
@@ -436,9 +524,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const applyDark = (dark: boolean) => {
       if (dark) {
         root.classList.add('dark');
-        if (metaTheme) metaTheme.setAttribute('content', '#0A0A0A');
+        root.style.colorScheme = 'dark';
+        if (metaTheme) metaTheme.setAttribute('content', '#000000');
       } else {
         root.classList.remove('dark');
+        root.style.colorScheme = 'light';
         if (metaTheme) metaTheme.setAttribute('content', '#FFFFFF');
       }
     };
@@ -476,19 +566,39 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Text Size synchronization
   useEffect(() => {
-    localStorage.setItem('univyx_text_size', textSize);
-    document.documentElement.setAttribute('data-text-size', textSize);
+    let pxVal = typeof textSize === 'number' ? textSize : parseInt(textSize as string, 10);
+    if (isNaN(pxVal)) {
+      if (textSize === 'small') pxVal = 13;
+      else if (textSize === 'large') pxVal = 17;
+      else if (textSize === 'extra-large') pxVal = 19;
+      else pxVal = 15;
+    }
+    pxVal = Math.min(19, Math.max(13, pxVal));
+    localStorage.setItem('univyx_text_size', pxVal.toString());
+    document.documentElement.style.setProperty('--app-font-size', `${pxVal}px`);
+    document.documentElement.style.setProperty('--text-scale', `${pxVal / 15}`);
+    document.documentElement.setAttribute('data-text-size', pxVal.toString());
   }, [textSize]);
 
   const setTextSize = (size: TextSizePreference) => {
-    setTextSizeState(size);
-    const labelMap: Record<TextSizePreference, string> = {
-      'small': 'Small (13px)',
-      'default': 'Default (15px)',
-      'large': 'Large (17px)',
-      'extra-large': 'Extra large (19px)'
-    };
-    showToast(`Text size set to ${labelMap[size]}`);
+    let pxVal = typeof size === 'number' ? size : parseInt(size as string, 10);
+    if (isNaN(pxVal)) {
+      if (size === 'small') pxVal = 13;
+      else if (size === 'large') pxVal = 17;
+      else if (size === 'extra-large') pxVal = 19;
+      else pxVal = 15;
+    }
+    pxVal = Math.min(19, Math.max(13, pxVal));
+    setTextSizeState(pxVal);
+    localStorage.setItem('univyx_text_size', pxVal.toString());
+    document.documentElement.style.setProperty('--app-font-size', `${pxVal}px`);
+    document.documentElement.style.setProperty('--text-scale', `${pxVal / 15}`);
+    document.documentElement.setAttribute('data-text-size', pxVal.toString());
+  };
+
+  const resetTextSize = () => {
+    setTextSize(15);
+    showToast('Text size reset to default (15px)');
   };
 
   // Persist State
@@ -557,7 +667,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     content: string,
     category: PostCategory,
     universityId?: string,
-    quotedPost?: MockPost
+    quotedPost?: MockPost,
+    poll?: Omit<PostPoll, 'id'> | null,
+    location?: string
   ): MockPost => {
     if (!currentUser) throw new Error('Sign in required to post');
 
@@ -594,6 +706,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       isLiked: false,
       isBookmarked: false,
       isReposted: false,
+      location: location || (currentUser.allowLocationTags !== false ? currentUser.location : undefined),
+      poll: poll
+        ? {
+            id: `poll-${Date.now()}`,
+            question: poll.question || content.trim(),
+            options: poll.options.map((opt, idx) => ({
+              id: `opt-${Date.now()}-${idx}`,
+              text: opt.text,
+              votes: 0
+            })),
+            totalVotes: 0,
+            duration: poll.duration,
+            expiresAt: poll.expiresAt || new Date(Date.now() + 86400000).toISOString(),
+            isClosed: false
+          }
+        : undefined,
       createdAt: new Date().toISOString(),
       quotedPost: quotedPost
         ? {
@@ -608,6 +736,353 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPosts((prev) => [newPost, ...prev]);
     showToast('Post published to Univyx network');
     return newPost;
+  };
+
+  const votePoll = (postId: string, optionId: string) => {
+    setPosts((prev) => {
+      const updated = prev.map((post) => {
+        if (post.id !== postId || !post.poll) return post;
+        if (post.poll.userVotedOptionId || post.poll.isClosed) return post;
+
+        const updatedOptions = post.poll.options.map((opt) => {
+          if (opt.id === optionId) {
+            return { ...opt, votes: opt.votes + 1 };
+          }
+          return opt;
+        });
+
+        return {
+          ...post,
+          poll: {
+            ...post.poll,
+            options: updatedOptions,
+            totalVotes: post.poll.totalVotes + 1,
+            userVotedOptionId: optionId
+          }
+        };
+      });
+      localStorage.setItem('univyx_posts', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Vote recorded');
+  };
+
+  // Location Profile Settings
+  const updateLocation = (location: string) => {
+    if (!currentUser) return;
+    const updated = { ...currentUser, location };
+    setCurrentUser(updated);
+    localStorage.setItem('univyx_user', JSON.stringify(updated));
+    showToast(`Campus location set to "${location}"`);
+  };
+
+  const toggleShowLocationOnProfile = () => {
+    if (!currentUser) return;
+    const nextVal = !(currentUser.showLocationOnProfile ?? true);
+    const updated = { ...currentUser, showLocationOnProfile: nextVal };
+    setCurrentUser(updated);
+    localStorage.setItem('univyx_user', JSON.stringify(updated));
+    showToast(nextVal ? 'Location visible on profile' : 'Location hidden from profile');
+  };
+
+  const toggleAllowLocationTags = () => {
+    if (!currentUser) return;
+    const nextVal = !(currentUser.allowLocationTags ?? true);
+    const updated = { ...currentUser, allowLocationTags: nextVal };
+    setCurrentUser(updated);
+    localStorage.setItem('univyx_user', JSON.stringify(updated));
+    showToast(nextVal ? 'Location tags enabled on posts' : 'Location tags disabled');
+  };
+
+  // Gist Room Handlers
+  const joinRoom = (room: GistRoom) => {
+    setActiveRoom(room);
+    setIsRoomModalOpen(true);
+    setIsRoomMiniPlayerOpen(false);
+  };
+
+  const leaveRoom = () => {
+    setIsRoomModalOpen(false);
+    setIsRoomMiniPlayerOpen(false);
+    setActiveRoom(null);
+    showToast('Left Gist Room');
+  };
+
+  const minimizeRoom = () => {
+    setIsRoomModalOpen(false);
+    setIsRoomMiniPlayerOpen(true);
+  };
+
+  const maximizeRoom = () => {
+    setIsRoomMiniPlayerOpen(false);
+    setIsRoomModalOpen(true);
+  };
+
+  const endRoom = (summary: { duration: string; peakListeners: number }) => {
+    if (activeRoom) {
+      setEndedRoomSummary({
+        roomTitle: activeRoom.title,
+        duration: summary.duration,
+        peakListeners: summary.peakListeners,
+        hostName: activeRoom.host.name
+      });
+      setRooms((prev) => {
+        const updated = prev.map((r) => (r.id === activeRoom.id ? { ...r, status: 'ended' as const } : r));
+        localStorage.setItem('univyx_rooms', JSON.stringify(updated));
+        return updated;
+      });
+    }
+    setIsRoomModalOpen(false);
+    setIsRoomMiniPlayerOpen(false);
+    setActiveRoom(null);
+  };
+
+  const closeEndedSummary = () => {
+    setEndedRoomSummary(null);
+  };
+
+  const createRoom = (roomData: Omit<GistRoom, 'id'>) => {
+    const newRoom: GistRoom = {
+      ...roomData,
+      id: `room-${Date.now()}`
+    };
+    setRooms((prev) => {
+      const updated = [newRoom, ...prev];
+      localStorage.setItem('univyx_rooms', JSON.stringify(updated));
+      return updated;
+    });
+    if (newRoom.status === 'live') {
+      joinRoom(newRoom);
+    }
+    showToast(`Gist room created: "${newRoom.title}"`);
+  };
+
+  const toggleRoomReminder = (roomId: string) => {
+    setRooms((prev) => {
+      const updated = prev.map((r) => {
+        if (r.id === roomId) {
+          const nextVal = !r.isReminderSet;
+          showToast(nextVal ? 'Reminder set for upcoming Gist Room' : 'Reminder removed');
+          return { ...r, isReminderSet: nextVal };
+        }
+        return r;
+      });
+      localStorage.setItem('univyx_rooms', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  // Direct Messages Handlers
+  const unreadMessagesCount = conversations.reduce((acc, c) => acc + (c.unreadCount || 0), 0);
+
+  const sendMessage = (conversationId: string, text: string) => {
+    if (!text.trim() || !currentUser) return;
+    const newMsg: DirectMessage = {
+      id: `msg-${Date.now()}`,
+      conversationId,
+      senderId: currentUser.id,
+      senderName: currentUser.fullName,
+      senderUsername: currentUser.username,
+      text: text.trim(),
+      createdAt: new Date().toISOString(),
+      status: 'sent'
+    };
+
+    setMessages((prev) => {
+      const thread = prev[conversationId] || [];
+      const updated = { ...prev, [conversationId]: [...thread, newMsg] };
+      localStorage.setItem('univyx_messages', JSON.stringify(updated));
+      return updated;
+    });
+
+    setConversations((prev) => {
+      const updated = prev.map((c) => {
+        if (c.id === conversationId) {
+          return {
+            ...c,
+            lastMessage: text.trim(),
+            lastMessageTime: 'Just now'
+          };
+        }
+        return c;
+      });
+      localStorage.setItem('univyx_conversations', JSON.stringify(updated));
+      return updated;
+    });
+
+    // Simulate reply if chatting with another scholar
+    const currentConv = conversations.find((c) => c.id === conversationId);
+    if (currentConv && !currentConv.isSelf) {
+      setTimeout(() => {
+        setMessages((prev) => {
+          const thread = prev[conversationId] || [];
+          const updated = {
+            ...prev,
+            [conversationId]: thread.map((m) => (m.id === newMsg.id ? { ...m, status: 'seen' as const } : m))
+          };
+          localStorage.setItem('univyx_messages', JSON.stringify(updated));
+          return updated;
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        const replyMsg: DirectMessage = {
+          id: `msg-${Date.now()}-reply`,
+          conversationId,
+          senderId: currentConv.participant.id,
+          senderName: currentConv.participant.fullName,
+          senderUsername: currentConv.participant.username,
+          text: `Got your note! Let's connect on this at the campus tech lab. 🎓`,
+          createdAt: new Date().toISOString(),
+          status: 'seen'
+        };
+        setMessages((prev) => {
+          const thread = prev[conversationId] || [];
+          const updated = { ...prev, [conversationId]: [...thread, replyMsg] };
+          localStorage.setItem('univyx_messages', JSON.stringify(updated));
+          return updated;
+        });
+        setConversations((prev) => {
+          const updated = prev.map((c) => {
+            if (c.id === conversationId) {
+              return {
+                ...c,
+                lastMessage: replyMsg.text,
+                lastMessageTime: 'Just now'
+              };
+            }
+            return c;
+          });
+          localStorage.setItem('univyx_conversations', JSON.stringify(updated));
+          return updated;
+        });
+      }, 2800);
+    }
+  };
+
+  const deleteMessage = (conversationId: string, messageId: string) => {
+    setMessages((prev) => {
+      const thread = prev[conversationId] || [];
+      const updated = { ...prev, [conversationId]: thread.filter((m) => m.id !== messageId) };
+      localStorage.setItem('univyx_messages', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Message deleted');
+  };
+
+  const startConversation = (participant: ConversationParticipant): string => {
+    const existing = conversations.find((c) => c.participant.id === participant.id);
+    if (existing) {
+      setActiveConversationId(existing.id);
+      setActiveTabState('messages');
+      return existing.id;
+    }
+    const newConvId = `conv-${Date.now()}`;
+    const newConv: Conversation = {
+      id: newConvId,
+      participant,
+      lastMessage: 'Conversation opened',
+      lastMessageTime: 'Just now',
+      unreadCount: 0,
+      isSelf: participant.isSelf
+    };
+    setConversations((prev) => {
+      const updated = [newConv, ...prev];
+      localStorage.setItem('univyx_conversations', JSON.stringify(updated));
+      return updated;
+    });
+    setMessages((prev) => {
+      const updated = { ...prev, [newConvId]: [] };
+      localStorage.setItem('univyx_messages', JSON.stringify(updated));
+      return updated;
+    });
+    setActiveConversationId(newConvId);
+    setActiveTabState('messages');
+    return newConvId;
+  };
+
+  // Sponsored Ads Handlers
+  const createAd = (adData: Omit<SponsoredAd, 'id' | 'impressions' | 'clicks' | 'ctr' | 'createdAt'>) => {
+    const newAd: SponsoredAd = {
+      ...adData,
+      id: `ad-${Date.now()}`,
+      impressions: 0,
+      clicks: 0,
+      ctr: 0,
+      createdAt: new Date().toISOString()
+    };
+    setAds((prev) => {
+      const updated = [newAd, ...prev];
+      localStorage.setItem('univyx_ads', JSON.stringify(updated));
+      return updated;
+    });
+    showToast(`Ad campaign "${newAd.title}" published`);
+  };
+
+  const updateAd = (id: string, adData: Partial<SponsoredAd>) => {
+    setAds((prev) => {
+      const updated = prev.map((a) => (a.id === id ? { ...a, ...adData } : a));
+      localStorage.setItem('univyx_ads', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Ad campaign updated');
+  };
+
+  const deleteAd = (id: string) => {
+    setAds((prev) => {
+      const updated = prev.filter((a) => a.id !== id);
+      localStorage.setItem('univyx_ads', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Ad campaign deleted');
+  };
+
+  const hideAd = (adId: string) => {
+    setHiddenAdIds((prev) => {
+      const updated = [...prev, adId];
+      sessionStorage.setItem('univyx_hidden_ads', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Ad hidden from feed');
+  };
+
+  // Academic Library Handlers
+  const toggleSaveLibraryResource = (id: string) => {
+    setLibraryResources((prev) => {
+      const updated = prev.map((r) => {
+        if (r.id === id) {
+          const nextVal = !r.isSaved;
+          showToast(nextVal ? 'Resource saved to your bookmarks' : 'Resource removed from saved');
+          return { ...r, isSaved: nextVal };
+        }
+        return r;
+      });
+      localStorage.setItem('univyx_academic_library', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const addLibraryResource = (res: Omit<AcademicLibraryResource, 'id' | 'downloadsCount' | 'createdAt'>) => {
+    const newRes: AcademicLibraryResource = {
+      ...res,
+      id: `res-${Date.now()}`,
+      downloadsCount: 1,
+      createdAt: new Date().toISOString()
+    };
+    setLibraryResources((prev) => {
+      const updated = [newRes, ...prev];
+      localStorage.setItem('univyx_academic_library', JSON.stringify(updated));
+      return updated;
+    });
+    showToast(`Uploaded "${newRes.courseCode}" for student review`);
+  };
+
+  const incrementDownloadResource = (id: string) => {
+    setLibraryResources((prev) => {
+      const updated = prev.map((r) => (r.id === id ? { ...r, downloadsCount: r.downloadsCount + 1 } : r));
+      localStorage.setItem('univyx_academic_library', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const editPost = (postId: string, newContent: string) => {
@@ -1133,7 +1608,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         toastMessage,
         showToast,
         textSize,
-        setTextSize
+        setTextSize,
+        resetTextSize,
+        updateLocation,
+        toggleShowLocationOnProfile,
+        toggleAllowLocationTags,
+        votePoll,
+        rooms,
+        activeRoom,
+        isRoomModalOpen,
+        isRoomMiniPlayerOpen,
+        isCreateRoomModalOpen,
+        setIsCreateRoomModalOpen,
+        endedRoomSummary,
+        joinRoom,
+        leaveRoom,
+        minimizeRoom,
+        maximizeRoom,
+        endRoom,
+        closeEndedSummary,
+        createRoom,
+        toggleRoomReminder,
+        conversations,
+        messages,
+        activeConversationId,
+        setActiveConversationId,
+        sendMessage,
+        deleteMessage,
+        startConversation,
+        unreadMessagesCount,
+        ads,
+        createAd,
+        updateAd,
+        deleteAd,
+        hiddenAdIds,
+        hideAd,
+        libraryResources,
+        toggleSaveLibraryResource,
+        addLibraryResource,
+        incrementDownloadResource
       }}
     >
       {children}

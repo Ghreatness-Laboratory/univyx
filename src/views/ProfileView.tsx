@@ -17,11 +17,20 @@ import {
   X,
   CheckCircle2,
   TrendingUp,
-  ArrowRight
+  ArrowRight,
+  Mail
 } from 'lucide-react';
 
 export const ProfileView: React.FC = () => {
-  const { currentUser, posts, setActiveTab, gainFollowers, showToast } = useApp();
+  const {
+    currentUser,
+    posts,
+    setActiveTab,
+    gainFollowers,
+    showToast,
+    setActiveConversationId,
+    startConversation
+  } = useApp();
   const [profileTab, setProfileTab] = useState<'posts' | 'bookmarks'>('posts');
   const [activeCommentsPost, setActiveCommentsPost] = useState<Post | null>(null);
   const [showFollowModal, setShowFollowModal] = useState<'followers' | 'following' | null>(null);
@@ -148,13 +157,26 @@ export const ProfileView: React.FC = () => {
             </div>
           </div>
 
-          <button
-            onClick={() => setActiveTab('settings')}
-            className="btn-pill flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 text-[15px] font-bold hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0 text-[#0F1419] dark:text-[#E7E9EA] transition-colors cursor-pointer"
-          >
-            <Settings className="w-4 h-4 text-[#536471] dark:text-[#71767B]" />
-            <span className="hidden sm:inline">Edit Profile</span>
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                setActiveConversationId('conv-self');
+                setActiveTab('messages');
+              }}
+              className="btn-pill flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1D9BF0] text-white text-[15px] font-bold hover:bg-[#1A8CD8] transition-colors cursor-pointer shadow-xs"
+            >
+              <Mail className="w-4 h-4" />
+              <span>Message</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('settings')}
+              className="btn-pill flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 text-[15px] font-bold hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0 text-[#0F1419] dark:text-[#E7E9EA] transition-colors cursor-pointer"
+            >
+              <Settings className="w-4 h-4 text-[#536471] dark:text-[#71767B]" />
+              <span className="hidden sm:inline">Edit Profile</span>
+            </button>
+          </div>
         </div>
 
         {/* Following & Followers Stats (Clickable to open Follower List modal) */}
@@ -374,12 +396,33 @@ export const ProfileView: React.FC = () => {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => showToast(`Updated following state for @${account.username}`)}
-                    className="btn-pill shrink-0 text-[15px] font-bold px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] transition-colors cursor-pointer"
-                  >
-                    {showFollowModal === 'followers' ? 'Follow Back' : 'Following'}
-                  </button>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      onClick={() => {
+                        setShowFollowModal(null);
+                        startConversation({
+                          id: account.id,
+                          fullName: account.name,
+                          username: account.username,
+                          universityName: account.university,
+                          universityId: account.id.replace('usr-', ''),
+                          verificationTier: account.tier,
+                          bio: account.bio
+                        });
+                      }}
+                      className="p-2 rounded-full border border-slate-200 dark:border-slate-700 text-[#1D9BF0] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                      title={`Message @${account.username}`}
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                    </button>
+
+                    <button
+                      onClick={() => showToast(`Updated following state for @${account.username}`)}
+                      className="btn-pill shrink-0 text-[14px] font-bold px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-[#0F1419] dark:text-[#E7E9EA] transition-colors cursor-pointer"
+                    >
+                      {showFollowModal === 'followers' ? 'Follow Back' : 'Following'}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

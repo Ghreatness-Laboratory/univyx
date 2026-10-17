@@ -20,7 +20,12 @@ import {
   CheckCircle2,
   Award,
   Clock,
-  Edit3
+  Edit3,
+  Megaphone,
+  Play,
+  Pause,
+  Plus,
+  Upload
 } from 'lucide-react';
 
 export const AdminDashboardView: React.FC = () => {
@@ -39,12 +44,31 @@ export const AdminDashboardView: React.FC = () => {
     showToast,
     currentUser,
     verificationLogs,
-    setVerificationTierForUser
+    setVerificationTierForUser,
+    ads,
+    createAd,
+    updateAd,
+    deleteAd
   } = useApp();
 
   const [section, setSection] = useState<
-    'overview' | 'posts' | 'users' | 'universities' | 'opportunities' | 'stores' | 'reports' | 'settings'
+    'overview' | 'posts' | 'users' | 'universities' | 'opportunities' | 'stores' | 'reports' | 'ads' | 'settings'
   >('overview');
+
+  // Ad Center state
+  const [adFilter, setAdFilter] = useState<'all' | 'Running' | 'Paused' | 'Pending' | 'Completed'>('all');
+  const [showCreateAdModal, setShowCreateAdModal] = useState(false);
+  const [newAdAdvertiser, setNewAdAdvertiser] = useState('');
+  const [newAdHeadline, setNewAdHeadline] = useState('');
+  const [newAdBody, setNewAdBody] = useState('');
+  const [newAdDestUrl, setNewAdDestUrl] = useState('');
+  const [newAdCtaText, setNewAdCtaText] = useState('Learn More');
+  const [newAdPlacement, setNewAdPlacement] = useState<'home' | 'academics' | 'store'>('home');
+  const [newAdTargetUni, setNewAdTargetUni] = useState('all');
+  const [newAdMediaType, setNewAdMediaType] = useState<'image' | 'video'>('image');
+  const [newAdMediaUrl, setNewAdMediaUrl] = useState('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80');
+  const [newAdMediaFileName, setNewAdMediaFileName] = useState('');
+  const [newAdError, setNewAdError] = useState('');
 
   const [searchPost, setSearchPost] = useState('');
   const [modNote, setModNote] = useState<Record<string, string>>({});
@@ -197,6 +221,7 @@ export const AdminDashboardView: React.FC = () => {
           { id: 'opportunities', label: `CIVYN (${opportunities.length})`, icon: Briefcase },
           { id: 'stores', label: `Store (${products.length})`, icon: ShoppingBag },
           { id: 'reports', label: `Reports (${pendingReports.length})`, icon: AlertTriangle, badge: pendingReports.length },
+          { id: 'ads', label: `Ad Center (${ads.length})`, icon: Megaphone },
           { id: 'settings', label: 'Platform Settings', icon: Settings }
         ].map((item) => {
           const Icon = item.icon;
@@ -600,7 +625,198 @@ export const AdminDashboardView: React.FC = () => {
         </div>
       )}
 
-      {/* 8. SETTINGS */}
+      {/* 8. AD CENTER (ADMIN ONLY) */}
+      {section === 'ads' && (
+        <div className="space-y-4 text-xs">
+          {/* Header & Metrics */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+                  <Megaphone className="w-4 h-4" />
+                </span>
+                <h3 className="font-bold text-base text-[#0F1419] dark:text-[#E7E9EA]">
+                  Univyx Sponsored Ads Center
+                </h3>
+              </div>
+              <p className="text-slate-500 text-[11px] mt-0.5">
+                Manage high-intent collegiate ad campaigns. Strictly accessible via admin credentials.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowCreateAdModal(true)}
+              className="btn-pill px-4 py-2 bg-[#1D9BF0] hover:bg-[#1A8CD8] text-white font-bold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-xs"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Create Ad Campaign</span>
+            </button>
+          </div>
+
+          {/* Metric Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-3.5 rounded-xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800">
+              <span className="text-slate-400 font-medium">Running Campaigns</span>
+              <div className="text-xl font-bold font-display mt-0.5">
+                {ads.filter((a) => a.status === 'Running' || a.status === 'Active').length}
+              </div>
+              <span className="text-[10px] text-emerald-500 font-medium">Live on feeds</span>
+            </div>
+            <div className="p-3.5 rounded-xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800">
+              <span className="text-slate-400 font-medium">Total Impressions</span>
+              <div className="text-xl font-bold font-display mt-0.5">
+                {ads.reduce((acc, a) => acc + (a.impressions || 0), 0).toLocaleString()}
+              </div>
+              <span className="text-[10px] text-[#1D9BF0] font-medium">Collegiate reach</span>
+            </div>
+            <div className="p-3.5 rounded-xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800">
+              <span className="text-slate-400 font-medium">Total Clicks</span>
+              <div className="text-xl font-bold font-display mt-0.5">
+                {ads.reduce((acc, a) => acc + (a.clicks || 0), 0).toLocaleString()}
+              </div>
+              <span className="text-[10px] text-purple-500 font-medium">Student engagement</span>
+            </div>
+            <div className="p-3.5 rounded-xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800">
+              <span className="text-slate-400 font-medium">Average CTR</span>
+              <div className="text-xl font-bold font-display mt-0.5">
+                {ads.length > 0
+                  ? (ads.reduce((acc, a) => acc + (a.ctr || 0), 0) / ads.length).toFixed(2)
+                  : '0.00'}%
+              </div>
+              <span className="text-[10px] text-emerald-500 font-medium">High intent</span>
+            </div>
+          </div>
+
+          {/* Status Filter Tabs */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            {['all', 'Running', 'Paused', 'Pending', 'Completed'].map((st) => (
+              <button
+                key={st}
+                onClick={() => setAdFilter(st as any)}
+                className={`px-3 py-1 rounded-full font-semibold transition-colors cursor-pointer capitalize text-[11px] ${
+                  adFilter === st
+                    ? 'bg-[#1D9BF0] text-white shadow-2xs'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`}
+              >
+                {st === 'all' ? `All Campaigns (${ads.length})` : st}
+              </button>
+            ))}
+          </div>
+
+          {/* Ads Table */}
+          <div className="rounded-2xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-xs">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121417] text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                  <th className="p-3">Advertiser & Campaign</th>
+                  <th className="p-3">Placement</th>
+                  <th className="p-3">Target Uni</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Spend</th>
+                  <th className="p-3">Impressions</th>
+                  <th className="p-3">Clicks</th>
+                  <th className="p-3">CTR</th>
+                  <th className="p-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
+                {ads
+                  .filter((a) => {
+                    if (adFilter === 'all') return true;
+                    if (adFilter === 'Running') return a.status === 'Running' || a.status === 'Active';
+                    return a.status === adFilter;
+                  })
+                  .map((ad) => {
+                    const isRunning = ad.status === 'Running' || ad.status === 'Active';
+                    return (
+                      <tr key={ad.id} className="hover:bg-slate-50 dark:hover:bg-[#121417] transition-colors">
+                        <td className="p-3">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-9 h-9 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-200 dark:border-slate-700">
+                              {ad.mediaType === 'video' ? (
+                                <div className="w-full h-full bg-slate-900 text-white flex items-center justify-center font-bold text-[9px]">
+                                  VID
+                                </div>
+                              ) : (
+                                <img src={ad.mediaUrl} alt="" className="w-full h-full object-cover" />
+                              )}
+                            </div>
+                            <div className="min-w-0 max-w-[200px]">
+                              <span className="font-bold text-slate-900 dark:text-white truncate block">
+                                {ad.advertiserName}
+                              </span>
+                              <span className="text-[11px] text-slate-500 truncate block">
+                                {ad.headline || ad.title}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-3 capitalize text-slate-600 dark:text-slate-400">
+                          {ad.placement || 'home'}
+                        </td>
+                        <td className="p-3 capitalize text-slate-600 dark:text-slate-400">
+                          {ad.targetUniversityId === 'all' ? 'All Varsities' : ad.targetUniversityId}
+                        </td>
+                        <td className="p-3">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                              isRunning
+                                ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400'
+                                : ad.status === 'Paused'
+                                ? 'bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400'
+                                : ad.status === 'Pending'
+                                ? 'bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                            }`}
+                          >
+                            {ad.status}
+                          </span>
+                        </td>
+                        <td className="p-3 font-semibold text-slate-700 dark:text-slate-300">
+                          {ad.spend || '₦120,000'}
+                        </td>
+                        <td className="p-3 font-mono text-slate-600 dark:text-slate-400">
+                          {ad.impressions.toLocaleString()}
+                        </td>
+                        <td className="p-3 font-mono text-slate-600 dark:text-slate-400">
+                          {ad.clicks.toLocaleString()}
+                        </td>
+                        <td className="p-3 font-mono font-bold text-[#1D9BF0]">
+                          {ad.ctr}%
+                        </td>
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => {
+                                updateAd(ad.id, {
+                                  status: isRunning ? 'Paused' : 'Running'
+                                });
+                              }}
+                              title={isRunning ? 'Pause Campaign' : 'Resume Campaign'}
+                              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 cursor-pointer"
+                            >
+                              {isRunning ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 text-emerald-500" />}
+                            </button>
+                            <button
+                              onClick={() => deleteAd(ad.id)}
+                              title="Delete Campaign"
+                              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-500 cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* 9. SETTINGS */}
       {section === 'settings' && (
         <div className="p-5 rounded-2xl bg-white dark:bg-[#16181C] border border-slate-200 dark:border-slate-800 text-xs space-y-3">
           <h3 className="font-bold text-sm">Platform Settings & Security Policies</h3>
@@ -616,6 +832,248 @@ export const AdminDashboardView: React.FC = () => {
               <span>Private University Verification Enforcement</span>
               <span className="text-emerald-500 font-bold">Active & Enforced</span>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Ad Modal (Admin Only) */}
+      {showCreateAdModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in">
+          <div className="w-full max-w-lg bg-white dark:bg-[#16181C] text-[#0F1419] dark:text-[#E7E9EA] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-5 text-xs max-h-[90vh] overflow-y-auto no-scrollbar space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div>
+                <h3 className="font-bold text-base text-[#0F1419] dark:text-[#E7E9EA]">
+                  Create Sponsored Ad Campaign
+                </h3>
+                <p className="text-[11px] text-slate-500">
+                  Target students across private universities in home feed, academics, or store
+                </p>
+              </div>
+              <button
+                onClick={() => setShowCreateAdModal(false)}
+                className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newAdAdvertiser.trim() || !newAdHeadline.trim() || !newAdBody.trim()) {
+                  setNewAdError('Please fill out all required fields.');
+                  return;
+                }
+                createAd({
+                  advertiserName: newAdAdvertiser.trim(),
+                  title: newAdHeadline.trim(),
+                  headline: newAdHeadline.trim(),
+                  text: newAdBody.trim(),
+                  ctaLabel: newAdCtaText,
+                  ctaUrl: newAdDestUrl.trim() || '#store',
+                  mediaType: newAdMediaType,
+                  mediaUrl: newAdMediaUrl,
+                  placement: newAdPlacement,
+                  targetUniversityId: newAdTargetUni,
+                  status: 'Running',
+                  startDate: new Date().toISOString().split('T')[0],
+                  endDate: '2026-12-31',
+                  spend: '₦150,000'
+                });
+                setShowCreateAdModal(false);
+                setNewAdAdvertiser('');
+                setNewAdHeadline('');
+                setNewAdBody('');
+                setNewAdDestUrl('');
+                setNewAdError('');
+              }}
+              className="space-y-3"
+            >
+              {newAdError && (
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 font-semibold">
+                  {newAdError}
+                </div>
+              )}
+
+              <div>
+                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Advertiser Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Access Bank Collegiate Youth or Samsung Campus Hub"
+                  value={newAdAdvertiser}
+                  onChange={(e) => setNewAdAdvertiser(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-[#0F1419] dark:text-[#E7E9EA]"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Headline *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 50% Off Student Gadgets & Certified Delivery"
+                  value={newAdHeadline}
+                  onChange={(e) => setNewAdHeadline(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-[#0F1419] dark:text-[#E7E9EA]"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Body Text *
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  placeholder="Describe your promotion or opportunity clearly for university students..."
+                  value={newAdBody}
+                  onChange={(e) => setNewAdBody(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-[#0F1419] dark:text-[#E7E9EA] leading-relaxed"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    Destination URL
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://... or #store"
+                    value={newAdDestUrl}
+                    onChange={(e) => setNewAdDestUrl(e.target.value)}
+                    className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-[#0F1419] dark:text-[#E7E9EA]"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    CTA Button Text *
+                  </label>
+                  <select
+                    value={newAdCtaText}
+                    onChange={(e) => setNewAdCtaText(e.target.value)}
+                    className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-[#0F1419] dark:text-[#E7E9EA]"
+                  >
+                    <option value="Learn More">Learn More</option>
+                    <option value="Shop Now">Shop Now</option>
+                    <option value="Apply">Apply</option>
+                    <option value="Sign Up">Sign Up</option>
+                    <option value="Visit">Visit</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    Placement *
+                  </label>
+                  <select
+                    value={newAdPlacement}
+                    onChange={(e) => setNewAdPlacement(e.target.value as any)}
+                    className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-[#0F1419] dark:text-[#E7E9EA]"
+                  >
+                    <option value="home">Home Feed</option>
+                    <option value="academics">Academics</option>
+                    <option value="store">Store</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    Target University *
+                  </label>
+                  <select
+                    value={newAdTargetUni}
+                    onChange={(e) => setNewAdTargetUni(e.target.value)}
+                    className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 text-[#0F1419] dark:text-[#E7E9EA]"
+                  >
+                    <option value="all">All Private Universities</option>
+                    {universities.map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Media Upload */}
+              <div>
+                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Creative Media (Image or Video) *
+                </label>
+                <div className="flex items-center gap-2 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewAdMediaType('image');
+                      setNewAdMediaUrl('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80');
+                    }}
+                    className={`flex-1 p-2 rounded-xl border text-center font-bold ${
+                      newAdMediaType === 'image'
+                        ? 'bg-[#1D9BF0] text-white border-[#1D9BF0]'
+                        : 'bg-slate-50 dark:bg-[#0A0A0A] border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    Image Ad
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewAdMediaType('video');
+                      setNewAdMediaUrl('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4');
+                    }}
+                    className={`flex-1 p-2 rounded-xl border text-center font-bold ${
+                      newAdMediaType === 'video'
+                        ? 'bg-[#1D9BF0] text-white border-[#1D9BF0]'
+                        : 'bg-slate-50 dark:bg-[#0A0A0A] border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    Video Ad
+                  </button>
+                </div>
+
+                <div className="p-3.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-center cursor-pointer relative bg-slate-50/50 dark:bg-[#0A0A0A]">
+                  <input
+                    type="file"
+                    accept={newAdMediaType === 'video' ? 'video/*' : 'image/*'}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) setNewAdMediaFileName(file.name);
+                    }}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                  />
+                  <Upload className="w-4 h-4 mx-auto text-slate-400 mb-1" />
+                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    {newAdMediaFileName || `Click to mock upload ${newAdMediaType}`}
+                  </p>
+                  <p className="text-[10px] text-slate-400">1200x675 recommended format</p>
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateAdModal(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-[#1D9BF0] hover:bg-[#1A8CD8] text-white font-bold transition-colors shadow-xs cursor-pointer"
+                >
+                  Publish Campaign
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
