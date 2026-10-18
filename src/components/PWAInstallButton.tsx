@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
+import { useApp } from '../context/AppContext';
 import { Download, Share2, X } from 'lucide-react';
 
 interface PWAInstallButtonProps {
@@ -12,6 +13,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
   variant = 'button'
 }) => {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
+  const { showToast } = useApp();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
 
   if (isInstalled) {
@@ -24,8 +26,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
     } else if (isIOS) {
       setShowIOSGuide(true);
     } else {
-      // Fallback hint for desktop or unsupported browsers
-      alert('To install univyX, tap your browser menu (⋮ or Share) and select "Install app" or "Add to Home Screen".');
+      showToast('To install, open browser menu and choose "Add to Home Screen" or "Install"');
     }
   };
 
@@ -76,9 +77,9 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
         onClick={handleInstallClick}
         title="Install Univyx App"
         aria-label="Install Univyx App"
-        className={`min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-text-muted hover:text-text hover:bg-accent-soft/40 rounded-xl transition-all duration-150 active:scale-95 cursor-pointer focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${className}`}
+        className={`w-10 h-10 flex items-center justify-center text-text-muted hover:text-text hover:bg-accent-soft/40 rounded-xl transition-all duration-150 active:scale-95 cursor-pointer touch-target-44 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${className}`}
       >
-        <Download className="w-5 h-5 text-text-muted" strokeWidth={1.8} />
+        <Download className="w-[18px] h-[18px] text-text-muted" strokeWidth={1.8} />
       </button>
 
       {showIOSGuide && (
