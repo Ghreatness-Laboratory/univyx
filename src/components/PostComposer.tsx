@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { Post, PostCategory, VerificationTier } from '../types';
 import { VerifiedBadge } from './VerifiedBadge';
@@ -7,6 +7,7 @@ import {
   Send,
   CornerDownRight,
   BarChart2,
+  Image as ImageIcon,
   Plus,
   Trash2,
   Globe
@@ -16,12 +17,14 @@ interface PostComposerProps {
   quotePost?: Post | null;
   onClose?: () => void;
   defaultCategory?: PostCategory;
+  initiallyExpanded?: boolean;
 }
 
 export const PostComposer: React.FC<PostComposerProps> = ({
   quotePost,
   onClose,
-  defaultCategory = 'general'
+  defaultCategory = 'general',
+  initiallyExpanded = false
 }) => {
   const {
     currentUser,
@@ -31,6 +34,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
     setIsComposerOpen
   } = useApp();
 
+  const [isExpanded, setIsExpanded] = useState(Boolean(quotePost || initiallyExpanded));
   const [content, setContent] = useState('');
   const [category, setCategory] = useState<PostCategory>(defaultCategory);
   const [universityId, setUniversityId] = useState<string>(
@@ -39,11 +43,25 @@ export const PostComposer: React.FC<PostComposerProps> = ({
   const [showMentionMenu, setShowMentionMenu] = useState(false);
   const [mentionQuery, setMentionQuery] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Poll state
   const [showPoll, setShowPoll] = useState(false);
   const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
   const [pollDuration, setPollDuration] = useState<'1h' | '1d' | '3d' | '7d'>('1d');
+
+  // Open if quotePost changes
+  useEffect(() => {
+    if (quotePost) {
+      setIsExpanded(true);
+    }
+  }, [quotePost]);
+
+  useEffect(() => {
+    if (isExpanded && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isExpanded]);
 
   const mentionableAccounts = [
     {
@@ -173,8 +191,17 @@ export const PostComposer: React.FC<PostComposerProps> = ({
     setContent('');
     setShowPoll(false);
     setPollOptions(['', '']);
+    setIsExpanded(false);
     if (onClose) onClose();
     setIsComposerOpen(false);
+  };
+
+  const handleCollapse = () => {
+    if (!content.trim() && !quotePost) {
+      setIsExpanded(false);
+      setShowPoll(false);
+    }
+    if (onClose) onClose();
   };
 
   const authorInitial = (currentUser?.fullName || currentUser?.full_name || 'S').charAt(0).toUpperCase();
@@ -183,11 +210,73 @@ export const PostComposer: React.FC<PostComposerProps> = ({
   const matchedUni = universities.find((u) => u.id === universityId);
   const uniShortCode = matchedUni?.shortName || matchedUni?.short_name || 'CU';
 
+  // 1. COLLAPSED STATE: Single 40px pill bar with gradient avatar, placeholder, and small image and poll icons
+  if (!isExpanded) {
+    return (
+      <div
+        onClick={() => setIsExpanded(true)}
+        className="h-10 px-3.5 py-1.5 rounded-full card-theme flex items-center gap-2.5 cursor-pointer hover:border-accent transition-all duration-150 mb-3 active:scale-[0.99] touch-target-44 shadow-xs"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsExpanded(true);
+          }
+        }}
+        aria-label="Open post composer"
+      >
+        {/* 28px gradient avatar */}
+        <div className="w-7 h-7 rounded-full avatar-gradient font-bold text-[11px] text-white flex items-center justify-center shrink-0 shadow-xs select-none">
+          {authorInitial}
+        </div>
+
+        {/* Placeholder text: 13px */}
+        <span className="text-[13px] text-text-muted flex-1 text-left select-none truncate">
+          What's happening on your campus?
+        </span>
+
+        {/* Small image and poll icons on the right */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(true);
+            }}
+            title="Add image"
+            aria-label="Add image"
+            className="w-7 h-7 flex items-center justify-center text-text-muted hover:text-accent rounded-full hover:bg-accent-soft/40 transition-colors"
+          >
+            <ImageIcon className="w-4 h-4 text-text-muted" strokeWidth={1.5} />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(true);
+              setShowPoll(true);
+            }}
+            title="Create poll"
+            aria-label="Create poll"
+            className="w-7 h-7 flex items-center justify-center text-text-muted hover:text-accent rounded-full hover:bg-accent-soft/40 transition-colors"
+          >
+            <BarChart2 className="w-4 h-4 text-text-muted" strokeWidth={1.5} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. EXPANDED STATE (expands in place in 150ms)
   return (
-    <div className="w-full card-theme p-3 mb-3">
+    <div
+      ref={containerRef}
+      className="w-full card-theme p-3 mb-3 transition-all duration-150 animate-in fade-in"
+    >
       {/* Top row: 28px gradient avatar + Textarea */}
       <div className="flex items-start gap-2.5">
-        {/* Requirement 5: Gradient avatar (28px) */}
+        {/* 28px gradient avatar */}
         <div className="w-7 h-7 rounded-full avatar-gradient font-bold text-[11px] text-white flex items-center justify-center shrink-0 shadow-xs select-none mt-0.5">
           {authorInitial}
         </div>
@@ -197,16 +286,27 @@ export const PostComposer: React.FC<PostComposerProps> = ({
           {/* Main Textarea: 13px, line-height 1.5, placeholder at 13px muted */}
           <textarea
             ref={textareaRef}
-            rows={2}
+            rows={3}
             placeholder="What's happening on your campus?"
             value={content}
             onChange={handleTextChange}
+            onBlur={() => {
+              // Auto-collapse when empty, poll is closed, and no quote post
+              if (!content.trim() && !showPoll && !quotePost) {
+                setTimeout(() => {
+                  if (document.activeElement && containerRef.current?.contains(document.activeElement)) {
+                    return;
+                  }
+                  setIsExpanded(false);
+                }, 150);
+              }
+            }}
             className="w-full bg-transparent border-none text-[13px] leading-[1.5] text-text placeholder:text-text-muted focus:outline-none resize-none font-sans"
           />
 
           {/* Autocomplete mention popover */}
           {showMentionMenu && filteredMentions.length > 0 && (
-            <div className="absolute z-30 left-0 top-14 w-72 rounded-[14px] bg-surface border border-border shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+            <div className="absolute z-30 left-0 top-20 w-72 rounded-[14px] bg-surface border border-border shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
               <div className="p-2 border-b border-border text-[10px] font-bold text-text-muted uppercase tracking-wider flex items-center justify-between">
                 <span>Mention Account</span>
                 <span className="text-accent font-mono">@{mentionQuery}</span>
@@ -246,7 +346,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
 
           {/* Quoted Post Preview */}
           {quotePost && (
-            <div className="my-2 p-2 rounded-[10px] border border-border bg-bg/60 text-xs">
+            <div className="my-2 p-2 rounded-[10px] border border-border bg-bg/60 text-xs relative">
               <div className="flex items-center gap-1 font-medium text-text mb-0.5">
                 <CornerDownRight className="w-3.5 h-3.5 text-text-muted" strokeWidth={1.5} />
                 <span className="text-[11px]">Quoting @{quotePost.author?.username || quotePost.username}</span>
@@ -345,9 +445,9 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             </div>
           )}
 
-          {/* Chips: an accent-soft "@ Mention Scholar" (no duplicate @ icon), #CampusLife, #Exams, #Tech and a Poll chip with a small bars icon. In at most two rows. 24px tall, 11px font. */}
+          {/* Chips (two rows max): accent-soft "@ Mention Scholar" (no duplicate @ icon), #CampusLife, #Exams, #Tech and Poll */}
           <div className="flex items-center gap-1.5 flex-wrap max-h-14 overflow-hidden mt-2 mb-1">
-            {/* Accent-soft "@ Mention Scholar" chip (removed duplicate @ icon) */}
+            {/* Accent-soft "@ Mention Scholar" chip (no duplicate @ icon) */}
             <button
               type="button"
               onClick={() => {
@@ -387,7 +487,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
               #Tech
             </button>
 
-            {/* Poll chip with small bars icon */}
+            {/* Poll chip */}
             <button
               type="button"
               onClick={() => setShowPoll(!showPoll)}
@@ -405,7 +505,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
           {/* Divider */}
           <div className="border-t border-border my-2" />
 
-          {/* Two dropdowns side by side on one row: General and a globe + CU audience selector */}
+          {/* Dropdowns on ONE row: General and audience (globe + CU) */}
           <div className="flex items-center gap-2">
             {/* General Dropdown */}
             <div className="relative">
@@ -426,7 +526,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             </div>
 
             {/* Globe + CU audience selector */}
-            <div className="h-6 px-2 rounded-full border border-border bg-surface text-text text-[11px] font-medium flex items-center gap-1 touch-target-44">
+            <div className="h-6 px-2.5 rounded-full border border-border bg-surface text-text text-[11px] font-medium flex items-center gap-1.5 touch-target-44">
               <Globe className="w-3 h-3 text-accent shrink-0" strokeWidth={1.5} />
               <select
                 value={universityId}
@@ -447,7 +547,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({
           {/* Divider */}
           <div className="border-t border-border my-2" />
 
-          {/* Last row: the 280 character counter on the left and the Post button on the right (24px tall, send icon + "Post", with a dimmed gradient when disabled) */}
+          {/* Bottom row: 280 counter on left and send-icon Post button on right (dimmed when empty) */}
           <div className="flex items-center justify-between pt-0.5">
             <span
               className={`text-[11px] tabular-nums font-medium ${
@@ -462,17 +562,15 @@ export const PostComposer: React.FC<PostComposerProps> = ({
             </span>
 
             <div className="flex items-center gap-2">
-              {onClose && (
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="h-6 px-2.5 text-[11px] font-medium text-text-muted hover:text-text rounded-full transition-colors cursor-pointer touch-target-44"
-                >
-                  Cancel
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={handleCollapse}
+                className="h-6 px-2.5 text-[11px] font-medium text-text-muted hover:text-text rounded-full transition-colors cursor-pointer touch-target-44"
+              >
+                Cancel
+              </button>
 
-              {/* 24px tall Post button: send icon + "Post", with dimmed gradient when disabled */}
+              {/* 24px tall send-icon Post button (dimmed when empty) */}
               <button
                 type="submit"
                 disabled={!canSubmit}

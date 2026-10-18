@@ -24,7 +24,7 @@ export const ComposerModal: React.FC = () => {
           </button>
         </div>
         <div className="p-2">
-          <PostComposer onClose={() => setIsComposerOpen(false)} />
+          <PostComposer onClose={() => setIsComposerOpen(false)} initiallyExpanded={true} />
         </div>
       </div>
     </div>

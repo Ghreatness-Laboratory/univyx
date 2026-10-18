@@ -3,6 +3,7 @@
 @theme {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
+  --color-surface-deep: var(--surface-deep);
   --color-border: var(--border);
   --color-text: var(--text);
   --color-text-muted: var(--text-muted);
@@ -21,6 +22,7 @@
     /* Light Theme Tokens */
     --bg: #F4F7FC;
     --surface: #FFFFFF;
+    --surface-deep: #FFFFFF;
     --border: #E2E8F3;
     --text: #0E1630;
     --text-muted: #66708D;
@@ -40,6 +42,7 @@
     /* Dark Theme Tokens (pure black, no navy tint anywhere) */
     --bg: #000000;
     --surface: #0B0C10;
+    --surface-deep: #07080C;
     --border: #1C1D24;
     --text: #F5F6FA;
     --text-muted: #8B90A3;
@@ -197,4 +200,43 @@
 /* Safe area padding for mobile notches / home bar */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 8px);
+}
+
+/* Pulsing Live Dot Animation */
+@keyframes livePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.6;
+  }
+}
+
+.animate-live-pulse {
+  animation: livePulse 1.6s ease-in-out infinite;
+}
+
+/* 18-bar Animated Staggered Audio Waveform */
+@keyframes waveBar {
+  0%, 100% {
+    transform: scaleY(0.2);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.waveform-bar {
+  transform-origin: bottom;
+  animation: waveBar 1.2s ease-in-out infinite;
+}
+
+/* Respect prefers-reduced-motion: stops continuous live pulse and waveform */
+@media (prefers-reduced-motion: reduce) {
+  .animate-live-pulse,
+  .waveform-bar {
+    animation: none !important;
+  }
 }

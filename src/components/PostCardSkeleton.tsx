@@ -2,7 +2,7 @@ import React from 'react';
 
 export const PostCardSkeleton: React.FC = () => {
   return (
-    <div className="card-theme p-3.5 mb-2.5 animate-pulse">
+    <div className="card-theme p-3.5 mb-3 animate-pulse">
       {/* Header Row */}
       <div className="flex items-center gap-2.5">
         {/* Avatar circle */}

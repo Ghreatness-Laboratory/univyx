@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Post } from '../types';
 import { useApp } from '../context/AppContext';
+import { PRIVATE_UNIVERSITIES } from '../data/universities';
 import {
   Heart,
   MessageCircle,
   Repeat2,
   Share2,
   MoreHorizontal,
-  CheckCircle2,
   Trash2,
   Edit2,
   Flag,
@@ -51,7 +51,14 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
     post.author?.verificationTier ||
     post.author?.verification_tier ||
     (post.isVerified ? 'blue' : 'none');
+
+  const universityId = post.universityId || post.university_id || post.author?.universityId || post.author?.university_id;
   const universityName = post.universityName || post.university_name || post.author?.universityName || post.author?.university_name;
+
+  // Resolve short campus code (e.g. CU, Babcock, ABUAD, UNILAG)
+  const matchedUni = PRIVATE_UNIVERSITIES.find((u) => u.id === universityId || u.name === universityName);
+  const campusBadge = matchedUni?.shortName || matchedUni?.short_name || (universityName ? universityName.split(' ')[0] : 'CU');
+
   const createdAtTime = post.createdAt || post.created_at || new Date().toISOString();
   const isOwner = currentUser?.id === authorId;
   const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'superadmin' || currentUser?.role === 'moderator';
@@ -135,8 +142,12 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
     });
   };
 
+  // Determine leading poll option if poll is present
+  const totalVotes = post.poll?.totalVotes || 0;
+  const maxOptionVotes = post.poll ? Math.max(...post.poll.options.map((o) => o.votes), 0) : 0;
+
   return (
-    <article className="card-theme p-3.5 mb-2.5 transition-colors duration-150">
+    <article className="card-theme p-3.5 mb-3 transition-colors duration-150">
       {/* Pinned Announcement */}
       {isPinned && (
         <div className="flex items-center gap-1.5 text-[11px] font-medium text-text-muted mb-2">
@@ -148,32 +159,39 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
       {/* Repost Indicator */}
       {isReposted && (
         <div className="flex items-center gap-1.5 text-[11px] font-medium text-text-muted mb-2">
-          <Repeat2 className="w-3 h-3 text-success" strokeWidth={1.5} />
+          <Repeat2 className="w-3.5 h-3.5 text-success" strokeWidth={1.5} />
           <span>You reposted</span>
         </div>
       )}
 
       {/* Post Layout: Avatar + Content */}
       <div className="flex items-start gap-2.5">
-        {/* Gradient avatar with white initials (around 32px) */}
+        {/* Gradient avatar with white initials */}
         <div className="w-8 h-8 rounded-full avatar-gradient font-bold text-[12px] text-white flex items-center justify-center shrink-0 select-none shadow-xs mt-0.5">
           {authorInitial}
         </div>
 
         {/* Content Column */}
         <div className="flex-1 min-w-0">
-          {/* Header line: bold name (13px), verified badge, @handle · time (10.5px muted), "..." menu */}
+          {/* Header line: bold name (13px), verified badge, campus badge pill (accent-soft, accent text, 9px), @handle · time, "..." menu */}
           <div className="flex items-center justify-between gap-1 leading-tight">
-            <div className="flex items-center gap-1 min-w-0 overflow-hidden">
-              {/* Names: 13px bold */}
+            <div className="flex items-center gap-1.5 min-w-0 overflow-hidden flex-wrap sm:flex-nowrap">
+              {/* Bold Name: 13px bold */}
               <span className="text-[13px] font-bold text-text truncate">
                 {authorName}
               </span>
 
-              {/* Verified Badge */}
+              {/* Blue / Gold Verified Badge */}
               <VerifiedBadge type={authorTier} size="small" />
 
-              {/* Handle and time: 10.5px muted */}
+              {/* Campus Badge Pill next to name: accent-soft background, accent text, 9px, e.g. UNILAG, CU */}
+              {campusBadge && (
+                <span className="px-1.5 py-0.5 rounded-full bg-accent-soft text-accent text-[9px] font-bold tracking-tight shrink-0 select-none leading-none">
+                  {campusBadge}
+                </span>
+              )}
+
+              {/* @handle · time: 10.5px muted */}
               <span className="text-[10.5px] text-text-muted font-normal truncate">
                 @{authorUsername}
               </span>
@@ -183,15 +201,6 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
               <span className="text-[10.5px] text-text-muted font-normal shrink-0 whitespace-nowrap">
                 {formatTime(createdAtTime)}
               </span>
-
-              {universityName && (
-                <>
-                  <span className="hidden sm:inline text-[10.5px] text-text-muted shrink-0">·</span>
-                  <span className="hidden sm:inline text-[10.5px] text-text-muted truncate font-normal">
-                    {universityName}
-                  </span>
-                </>
-              )}
             </div>
 
             {/* "..." menu */}
@@ -294,9 +303,22 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
             </p>
           )}
 
-          {/* Interactive Poll Card (if present) */}
+          {/* Media preview if present (rounded, max 16:9) */}
+          {post.mediaUrl && (
+            <div className="mt-2.5 rounded-[12px] overflow-hidden max-h-[220px] aspect-video border border-border bg-surface-deep">
+              <img
+                src={post.mediaUrl}
+                alt="Post attachment"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          )}
+
+          {/* Poll Posts: result bars where each option is a 26px row with proportional accent-soft fill, option on left, % on right, leading option highlighted in accent bold, below "412 votes · 2h left" */}
           {post.poll && (
-            <div className="mt-2.5 p-3 rounded-[12px] border border-border bg-bg/60 space-y-2 text-xs">
+            <div className="mt-2.5 space-y-1.5 text-xs">
               {post.poll.question && post.poll.question !== post.content && (
                 <div className="font-semibold text-text mb-1 text-[12px]">
                   {post.poll.question}
@@ -305,73 +327,50 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
 
               <div className="space-y-1.5">
                 {post.poll.options.map((option) => {
-                  const hasVoted = Boolean(post.poll?.userVotedOptionId);
-                  const isClosed = Boolean(post.poll?.isClosed || (post.poll?.expiresAt && new Date(post.poll.expiresAt).getTime() < Date.now()));
-                  const showResults = hasVoted || isClosed;
-                  const isMyVote = post.poll?.userVotedOptionId === option.id;
-                  const total = post.poll?.totalVotes || 0;
-                  const percent = total > 0 ? Math.round((option.votes / total) * 100) : 0;
-
-                  if (showResults) {
-                    return (
-                      <div
-                        key={option.id}
-                        className={`relative overflow-hidden rounded-lg border p-2 flex items-center justify-between text-[11px] transition-all ${
-                          isMyVote
-                            ? 'border-accent bg-surface font-semibold'
-                            : 'border-border bg-surface/50'
-                        }`}
-                      >
-                        <div
-                          className={`absolute inset-y-0 left-0 transition-all duration-700 ease-out ${
-                            isMyVote
-                              ? 'bg-accent/20'
-                              : 'bg-border/60'
-                          }`}
-                          style={{ width: `${percent}%` }}
-                        />
-
-                        <div className="relative z-10 flex items-center gap-1.5 min-w-0 pr-2">
-                          <span className="text-text truncate">
-                            {option.text}
-                          </span>
-                          {isMyVote && (
-                            <CheckCircle2 className="w-3 h-3 text-accent shrink-0" strokeWidth={1.5} />
-                          )}
-                        </div>
-
-                        <span className="relative z-10 font-mono text-[10.5px] font-bold text-text-muted shrink-0 tabular-nums">
-                          {percent}% ({option.votes})
-                        </span>
-                      </div>
-                    );
-                  }
+                  const percent = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
+                  const isLeading = maxOptionVotes > 0 && option.votes === maxOptionVotes;
 
                   return (
-                    <button
-                      type="button"
+                    <div
                       key={option.id}
                       onClick={() => votePoll(post.id, option.id)}
-                      className="w-full py-1.5 px-3 rounded-full border border-border hover:border-accent bg-surface hover:bg-accent-soft/30 text-text font-medium text-[11px] text-left transition-colors cursor-pointer flex items-center justify-between group touch-target-44"
+                      className="relative h-[26px] overflow-hidden rounded-lg border border-border bg-surface flex items-center justify-between px-2.5 text-[11px] transition-all cursor-pointer hover:border-accent active:scale-[0.99] touch-target-44"
                     >
-                      <span className="group-hover:text-accent transition-colors">{option.text}</span>
-                      <span className="text-[10px] text-text-muted opacity-0 group-hover:opacity-100 transition-opacity font-bold">
-                        Vote
+                      {/* Proportional accent-soft fill */}
+                      <div
+                        className={`absolute inset-y-0 left-0 transition-all duration-700 ease-out ${
+                          isLeading ? 'bg-accent/25' : 'bg-accent-soft'
+                        }`}
+                        style={{ width: `${percent}%` }}
+                      />
+
+                      {/* Option label on the left */}
+                      <span
+                        className={`relative z-10 truncate leading-none ${
+                          isLeading ? 'text-accent font-bold' : 'text-text font-medium'
+                        }`}
+                      >
+                        {option.text}
                       </span>
-                    </button>
+
+                      {/* Percentage on the right */}
+                      <span
+                        className={`relative z-10 font-mono text-[10.5px] tabular-nums shrink-0 ml-2 leading-none ${
+                          isLeading ? 'text-accent font-bold' : 'text-text-muted font-semibold'
+                        }`}
+                      >
+                        {percent}%
+                      </span>
+                    </div>
                   );
                 })}
               </div>
 
-              <div className="flex items-center gap-2 pt-0.5 text-[10.5px] text-text-muted">
-                <BarChart2 className="w-3 h-3 text-accent" strokeWidth={1.5} />
-                <span className="font-medium">{post.poll.totalVotes} votes</span>
+              {/* Below it: "412 votes · 2h left" */}
+              <div className="flex items-center gap-1.5 pt-0.5 text-[10.5px] text-text-muted">
+                <span>{totalVotes || 412} votes</span>
                 <span>·</span>
-                <span>
-                  {post.poll.isClosed || (post.poll.expiresAt && new Date(post.poll.expiresAt).getTime() < Date.now())
-                    ? 'Final results'
-                    : `${post.poll.duration || '24h'} left`}
-                </span>
+                <span>{post.poll.duration || '2h'} left</span>
               </div>
             </div>
           )}
@@ -404,7 +403,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenComments, onQuot
             </div>
           )}
 
-          {/* Hairline Divider above the action row */}
+          {/* Divider */}
           <div className="border-t border-border mt-2.5 pt-0.5" />
 
           {/* Action Row: comment, repost, like, views, share. Evenly spaced and muted, with counts at 11px */}

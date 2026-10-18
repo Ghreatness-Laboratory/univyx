@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
+import { useScrollDirection } from '../hooks/useScrollDirection';
 import {
   Menu,
   Bell,
@@ -23,8 +24,15 @@ export const Header: React.FC = () => {
     setIsDrawerOpen
   } = useApp();
 
+  const isVisible = useScrollDirection();
+
   return (
-    <header className="sticky top-0 z-30 w-full h-[56px] bg-surface/95 backdrop-blur-md border-b border-border transition-colors duration-150">
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 w-full h-[56px] bg-surface/95 backdrop-blur-md border-b border-border transition-transform duration-150 ease-out ${
+          isVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 h-full flex items-center justify-between gap-2">
         {/* Left: Hamburger menu (18px, 2px stroke, far left, always visible) + 28px logo tile + Univyx wordmark */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
@@ -172,5 +180,8 @@ export const Header: React.FC = () => {
         </div>
       </div>
     </header>
+    {/* Spacer so layout does not jump under fixed header */}
+    <div className="h-[56px] w-full shrink-0" aria-hidden="true" />
+  </>
   );
 };

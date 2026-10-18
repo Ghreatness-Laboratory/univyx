@@ -19,6 +19,8 @@ export interface PostAuthor {
   verification_tier?: 'none' | 'blue' | 'gold';
   followersCount?: number;
   followers_count?: number;
+  universityId?: string;
+  university_id?: string;
   universityName?: string;
   university_name?: string;
 }
@@ -74,6 +76,8 @@ export interface MockPost {
   isPinned?: boolean;
   is_pinned?: boolean;
   location?: string;
+  mediaUrl?: string;
+  media_url?: string;
   poll?: PostPoll;
   createdAt: string;
   created_at?: string;
